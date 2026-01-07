@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { IOrder } from '@/models/Order';
+import type { IOrder } from '@/models/Order';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<IOrder[]>([]);

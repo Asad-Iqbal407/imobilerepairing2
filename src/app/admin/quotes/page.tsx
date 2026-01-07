@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { IQuote } from '@/models/Quote';
+import type { IQuote } from '@/models/Quote';
 
 export default function QuotesPage() {
   const [quotes, setQuotes] = useState<IQuote[]>([]);
@@ -310,13 +310,13 @@ export default function QuotesPage() {
                 </div>
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => handleUpdateStatus(selectedQuote._id.toString(), 'responded')}
+                    onClick={() => handleUpdateStatus(selectedQuote._id as string, 'responded')}
                     className="px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-all"
                   >
                     Mark Responded
                   </button>
                   <button 
-                    onClick={() => handleUpdateStatus(selectedQuote._id.toString(), 'completed')}
+                    onClick={() => handleUpdateStatus(selectedQuote._id as string, 'completed')}
                     className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-all"
                   >
                     Mark Completed
@@ -400,7 +400,7 @@ export default function QuotesPage() {
 
             <div className="p-6 border-t border-slate-100 bg-slate-50">
               <button
-                onClick={() => handleDelete(selectedQuote._id.toString())}
+                onClick={() => handleDelete(selectedQuote._id as string)}
                 className="w-full py-3 px-4 bg-white border border-rose-200 text-rose-600 rounded-xl font-bold hover:bg-rose-50 transition-all flex items-center justify-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

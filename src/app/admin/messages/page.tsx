@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { IContact } from '@/models/Contact';
+import type { IContact } from '@/models/Contact';
 
 export default function MessagesPage() {
   const [messages, setMessages] = useState<IContact[]>([]);
@@ -299,7 +299,7 @@ export default function MessagesPage() {
 
             <div className="p-6 border-t border-slate-100 bg-slate-50">
               <button
-                onClick={() => handleDelete(selectedMessage._id.toString())}
+                onClick={() => handleDelete(selectedMessage._id as string)}
                 className="w-full py-3 px-4 bg-white border border-rose-200 text-rose-600 rounded-xl font-bold hover:bg-rose-50 transition-all flex items-center justify-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
