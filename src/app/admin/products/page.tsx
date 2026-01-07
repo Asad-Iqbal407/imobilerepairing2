@@ -355,7 +355,7 @@ export default function ManageProducts() {
               </svg>
             </div>
             <h3 className="text-lg font-bold text-slate-900">No products match your criteria</h3>
-            <p className="text-slate-500 max-w-xs mx-auto mt-2">Try adjusting your search or category filters to find what you're looking for.</p>
+            <p className="text-slate-500 max-w-xs mx-auto mt-2">Try adjusting your search or category filters to find what you&apos;re looking for.</p>
           </div>
         )}
       </div>

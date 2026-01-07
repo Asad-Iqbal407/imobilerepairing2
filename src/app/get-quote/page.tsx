@@ -218,7 +218,7 @@ function QuoteForm() {
                 </ul>
               </div>
               <div className="mt-12 pt-8 border-t border-blue-500">
-                <p className="text-blue-100 text-sm italic">"Fastest repair service I've ever used. Got my quote and fixed the same day!"</p>
+                <p className="text-blue-100 text-sm italic">&quot;Fastest repair service I&apos;ve ever used. Got my quote and fixed the same day!&quot;</p>
                 <p className="mt-2 font-bold">- John D.</p>
               </div>
             </div>

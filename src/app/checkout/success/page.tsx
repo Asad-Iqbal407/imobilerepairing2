@@ -12,19 +12,6 @@ function SuccessContent() {
   const { items, clearCart } = useCart();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 
-  useEffect(() => {
-    // Only clear if there are items to clear
-    if (items.length > 0) {
-      clearCart();
-    }
-
-    if (sessionId && orderId) {
-      updateOrderStatus(orderId);
-    } else {
-      setStatus('success');
-    }
-  }, [sessionId, orderId, clearCart, items.length]);
-
   const updateOrderStatus = async (id: string) => {
     try {
       const res = await fetch(`/api/orders/${id}`, {
@@ -43,6 +30,20 @@ function SuccessContent() {
       setStatus('success'); // Still show success to user
     }
   };
+
+  useEffect(() => {
+    // Only clear if there are items to clear
+    if (items.length > 0) {
+      clearCart();
+    }
+
+    if (sessionId && orderId) {
+      updateOrderStatus(orderId);
+    } else {
+      setStatus('success');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId, orderId, items.length]);
 
   if (status === 'loading') return (
     <div className="min-h-screen flex items-center justify-center bg-white">
@@ -64,7 +65,7 @@ function SuccessContent() {
         </div>
         <h1 className="text-4xl font-black text-slate-900 mb-6 tracking-tight">Payment Successful!</h1>
         <p className="text-slate-500 text-lg leading-relaxed mb-10">
-          Thank you for your trust. We've received your payment and our team is already preparing to get your device back in perfect condition.
+          Thank you for your trust. We&apos;ve received your payment and our team is already preparing to get your device back in perfect condition.
         </p>
         <div className="grid grid-cols-1 gap-4">
           <Link

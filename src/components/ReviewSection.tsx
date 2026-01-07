@@ -181,7 +181,7 @@ export default function ReviewSection() {
                   {renderStars(review.rating)}
                 </div>
                 <p className="text-slate-600 leading-relaxed text-lg italic">
-                  "<DynamicText text={review.comment} />"
+                  &quot;<DynamicText text={review.comment} />&quot;
                 </p>
               </div>
             ))
@@ -254,7 +254,7 @@ export default function ReviewSection() {
                         {renderStars(review.rating)}
                       </div>
                       <p className="text-slate-600 leading-relaxed text-base italic flex-1">
-                        "{review.comment}"
+                        &quot;{review.comment}&quot;
                       </p>
                     </div>
                   ))}

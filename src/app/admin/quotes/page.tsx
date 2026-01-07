@@ -369,7 +369,7 @@ export default function QuotesPage() {
               <div className="space-y-2">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Problem Description</span>
                 <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
-                  "{selectedQuote.problem}"
+                  &quot;{selectedQuote.problem}&quot;
                 </div>
               </div>
 

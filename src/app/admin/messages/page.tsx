@@ -278,7 +278,7 @@ export default function MessagesPage() {
               <div className="space-y-3">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Message Content</span>
                 <div className="bg-white p-6 rounded-3xl border border-slate-100 text-slate-700 font-medium leading-relaxed shadow-sm italic">
-                  "{selectedMessage.message}"
+                  &quot;{selectedMessage.message}&quot;
                 </div>
               </div>
 

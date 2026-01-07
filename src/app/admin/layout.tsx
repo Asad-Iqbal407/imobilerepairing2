@@ -84,6 +84,7 @@ export default function AdminLayout({
   useEffect(() => {
     const authStatus = localStorage.getItem('is_admin_authenticated');
     if (authStatus === 'true') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsAuthenticated(true);
     } else {
       if (pathname !== '/admin/login') {

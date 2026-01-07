@@ -35,6 +35,7 @@ export default function Navbar() {
   }, []);
 
   // Close mobile menu when route changes
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setIsOpen(false), [pathname]);
 
   const navLinks = [
