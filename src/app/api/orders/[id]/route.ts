@@ -5,10 +5,10 @@ import { sendOrderEmails } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     
     const oldOrder = await Order.findById(id);
@@ -62,10 +62,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
   try {
-    const { id } = params;
+    const { id } = await params;
     const deleted = await Order.findByIdAndDelete(id);
     if (!deleted) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });

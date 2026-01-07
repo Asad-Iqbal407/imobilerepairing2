@@ -4,11 +4,11 @@ import Review from '@/models/Review';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
-    const { id } = params;
+    const { id } = await params;
     
     const deletedReview = await Review.findByIdAndDelete(id);
     

@@ -17,10 +17,10 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    const { id } = params;
+    const { id } = await params;
     const deleted = await Quote.findByIdAndDelete(id);
     if (!deleted) {
       return NextResponse.json({ error: 'Quote not found' }, { status: 404 });

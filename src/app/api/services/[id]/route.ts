@@ -17,9 +17,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
-  const { id } = params;
+  const { id } = await params;
   try {
     const service = await Service.findByIdAndDelete(id);
     if (!service) {

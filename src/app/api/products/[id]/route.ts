@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
-  const { id: productId } = params;
+  const { id: productId } = await params;
   try {
     const body = await request.json();
     console.log(`API: Updating product ${productId}`, body);
@@ -31,9 +31,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   await dbConnect();
-  const { id: productId } = params;
+  const { id: productId } = await params;
   try {
     const product = await Product.findByIdAndDelete(productId);
     if (!product) {
