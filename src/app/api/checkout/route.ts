@@ -3,13 +3,15 @@ import Stripe from 'stripe';
 import dbConnect from '@/lib/db';
 import Order from '@/models/Order';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16' as any,
-});
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2023-10-16' as any,
+    })
+  : null;
 
 export async function POST(request: NextRequest) {
   try {
-    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('YOUR_SECRET_KEY')) {
+    if (!stripe || !process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes('YOUR_SECRET_KEY')) {
       return NextResponse.json({ error: 'Stripe Secret Key is not configured. Please add it to your .env.local file.' }, { status: 500 });
     }
 
@@ -34,7 +36,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
+    const session = await stripe!.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: items.map((item: any) => ({
         price_data: {
