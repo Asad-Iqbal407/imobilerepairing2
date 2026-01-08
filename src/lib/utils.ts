@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export const isValidUrl = (url: string) => {
   try {
     if (!url || typeof url !== 'string') return false;
+    if (url.startsWith('data:image')) return true; // Base64 images are valid
     if (url.startsWith('/uploads/')) return true; // Local uploads are valid
     if (!url.startsWith('http') && !url.startsWith('/')) return false;
     new URL(url.startsWith('http') ? url : `http://localhost${url}`);
