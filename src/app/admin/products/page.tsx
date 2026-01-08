@@ -48,6 +48,7 @@ export default function ManageProducts() {
   const isValidUrl = (url: string) => {
     try {
       if (!url || typeof url !== 'string') return false;
+      if (url.startsWith('data:image')) return true;
       if (url.startsWith('/uploads/')) return true;
       if (!url.startsWith('http') && !url.startsWith('/')) return false;
       new URL(url.startsWith('http') ? url : `http://localhost${url}`);
