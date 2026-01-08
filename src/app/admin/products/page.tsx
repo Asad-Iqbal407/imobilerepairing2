@@ -94,15 +94,51 @@ export default function ManageProducts() {
     setIsFormOpen(true);
   };
 
+  const resizeImage = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 800;
+        const scale = MAX_WIDTH / img.width;
+        const width = scale < 1 ? MAX_WIDTH : img.width;
+        const height = scale < 1 ? img.height * scale : img.height;
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const newFile = new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() });
+              resolve(newFile);
+            } else {
+              reject(new Error('Canvas to Blob failed'));
+            }
+          }, 'image/jpeg', 0.7);
+        } else {
+          reject(new Error('Canvas context failed'));
+        }
+      };
+      img.onerror = (e) => reject(e);
+    });
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
+    
     try {
+      // Resize image before upload to avoid large payloads
+      const resizedFile = await resizeImage(file);
+      
+      const formData = new FormData();
+      formData.append('file', resizedFile);
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
