@@ -42,6 +42,7 @@ export default function Navbar() {
     { href: "/", label: t.common.home, icon: Smartphone },
     { href: "/services", label: t.common.services, icon: Wrench },
     { href: "/shop", label: t.common.shop, icon: Store },
+    { href: "/blog", label: "Blog", icon: ClipboardList },
     { href: "/contact", label: t.common.contact, icon: PhoneCall },
   ];
 

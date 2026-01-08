@@ -10,6 +10,7 @@ interface Stats {
   messages: number;
   products: number;
   services: number;
+  posts: number;
 }
 
 interface Activity {
@@ -29,6 +30,7 @@ export default function AdminDashboard() {
     messages: 0,
     products: 0,
     services: 0,
+    posts: 0,
   });
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,12 +38,13 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [ordersRes, quotesRes, messagesRes, productsRes, servicesRes] = await Promise.all([
+        const [ordersRes, quotesRes, messagesRes, productsRes, servicesRes, postsRes] = await Promise.all([
           fetch('/api/orders'),
           fetch('/api/quotes'),
           fetch('/api/contact'),
           fetch('/api/products'),
           fetch('/api/services'),
+          fetch('/api/posts'),
         ]);
 
         const orders = await ordersRes.json();
@@ -49,6 +52,7 @@ export default function AdminDashboard() {
         const messages = await messagesRes.json();
         const products = await productsRes.json();
         const services = await servicesRes.json();
+        const posts = await postsRes.json();
 
         const totalRevenue = Array.isArray(orders) 
           ? orders.reduce((acc: number, order: any) => acc + (order.total || 0), 0)
@@ -61,6 +65,7 @@ export default function AdminDashboard() {
           messages: Array.isArray(messages) ? messages.length : 0,
           products: Array.isArray(products) ? products.length : 0,
           services: Array.isArray(services) ? services.length : 0,
+          posts: Array.isArray(posts) ? posts.length : 0,
         });
 
         // Process Recent Activities
@@ -169,6 +174,18 @@ export default function AdminDashboard() {
       ),
       color: 'bg-purple-500',
       trend: '-2.1%',
+    },
+    {
+      label: 'Blog Posts',
+      value: stats.posts.toString(),
+      href: '/admin/blogs',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+        </svg>
+      ),
+      color: 'bg-indigo-500',
+      trend: 'New',
     },
   ];
 

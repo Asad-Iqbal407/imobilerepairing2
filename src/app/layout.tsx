@@ -13,6 +13,7 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://imobile.com'),
   title: {
     default: "IMOBILE - Expert Mobile Phone Repair",
     template: "%s | IMOBILE"
