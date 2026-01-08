@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import { join } from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,21 +9,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
+    // Check file size (limit to 2MB to prevent large DB documents)
+    if (file.size > 2 * 1024 * 1024) {
+      return NextResponse.json({ error: 'File size too large. Max 2MB allowed.' }, { status: 400 });
+    }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Generate a unique filename
-    const extension = file.name.split('.').pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${extension}`;
-    const path = join(process.cwd(), 'public', 'uploads', fileName);
+    // Convert to Base64 Data URI
+    // This allows images to be stored directly in the database string field
+    // without needing external storage (S3/Cloudinary) or local filesystem (which fails on Vercel)
+    const mimeType = file.type || 'image/jpeg';
+    const base64 = buffer.toString('base64');
+    const dataUri = `data:${mimeType};base64,${base64}`;
 
-    // Write file to public/uploads
-    await writeFile(path, buffer);
-    
-    // Return the relative URL
-    const imageUrl = `/uploads/${fileName}`;
-
-    return NextResponse.json({ url: imageUrl });
+    return NextResponse.json({ url: dataUri });
   } catch (error) {
     console.error('Upload error:', error);
     return NextResponse.json({ error: 'Failed to upload image' }, { status: 500 });
