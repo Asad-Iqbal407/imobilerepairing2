@@ -54,13 +54,13 @@ export async function GET() {
     await dbConnect();
     const count = await Service.countDocuments();
     if (count === 0) {
-      await Service.insertMany(initialServices);
+      console.log('Database empty, inserting initial services...');
+      await Service.insertMany(initialServices.map(({ id, ...s }) => s));
     }
-    const services = await Service.find({});
+    const services = await Service.find({}).sort({ createdAt: -1 });
     return NextResponse.json(services);
   } catch (error) {
     console.error('API Error: Failed to fetch services:', error);
-    // Return initialServices as fallback directly from API if DB fails
     return NextResponse.json(initialServices);
   }
 }

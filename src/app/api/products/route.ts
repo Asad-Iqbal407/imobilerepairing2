@@ -165,24 +165,19 @@ const initialProducts = [
 export async function GET() {
   try {
     await dbConnect();
-    const validCategories = [
-      'New Phones', 'Refurbished Phones', '2nd Hand Phones', 'Tablets', 
-      'Cables', 'Chargers', 'Powerbanks', 'Earbuds', 'Adapters', 'Speakers', 'Cases'
-    ];
-
-    const invalidProduct = await Product.findOne({ category: { $nin: validCategories } });
-    const count = await Product.countDocuments();
     
-    if (invalidProduct || count === 0) {
-      await Product.deleteMany({});
-      await Product.insertMany(initialProducts);
+    // Only insert initial products if the database is completely empty
+    const count = await Product.countDocuments();
+    if (count === 0) {
+      console.log('Database empty, inserting initial products...');
+      await Product.insertMany(initialProducts.map(({ id, ...p }) => p));
     }
 
-    const products = await Product.find({});
+    const products = await Product.find({}).sort({ createdAt: -1 });
     return NextResponse.json(products);
   } catch (error) {
     console.error('API Error: Failed to fetch products:', error);
-    // Return initialProducts as fallback directly from API if DB fails
+    // On Vercel, this fallback might be why changes don't show if DB connection fails
     return NextResponse.json(initialProducts);
   }
 }
