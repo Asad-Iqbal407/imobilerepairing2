@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useData, Service } from '@/context/DataContext';
 import { getServiceEmoji } from '@/lib/utils';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ManageServices() {
   const { services, addService, updateService, deleteService } = useData();
+  const { t } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -65,7 +67,7 @@ export default function ManageServices() {
       setCurrentService({ ...currentService, image: data.url });
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Failed to upload image. Please try again.');
+      alert(t.admin.uploadError);
     } finally {
       setIsUploading(false);
     }
@@ -83,7 +85,7 @@ export default function ManageServices() {
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Failed to save service. Please try again.');
+      alert(t.admin.saveError);
     }
   };
 
@@ -100,7 +102,7 @@ export default function ManageServices() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this service?')) {
+    if (confirm(t.admin.confirmDelete)) {
       deleteService(id);
     }
   };
@@ -127,8 +129,8 @@ export default function ManageServices() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Manage Services</h1>
-          <p className="text-slate-500 mt-1">Add, edit, or remove repair services from your storefront.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t.admin.manageServices}</h1>
+          <p className="text-slate-500 mt-1">{t.admin.manageServicesDesc}</p>
         </div>
         <button
           onClick={() => {
@@ -140,7 +142,7 @@ export default function ManageServices() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Add New Service
+          {t.admin.addService}
         </button>
       </div>
 
@@ -154,7 +156,7 @@ export default function ManageServices() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Total Services</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.totalServices}</p>
               <h3 className="text-2xl font-bold text-slate-900">{totalServices}</h3>
             </div>
           </div>
@@ -167,8 +169,8 @@ export default function ManageServices() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Avg. Price</p>
-              <h3 className="text-2xl font-bold text-slate-900">${Math.round(avgPrice)}</h3>
+              <p className="text-sm font-medium text-slate-500">{t.admin.avgPrice}</p>
+              <h3 className="text-2xl font-bold text-slate-900">{t.admin.currencySymbol}{Math.round(avgPrice)}</h3>
             </div>
           </div>
         </div>
@@ -180,7 +182,7 @@ export default function ManageServices() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Premium (+$100)</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.premium} (+{t.admin.currencySymbol}100)</p>
               <h3 className="text-2xl font-bold text-slate-900">{premiumServices}</h3>
             </div>
           </div>
@@ -193,7 +195,7 @@ export default function ManageServices() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Entry (&lt;$50)</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.entry} (&lt;{t.admin.currencySymbol}50)</p>
               <h3 className="text-2xl font-bold text-slate-900">{entryServices}</h3>
             </div>
           </div>
@@ -208,7 +210,7 @@ export default function ManageServices() {
           </svg>
           <input
             type="text"
-            placeholder="Search services..."
+            placeholder={t.admin.searchServices}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -222,9 +224,9 @@ export default function ManageServices() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Service Details</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Starting Price</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.serviceDetails}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.startingPrice}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -255,7 +257,7 @@ export default function ManageServices() {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-emerald-50 text-emerald-700">
-                      ${service.price}
+                      {t.admin.currencySymbol}{service.price}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -263,7 +265,7 @@ export default function ManageServices() {
                       <button
                         onClick={() => handleEdit(service)}
                         className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="Edit Service"
+                        title={t.admin.editService}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -272,7 +274,7 @@ export default function ManageServices() {
                       <button
                         onClick={() => handleDelete(service.id)}
                         className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                        title="Delete Service"
+                        title={t.admin.delete}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -292,8 +294,8 @@ export default function ManageServices() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">No services match your criteria</h3>
-            <p className="text-slate-500 max-w-xs mx-auto mt-2">Try adjusting your search to find the service you&apos;re looking for.</p>
+            <h3 className="text-lg font-bold text-slate-900">{t.admin.noServicesFound}</h3>
+            <p className="text-slate-500 max-w-xs mx-auto mt-2">{t.admin.noServicesFoundDesc}</p>
           </div>
         )}
       </div>
@@ -304,7 +306,7 @@ export default function ManageServices() {
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setIsFormOpen(false)} />
           <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-              <h2 className="text-xl font-bold text-slate-900">{isEditing ? 'Edit Service' : 'Add New Service'}</h2>
+              <h2 className="text-xl font-bold text-slate-900">{isEditing ? t.admin.editService : t.admin.addService}</h2>
               <button onClick={() => setIsFormOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -314,7 +316,7 @@ export default function ManageServices() {
             
             <form onSubmit={handleSubmit} id="service-form" className="flex-1 overflow-y-auto p-6 space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Service Title</label>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.serviceTitle}</label>
                 <input
                     type="text"
                     required
@@ -326,7 +328,7 @@ export default function ManageServices() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Service Image</label>
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.serviceImage}</label>
                   <div className="flex flex-col gap-4">
                     {/* File Upload */}
                     <div className="relative group">
@@ -349,14 +351,14 @@ export default function ManageServices() {
                         {isUploading ? (
                           <div className="flex flex-col items-center gap-2">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                            <span className="text-sm font-medium text-slate-500">Uploading...</span>
+                            <span className="text-sm font-medium text-slate-500">{t.admin.uploading}</span>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
-                            <span className="text-sm font-medium text-slate-500">Upload from local system</span>
+                            <span className="text-sm font-medium text-slate-500">{t.admin.uploadLocal}</span>
                           </div>
                         )}
                       </label>
@@ -367,7 +369,7 @@ export default function ManageServices() {
                         <div className="w-full border-t border-slate-200"></div>
                       </div>
                       <div className="relative flex justify-center text-sm">
-                        <span className="px-2 bg-white text-slate-500">or use URL</span>
+                        <span className="px-2 bg-white text-slate-500">{t.admin.orUseUrl}</span>
                       </div>
                     </div>
 
@@ -390,18 +392,18 @@ export default function ManageServices() {
                         className="object-cover transition-transform duration-500 group-hover/preview:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="text-white text-xs font-bold uppercase tracking-widest bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">Preview</span>
+                        <span className="text-white text-xs font-bold uppercase tracking-widest bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">{t.admin.preview}</span>
                       </div>
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Description</label>
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.description}</label>
                   <textarea
                     required
                     rows={4}
-                    placeholder="Describe what&apos;s included in this service..."
+                    placeholder={t.admin.descriptionPlaceholder}
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium resize-none"
                     value={currentService.description || ''}
                     onChange={(e) => setCurrentService({ ...currentService, description: e.target.value })}
@@ -409,9 +411,9 @@ export default function ManageServices() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Base Price ($)</label>
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.price} ({t.admin.currencySymbol})</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{t.admin.currencySymbol}</span>
                     <input
                       type="number"
                       required
@@ -425,7 +427,7 @@ export default function ManageServices() {
                       }}
                     />
                   </div>
-                <p className="text-[11px] text-slate-400 font-medium italic mt-1 uppercase tracking-tighter">Starting Price for Customers</p>
+                <p className="text-[11px] text-slate-400 font-medium italic mt-1 uppercase tracking-tighter">{t.admin.startingPriceDesc}</p>
               </div>
             </form>
 
@@ -435,14 +437,14 @@ export default function ManageServices() {
                 onClick={() => setIsFormOpen(false)}
                 className="flex-1 py-3 px-4 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-white/80 transition-all"
               >
-                Cancel
+                {t.admin.cancel}
               </button>
               <button
                 type="submit"
                 form="service-form"
                 className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
               >
-                {isEditing ? 'Save Changes' : 'Create Service'}
+                {isEditing ? t.admin.saveChanges : t.admin.createService}
               </button>
             </div>
           </div>

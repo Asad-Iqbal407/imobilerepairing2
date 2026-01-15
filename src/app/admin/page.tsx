@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Stats {
   orders: number;
@@ -23,6 +24,7 @@ interface Activity {
 }
 
 export default function AdminDashboard() {
+  const { t } = useLanguage();
   const [stats, setStats] = useState<Stats>({
     orders: 0,
     revenue: 0,
@@ -76,8 +78,8 @@ export default function AdminDashboard() {
             recentActivities.push({
               id: order._id || Math.random().toString(),
               type: 'order',
-              title: `New Order #${(order._id || '').slice(-6)}`,
-              subtitle: `${order.customerName || 'Unknown'} - $${order.total || 0}`,
+              title: `${t.admin.newOrder} #${(order._id || '').slice(-6)}`,
+              subtitle: `${order.customerName || t.admin.unknown} - ${t.admin.currencySymbol}${order.total || 0}`,
               time: order.createdAt || new Date().toISOString(),
               status: order.status
             });
@@ -89,8 +91,8 @@ export default function AdminDashboard() {
             recentActivities.push({
               id: quote._id || Math.random().toString(),
               type: 'quote',
-              title: `Quote Request`,
-              subtitle: `${quote.name || 'Unknown'} - ${quote.service || 'General'}`,
+              title: t.admin.quoteRequest,
+              subtitle: `${quote.name || t.admin.unknown} - ${quote.service || t.admin.general}`,
               time: quote.createdAt || new Date().toISOString(),
             });
           });
@@ -101,8 +103,8 @@ export default function AdminDashboard() {
             recentActivities.push({
               id: msg._id || Math.random().toString(),
               type: 'message',
-              title: `New Message`,
-              subtitle: `From ${msg.name || 'Unknown'}`,
+              title: t.admin.newMessage,
+              subtitle: `${t.admin.from} ${msg.name || t.admin.unknown}`,
               time: msg.createdAt || new Date().toISOString(),
             });
           });
@@ -128,8 +130,8 @@ export default function AdminDashboard() {
 
   const statCards = [
     {
-      label: 'Total Revenue',
-      value: `$${stats.revenue.toLocaleString()}`,
+      label: t.admin.totalRevenue,
+      value: `${t.admin.currencySymbol}${stats.revenue.toLocaleString()}`,
       href: '/admin/orders',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,7 +142,7 @@ export default function AdminDashboard() {
       trend: '+12.5%',
     },
     {
-      label: 'Total Orders',
+      label: t.admin.totalOrders,
       value: stats.orders.toString(),
       href: '/admin/orders',
       icon: (
@@ -152,7 +154,7 @@ export default function AdminDashboard() {
       trend: '+3.2%',
     },
     {
-      label: 'Quote Requests',
+      label: t.admin.quoteRequests,
       value: stats.quotes.toString(),
       href: '/admin/quotes',
       icon: (
@@ -164,7 +166,7 @@ export default function AdminDashboard() {
       trend: '+5.4%',
     },
     {
-      label: 'New Messages',
+      label: t.admin.newMessages,
       value: stats.messages.toString(),
       href: '/admin/messages',
       icon: (
@@ -176,7 +178,7 @@ export default function AdminDashboard() {
       trend: '-2.1%',
     },
     {
-      label: 'Blog Posts',
+      label: t.admin.blogPosts,
       value: stats.posts.toString(),
       href: '/admin/blogs',
       icon: (
@@ -218,8 +220,8 @@ export default function AdminDashboard() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Dashboard Overview</h1>
-          <p className="text-slate-500 mt-1">Welcome back, Administrator. Here&apos;s what&apos;s happening today.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t.admin.dashboardOverview}</h1>
+          <p className="text-slate-500 mt-1">{t.admin.welcomeBack}</p>
         </div>
         <div className="flex items-center gap-3">
           <button 
@@ -229,13 +231,13 @@ export default function AdminDashboard() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
-            Export Report
+            {t.admin.exportReport}
           </button>
           <Link href="/admin/services" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            Add Service
+            {t.admin.addService}
           </Link>
         </div>
       </div>
@@ -269,8 +271,8 @@ export default function AdminDashboard() {
         <div className="lg:col-span-2 space-y-6">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-slate-900">Inventory Status</h2>
-              <Link href="/admin/products" className="text-blue-600 text-sm font-bold hover:underline">View All</Link>
+              <h2 className="text-xl font-bold text-slate-900">{t.admin.inventoryStatus}</h2>
+              <Link href="/admin/products" className="text-blue-600 text-sm font-bold hover:underline">{t.admin.viewAll}</Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
@@ -278,8 +280,8 @@ export default function AdminDashboard() {
                   📱
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">{stats.products} Products</p>
-                  <p className="text-xs text-slate-500">Active in shop</p>
+                  <p className="text-sm font-bold text-slate-900">{stats.products} {t.admin.productsCount}</p>
+                  <p className="text-xs text-slate-500">{t.admin.activeInShop}</p>
                 </div>
               </div>
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
@@ -287,15 +289,15 @@ export default function AdminDashboard() {
                   🛠️
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900">{stats.services} Services</p>
-                  <p className="text-xs text-slate-500">Available for booking</p>
+                  <p className="text-sm font-bold text-slate-900">{stats.services} {t.admin.servicesCount}</p>
+                  <p className="text-xs text-slate-500">{t.admin.availableForBooking}</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Recent Activity</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-6">{t.admin.recentActivity}</h2>
             <div className="space-y-6">
               {activities.length > 0 ? (
                 activities.map((activity) => (
@@ -339,7 +341,7 @@ export default function AdminDashboard() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <p className="text-slate-500 font-medium">No recent activity found.</p>
+                  <p className="text-slate-500 font-medium">{t.admin.noRecentActivity}</p>
                 </div>
               )}
             </div>
@@ -350,37 +352,37 @@ export default function AdminDashboard() {
         <div className="space-y-6">
           <div className="bg-slate-900 p-6 rounded-2xl shadow-xl text-white overflow-hidden relative">
             <div className="relative z-10">
-              <h2 className="text-xl font-bold mb-2">Need Help?</h2>
-              <p className="text-slate-400 text-sm mb-6">Check out the admin documentation or contact system support.</p>
+              <h2 className="text-xl font-bold mb-2">{t.admin.needHelp}</h2>
+              <p className="text-slate-400 text-sm mb-6">{t.admin.supportDesc}</p>
               <Link 
                 href="/admin/messages"
                 className="block w-full py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-slate-100 transition-all text-center active:scale-95"
               >
-                Support Center
+                {t.admin.supportCenter}
               </Link>
             </div>
             <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl"></div>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">System Health</h2>
+            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">{t.admin.systemHealth}</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">Database Status</span>
+                <span className="text-sm text-slate-600 font-medium">{t.admin.databaseStatus}</span>
                 <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
                   <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
-                  Connected
+                  {t.admin.connected}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">Stripe API</span>
+                <span className="text-sm text-slate-600 font-medium">{t.admin.stripeApi}</span>
                 <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
                   <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
-                  Online
+                  {t.admin.online}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">Storage</span>
+                <span className="text-sm text-slate-600 font-medium">{t.admin.storage}</span>
                 <span className="text-xs font-bold text-slate-900">2.4GB / 5.0GB</span>
               </div>
               <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">

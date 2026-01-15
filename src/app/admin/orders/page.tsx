@@ -3,8 +3,10 @@
 import { useEffect, useState } from 'react';
 import type { IOrder } from '@/models/Order';
 import { formatPriceByCurrency, type SupportedCurrency } from '@/lib/utils';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function OrdersPage() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,7 +80,7 @@ export default function OrdersPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this order?')) return;
+    if (!confirm(t.admin.confirmDeleteOrder)) return;
     try {
       const res = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -100,8 +102,8 @@ export default function OrdersPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Orders</h1>
-          <p className="text-slate-500 mt-1">Manage customer orders and fulfillment status.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t.admin.orders}</h1>
+          <p className="text-slate-500 mt-1">{t.admin.manageOrders}</p>
         </div>
         <button
           onClick={fetchOrders}
@@ -110,7 +112,7 @@ export default function OrdersPage() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          Refresh
+          {t.admin.refresh}
         </button>
       </div>
 
@@ -124,7 +126,7 @@ export default function OrdersPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Orders</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalOrders}</p>
               <p className="text-2xl font-bold text-slate-900">{totalOrders}</p>
             </div>
           </div>
@@ -137,7 +139,7 @@ export default function OrdersPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Revenue</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalRevenue}</p>
               <p className="text-2xl font-bold text-slate-900">
                 {formatPriceByCurrency(revenueByCurrency.usd, 'usd')}
               </p>
@@ -157,7 +159,7 @@ export default function OrdersPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Pending</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.pending}</p>
               <p className="text-2xl font-bold text-slate-900">{pendingOrders}</p>
             </div>
           </div>
@@ -170,7 +172,7 @@ export default function OrdersPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Completed</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.completed}</p>
               <p className="text-2xl font-bold text-slate-900">{completedOrders}</p>
             </div>
           </div>
@@ -185,24 +187,24 @@ export default function OrdersPage() {
           </svg>
           <input
             type="text"
-            placeholder="Search orders (name, email, ID)..."
+            placeholder={t.admin.searchOrdersPlaceholder}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
-          {['All', 'pending', 'paid', 'confirmed', 'shipped', 'cancelled'].map((status) => (
+          {['all', 'pending', 'paid', 'confirmed', 'shipped', 'cancelled'].map((status) => (
             <button
               key={status}
-              onClick={() => setSelectedStatus(status)}
+              onClick={() => setSelectedStatus(status === 'all' ? 'All' : status)}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border whitespace-nowrap ${
-                selectedStatus === status
+                (selectedStatus === 'All' && status === 'all') || selectedStatus === status
                   ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white border-slate-200 text-slate-500 hover:border-blue-200 hover:text-blue-600'
               }`}
             >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
+              {status === 'all' ? t.admin.all : t.admin[status as keyof typeof t.admin] || status}
             </button>
           ))}
         </div>
@@ -223,12 +225,12 @@ export default function OrdersPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Customer</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Items</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Total</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.customer}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.items}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.total}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.date}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.status}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -264,7 +266,7 @@ export default function OrdersPage() {
                       order.status === 'cancelled' ? 'bg-rose-50 text-rose-700' :
                       'bg-slate-50 text-slate-700'
                     }`}>
-                      {order.status}
+                      {t.admin[order.status as keyof typeof t.admin] || order.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -275,7 +277,7 @@ export default function OrdersPage() {
                           setIsDetailsOpen(true);
                         }}
                         className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="View Details"
+                        title={t.admin.viewDetails}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -285,7 +287,7 @@ export default function OrdersPage() {
                       <button
                         onClick={() => handleDelete(order._id)}
                         className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                        title="Delete Order"
+                        title={t.admin.deleteOrder}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -305,11 +307,11 @@ export default function OrdersPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">No orders found</h3>
+            <h3 className="text-lg font-bold text-slate-900">{t.admin.noOrdersFound}</h3>
             <p className="text-slate-500 max-w-xs mx-auto mt-2">
               {orders.length === 0 
-                ? "Customer orders will appear here once they make a purchase."
-                : "No orders match your search criteria."}
+                ? t.admin.noOrdersFoundDesc
+                : t.admin.noOrdersFoundFiltered}
             </p>
           </div>
         )}
@@ -322,7 +324,7 @@ export default function OrdersPage() {
           <div className="fixed inset-y-0 right-0 max-w-xl w-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Order Details</h2>
+                <h2 className="text-xl font-bold text-slate-900">{t.admin.orderDetails}</h2>
                 <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">ID: {selectedOrder._id.toString()}</p>
               </div>
               <button onClick={() => setIsDetailsOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
@@ -335,7 +337,7 @@ export default function OrdersPage() {
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
               {/* Status Section */}
               <div className="space-y-3">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Order Fulfillment</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.orderFulfillment}</span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {['pending', 'paid', 'confirmed', 'shipped', 'cancelled'].map((status) => (
                     <button
@@ -347,7 +349,7 @@ export default function OrdersPage() {
                           : 'bg-white border-slate-200 text-slate-400 hover:border-blue-200 hover:text-blue-600'
                       }`}
                     >
-                      {status.charAt(0).toUpperCase() + status.slice(1)}
+                      {t.admin[status as keyof typeof t.admin] || status}
                     </button>
                   ))}
                 </div>
@@ -356,26 +358,26 @@ export default function OrdersPage() {
               {/* Customer & Shipping Info */}
               <div className="grid grid-cols-2 gap-8">
                 <div className="space-y-4">
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">Customer</h3>
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">{t.admin.customer}</h3>
                   <div className="space-y-3">
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Name</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.name}</span>
                       <p className="text-slate-900 font-bold">{selectedOrder.customerName}</p>
                     </div>
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Email</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.email}</span>
                       <a href={`mailto:${selectedOrder.customerEmail}`} className="text-blue-600 font-bold hover:underline">{selectedOrder.customerEmail}</a>
                     </div>
                     <div className="space-y-1">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Phone</span>
-                      <p className="text-slate-900 font-bold">{selectedOrder.customerPhone || 'N/A'}</p>
+                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.phone}</span>
+                      <p className="text-slate-900 font-bold">{selectedOrder.customerPhone || t.admin.na}</p>
                     </div>
                   </div>
                 </div>
                 <div className="space-y-4 text-right">
                   <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">Shipping</h3>
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Address</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.address}</span>
                     <p className="text-slate-900 font-medium leading-relaxed whitespace-pre-wrap">
                       {selectedOrder.customerAddress || 'No address provided'}
                     </p>

@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function ManageProducts() {
   const { products, addProduct, updateProduct, deleteProduct } = useData();
+  const { t, language } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -30,19 +32,19 @@ export default function ManageProducts() {
   }, []);
 
   const categories = [
-    { id: 'All', label: 'All', icon: '🏷️' },
-    { id: 'New Phones', label: 'New Phones', icon: '📱' },
-    { id: 'Refurbished Phones', label: 'Refurbished Phones', icon: '🔄' },
-    { id: '2nd Hand Phones', label: '2nd Hand Phones', icon: '🤝' },
-    { id: 'Tablets', label: 'Tablets', icon: '📟' },
-    { id: 'Cables', label: 'Cables', icon: '🔌' },
-    { id: 'Chargers', label: 'Chargers', icon: '⚡' },
-    { id: 'Powerbanks', label: 'Powerbanks', icon: '🔋' },
-    { id: 'Earbuds', label: 'Earbuds', icon: '🎧' },
-    { id: 'Adapters', label: 'Adapters', icon: '🔌' },
-    { id: 'Speakers', label: 'Speakers', icon: '🔊' },
-    { id: 'Cases', label: 'Cases', icon: '📱' },
-    { id: 'Other', label: 'Other', icon: '📦' }
+    { id: 'All', label: t.admin.all, icon: '🏷️' },
+    { id: 'New Phones', label: t.shop.filterNewPhones, icon: '📱' },
+    { id: 'Refurbished Phones', label: t.shop.filterRefurbishedPhones, icon: '🔄' },
+    { id: '2nd Hand Phones', label: t.shop.filterSecondHandPhones, icon: '🤝' },
+    { id: 'Tablets', label: t.shop.filterTablets, icon: '📟' },
+    { id: 'Cables', label: t.shop.filterCables, icon: '🔌' },
+    { id: 'Chargers', label: t.shop.filterChargers, icon: '⚡' },
+    { id: 'Powerbanks', label: t.shop.filterPowerbanks, icon: '🔋' },
+    { id: 'Earbuds', label: t.shop.filterEarbuds, icon: '🎧' },
+    { id: 'Adapters', label: t.shop.filterAdapters, icon: '🔌' },
+    { id: 'Speakers', label: t.shop.filterSpeakers, icon: '🔊' },
+    { id: 'Cases', label: t.shop.filterCases, icon: '📱' },
+    { id: 'Other', label: t.shop.filterOther, icon: '📦' }
   ];
 
   const isValidUrl = (url: string) => {
@@ -77,7 +79,7 @@ export default function ManageProducts() {
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Failed to save product. Please try again.');
+      alert(t.admin.saveError);
     }
   };
 
@@ -150,14 +152,14 @@ export default function ManageProducts() {
       setCurrentProduct({ ...currentProduct, image: data.url });
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Failed to upload image. Please try again.');
+      alert(t.admin.uploadError);
     } finally {
       setIsUploading(false);
     }
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm(t.admin.confirmDelete)) {
       deleteProduct(id);
     }
   };
@@ -191,8 +193,8 @@ export default function ManageProducts() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Manage Products</h1>
-          <p className="text-slate-500 mt-1">Manage your inventory of phones, tablets, and accessories.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t.admin.manageProducts}</h1>
+          <p className="text-slate-500 mt-1">{t.admin.manageProductsDesc}</p>
         </div>
         <button
           onClick={() => {
@@ -204,7 +206,7 @@ export default function ManageProducts() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Add New Product
+          {t.admin.addProduct}
         </button>
       </div>
 
@@ -218,7 +220,7 @@ export default function ManageProducts() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Products</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalProducts}</p>
               <p className="text-2xl font-bold text-slate-900">{totalProducts}</p>
             </div>
           </div>
@@ -231,8 +233,8 @@ export default function ManageProducts() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Inventory Value</p>
-              <p className="text-2xl font-bold text-slate-900">${totalValue.toLocaleString()}</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.inventoryValue}</p>
+              <p className="text-2xl font-bold text-slate-900">{t.admin.currencySymbol}{totalValue.toLocaleString()}</p>
             </div>
           </div>
         </div>
@@ -244,7 +246,7 @@ export default function ManageProducts() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Phones & Tablets</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.phonesAndTablets}</p>
               <p className="text-2xl font-bold text-slate-900">
                 {(categoriesCount['New Phones'] || 0) + (categoriesCount['Refurbished Phones'] || 0) + (categoriesCount['2nd Hand Phones'] || 0) + (categoriesCount['Tablets'] || 0)}
               </p>
@@ -259,7 +261,7 @@ export default function ManageProducts() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">All Accessories</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.allAccessories}</p>
               <p className="text-2xl font-bold text-slate-900">
                 {(categoriesCount['Cables'] || 0) + 
                  (categoriesCount['Chargers'] || 0) + 
@@ -283,7 +285,7 @@ export default function ManageProducts() {
           </svg>
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder={t.admin.searchProducts}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -313,10 +315,10 @@ export default function ManageProducts() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Product</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Category</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Price</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.productName}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.category}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.price}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -349,12 +351,12 @@ export default function ManageProducts() {
                       'bg-amber-50 text-amber-700'
                     }`}>
                       <span>{categories.find(c => c.id === product.category)?.icon || '📦'}</span>
-                      {product.category}
+                      {categories.find(c => c.id === product.category)?.label || product.category}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-emerald-50 text-emerald-700">
-                      ${product.price}
+                      {t.admin.currencySymbol}{product.price}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -362,7 +364,7 @@ export default function ManageProducts() {
                       <button
                         onClick={() => handleEdit(product)}
                         className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="Edit Product"
+                        title={t.admin.editProduct}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -371,7 +373,7 @@ export default function ManageProducts() {
                       <button
                         onClick={() => handleDelete(product.id)}
                         className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                        title="Delete Product"
+                        title={t.admin.delete}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -391,8 +393,8 @@ export default function ManageProducts() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">No products match your criteria</h3>
-            <p className="text-slate-500 max-w-xs mx-auto mt-2">Try adjusting your search or category filters to find what you&apos;re looking for.</p>
+            <h3 className="text-lg font-bold text-slate-900">{t.admin.noProductsFound}</h3>
+            <p className="text-slate-500 max-w-xs mx-auto mt-2">{t.admin.noProductsFoundDesc}</p>
           </div>
         )}
       </div>
@@ -403,7 +405,7 @@ export default function ManageProducts() {
           <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setIsFormOpen(false)} />
           <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-              <h2 className="text-xl font-bold text-slate-900">{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
+              <h2 className="text-xl font-bold text-slate-900">{isEditing ? t.admin.editProduct : t.admin.addProduct}</h2>
               <button onClick={() => setIsFormOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -413,7 +415,7 @@ export default function ManageProducts() {
             
             <form onSubmit={handleSubmit} id="product-form" className="flex-1 overflow-y-auto p-6 space-y-6">
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Product Name</label>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.productName}</label>
                 <input
                   type="text"
                   required
@@ -426,7 +428,7 @@ export default function ManageProducts() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Category</label>
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.category}</label>
                   <select
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium appearance-none"
                     value={currentProduct.category || 'New Phones'}
@@ -441,7 +443,7 @@ export default function ManageProducts() {
                 </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Product Image</label>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.productImage}</label>
                 <div className="flex flex-col gap-4">
                   {/* File Upload */}
                   <div className="relative group">
@@ -464,14 +466,14 @@ export default function ManageProducts() {
                       {isUploading ? (
                         <div className="flex flex-col items-center gap-2">
                           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                          <span className="text-sm font-medium text-slate-500">Uploading...</span>
+                          <span className="text-sm font-medium text-slate-500">{t.admin.uploading}</span>
                         </div>
                       ) : (
                         <div className="flex flex-col items-center gap-2">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-400 group-hover:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                           </svg>
-                          <span className="text-sm font-medium text-slate-500">Upload from local system</span>
+                          <span className="text-sm font-medium text-slate-500">{t.admin.uploadLocal}</span>
                         </div>
                       )}
                     </label>
@@ -482,7 +484,7 @@ export default function ManageProducts() {
                       <div className="w-full border-t border-slate-200"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-2 bg-white text-slate-500">or use URL</span>
+                      <span className="px-2 bg-white text-slate-500">{t.admin.orUseUrl}</span>
                     </div>
                   </div>
 
@@ -506,7 +508,7 @@ export default function ManageProducts() {
                         type="button"
                         onClick={() => setCurrentProduct({ ...currentProduct, image: '' })}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition-colors"
-                        title="Clear image"
+                        title={t.admin.clearImage}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -529,9 +531,9 @@ export default function ManageProducts() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Price ($)</label>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.price} ({t.admin.currencySymbol})</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">$</span>
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{t.admin.currencySymbol}</span>
                   <input
                     type="number"
                     required
@@ -548,11 +550,11 @@ export default function ManageProducts() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">Description</label>
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.description}</label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Technical specs, condition, or other details..."
+                  placeholder={t.admin.descriptionPlaceholder}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium resize-none"
                   value={currentProduct.description || ''}
                   onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
@@ -566,14 +568,14 @@ export default function ManageProducts() {
                 onClick={() => setIsFormOpen(false)}
                 className="flex-1 py-3 px-4 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-white/80 transition-all"
               >
-                Cancel
+                {t.admin.cancel}
               </button>
               <button
                 type="submit"
                 form="product-form"
                 className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
               >
-                {isEditing ? 'Save Changes' : 'Add Product'}
+                {isEditing ? t.admin.saveChanges : t.admin.addProduct}
               </button>
             </div>
           </div>

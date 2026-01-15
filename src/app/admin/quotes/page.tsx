@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import type { IQuote } from '@/models/Quote';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function QuotesPage() {
+  const { t } = useLanguage();
   const [quotes, setQuotes] = useState<IQuote[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedQuote, setSelectedQuote] = useState<IQuote | null>(null);
@@ -65,7 +67,7 @@ export default function QuotesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this quote request?')) return;
+    if (!confirm(t.admin.confirmDeleteQuote)) return;
     try {
       const res = await fetch(`/api/quotes/${id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -87,8 +89,8 @@ export default function QuotesPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Quote Requests</h1>
-          <p className="text-slate-500 mt-1">Review and manage repair quote requests from customers.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t.admin.quotes}</h1>
+          <p className="text-slate-500 mt-1">{t.admin.manageQuotes}</p>
         </div>
         <button
           onClick={fetchQuotes}
@@ -97,7 +99,7 @@ export default function QuotesPage() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          Refresh
+          {t.admin.refresh}
         </button>
       </div>
 
@@ -111,7 +113,7 @@ export default function QuotesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Quotes</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalQuotes}</p>
               <p className="text-2xl font-bold text-slate-900">{totalQuotes}</p>
             </div>
           </div>
@@ -124,7 +126,7 @@ export default function QuotesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Pending</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.pending}</p>
               <p className="text-2xl font-bold text-slate-900">{pendingQuotes}</p>
             </div>
           </div>
@@ -137,7 +139,7 @@ export default function QuotesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Responded</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.responded}</p>
               <p className="text-2xl font-bold text-slate-900">{respondedQuotes}</p>
             </div>
           </div>
@@ -150,7 +152,7 @@ export default function QuotesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Completed</p>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.completed}</p>
               <p className="text-2xl font-bold text-slate-900">{completedQuotes}</p>
             </div>
           </div>
@@ -165,24 +167,24 @@ export default function QuotesPage() {
           </svg>
           <input
             type="text"
-            placeholder="Search quotes (name, email, device)..."
+            placeholder={t.admin.searchQuotesPlaceholder}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
-          {['All', 'pending', 'responded', 'completed'].map((status) => (
+          {['all', 'pending', 'responded', 'completed'].map((status) => (
             <button
               key={status}
-              onClick={() => setSelectedStatus(status)}
+              onClick={() => setSelectedStatus(status === 'all' ? 'All' : status)}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border whitespace-nowrap ${
-                selectedStatus === status
+                (selectedStatus === 'All' && status === 'all') || selectedStatus === status
                   ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white border-slate-200 text-slate-500 hover:border-blue-200 hover:text-blue-600'
               }`}
             >
-              {status.charAt(0).toUpperCase() + status.slice(1)}
+              {t.admin[status as keyof typeof t.admin] || status.charAt(0).toUpperCase() + status.slice(1)}
             </button>
           ))}
         </div>
@@ -194,11 +196,11 @@ export default function QuotesPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Customer</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Device</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.customer}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.getQuote.deviceType}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.date}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.status}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -218,7 +220,7 @@ export default function QuotesPage() {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="text-slate-500 text-sm">
-                      {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : 'N/A'}
+                      {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : t.admin.na}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
@@ -227,7 +229,7 @@ export default function QuotesPage() {
                       quote.status === 'responded' ? 'bg-blue-50 text-blue-700' :
                       'bg-emerald-50 text-emerald-700'
                     }`}>
-                      {quote.status}
+                      {t.admin[quote.status as keyof typeof t.admin] || quote.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -238,7 +240,7 @@ export default function QuotesPage() {
                           setIsDetailsOpen(true);
                         }}
                         className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="View Details"
+                        title={t.admin.viewDetails}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -248,7 +250,7 @@ export default function QuotesPage() {
                       <button
                         onClick={() => handleDelete(quote._id)}
                         className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                        title="Delete Quote"
+                        title={t.admin.delete}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -268,11 +270,11 @@ export default function QuotesPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">No quotes found</h3>
+            <h3 className="text-lg font-bold text-slate-900">{t.admin.noQuotesFound}</h3>
             <p className="text-slate-500 max-w-xs mx-auto mt-2">
               {quotes.length === 0 
-                ? "Any new quote requests will appear here."
-                : "No quotes match your search criteria."}
+                ? t.admin.noQuotesFoundDesc
+                : t.admin.noQuotesFoundFiltered}
             </p>
           </div>
         )}
@@ -285,7 +287,7 @@ export default function QuotesPage() {
           <div className="fixed inset-y-0 right-0 max-w-xl w-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Quote Details</h2>
+                <h2 className="text-xl font-bold text-slate-900">{t.admin.quoteDetails}</h2>
                 <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">ID: {selectedQuote._id.toString()}</p>
               </div>
               <button onClick={() => setIsDetailsOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
@@ -299,13 +301,13 @@ export default function QuotesPage() {
               {/* Status Section */}
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                 <div>
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Current Status</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">{t.admin.currentStatus}</span>
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-bold ${
                     selectedQuote.status === 'pending' ? 'bg-amber-100 text-amber-700' :
                     selectedQuote.status === 'responded' ? 'bg-blue-100 text-blue-700' :
                     'bg-emerald-100 text-emerald-700'
                   }`}>
-                    {selectedQuote.status}
+                    {t.admin[selectedQuote.status as keyof typeof t.admin] || selectedQuote.status}
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -313,13 +315,13 @@ export default function QuotesPage() {
                     onClick={() => handleUpdateStatus(selectedQuote._id as unknown as string, 'responded')}
                     className="px-3 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-all"
                   >
-                    Mark Responded
+                    {t.admin.markResponded}
                   </button>
                   <button 
                     onClick={() => handleUpdateStatus(selectedQuote._id as unknown as string, 'completed')}
                     className="px-3 py-1.5 bg-emerald-600 text-white text-xs font-bold rounded-lg hover:bg-emerald-700 transition-all"
                   >
-                    Mark Completed
+                    {t.admin.markCompleted}
                   </button>
                 </div>
               </div>
@@ -327,39 +329,39 @@ export default function QuotesPage() {
               {/* Customer Info */}
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-1">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Customer Name</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.customerName}</span>
                   <p className="text-slate-900 font-bold text-lg">{selectedQuote.name}</p>
                 </div>
                 <div className="space-y-1 text-right">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Request Date</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.requestDate}</span>
                   <p className="text-slate-900 font-medium">
-                    {selectedQuote.createdAt ? new Date(selectedQuote.createdAt).toLocaleDateString() : 'N/A'}
+                    {selectedQuote.createdAt ? new Date(selectedQuote.createdAt).toLocaleDateString() : t.admin.na}
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Email Address</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.emailAddress}</span>
                   <a href={`mailto:${selectedQuote.email}`} className="text-blue-600 font-bold hover:underline">{selectedQuote.email}</a>
                 </div>
                 <div className="space-y-1 text-right">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Phone Number</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.phoneNumber}</span>
                   <a href={`tel:${selectedQuote.phone}`} className="text-slate-900 font-bold hover:underline">{selectedQuote.phone}</a>
                 </div>
               </div>
 
               {/* Device Details */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">Device Information</h3>
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">{t.admin.deviceInformation}</h3>
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Device Model</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.deviceModel}</span>
                     <p className="text-slate-900 font-bold">{selectedQuote.deviceModel}</p>
                   </div>
                   <div className="space-y-1 text-right">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Category</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.category}</span>
                     <p className="text-slate-900 font-bold capitalize">{selectedQuote.category}</p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Part/Service Needed</span>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.partServiceNeeded}</span>
                     <p className="text-slate-900 font-bold capitalize">{selectedQuote.part}</p>
                   </div>
                 </div>
@@ -367,7 +369,7 @@ export default function QuotesPage() {
 
               {/* Problem Description */}
               <div className="space-y-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Problem Description</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.problemDescription}</span>
                 <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
                   &quot;{selectedQuote.problem}&quot;
                 </div>
@@ -376,7 +378,7 @@ export default function QuotesPage() {
               {/* Images */}
               {selectedQuote.images && selectedQuote.images.length > 0 && (
                 <div className="space-y-3">
-                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">Attached Images</span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.attachedImages}</span>
                   <div className="grid grid-cols-3 gap-3">
                     {selectedQuote.images.map((img: string, idx: number) => (
                       <div key={idx} className="relative aspect-square group cursor-zoom-in rounded-xl overflow-hidden border border-slate-200">
@@ -406,7 +408,7 @@ export default function QuotesPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Delete Quote Request
+                {t.admin.deleteQuoteRequest}
               </button>
             </div>
           </div>
