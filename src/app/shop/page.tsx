@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import ShopClient from './ShopClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Shop",
   description: "Browse our wide range of new and refurbished mobile phones, accessories, and more.",
