@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Contact from '@/models/Contact';
 
+export const dynamic = 'force-dynamic';
+
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();

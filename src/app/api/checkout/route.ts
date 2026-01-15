@@ -3,6 +3,8 @@ import Stripe from 'stripe';
 import dbConnect from '@/lib/db';
 import Order from '@/models/Order';
 
+export const dynamic = 'force-dynamic';
+
 const stripe = process.env.STRIPE_SECRET_KEY 
   ? new Stripe(process.env.STRIPE_SECRET_KEY, {
       apiVersion: '2023-10-16' as any,

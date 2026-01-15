@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Quote from '@/models/Quote';
 
+export const dynamic = 'force-dynamic';
+
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
