@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { IOrder } from '@/models/Order';
+import { formatPriceByCurrency, type SupportedCurrency } from '@/lib/utils';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<IOrder[]>([]);
@@ -47,7 +48,14 @@ export default function OrdersPage() {
   });
 
   const totalOrders = orders.length;
-  const totalRevenue = orders.reduce((sum, order) => sum + (order.total || 0), 0);
+  const revenueByCurrency = orders.reduce(
+    (acc, order: any) => {
+      const currency: SupportedCurrency = order.currency === 'eur' ? 'eur' : 'usd';
+      acc[currency] += order.total || 0;
+      return acc;
+    },
+    { usd: 0, eur: 0 } as Record<SupportedCurrency, number>
+  );
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
   const completedOrders = orders.filter(o => o.status === 'confirmed').length;
 
@@ -130,7 +138,14 @@ export default function OrdersPage() {
             </div>
             <div>
               <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Revenue</p>
-              <p className="text-2xl font-bold text-slate-900">${totalRevenue.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-slate-900">
+                {formatPriceByCurrency(revenueByCurrency.usd, 'usd')}
+              </p>
+              {revenueByCurrency.eur > 0 && (
+                <p className="text-xs font-bold text-slate-500">
+                  {formatPriceByCurrency(revenueByCurrency.eur, 'eur')}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -231,7 +246,9 @@ export default function OrdersPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="font-bold text-slate-900">${order.total}</span>
+                    <span className="font-bold text-slate-900">
+                      {formatPriceByCurrency(order.total, (order.currency || 'usd') as SupportedCurrency)}
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="text-slate-500 text-sm">
@@ -385,8 +402,8 @@ export default function OrdersPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-slate-900">${item.price * item.quantity}</p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">${item.price} each</p>
+                        <p className="font-bold text-slate-900">{formatPriceByCurrency(item.price * item.quantity, (selectedOrder.currency || 'usd') as SupportedCurrency)}</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{formatPriceByCurrency(item.price, (selectedOrder.currency || 'usd') as SupportedCurrency)} each</p>
                       </div>
                     </div>
                   ))}
@@ -400,7 +417,7 @@ export default function OrdersPage() {
                   <span className="text-blue-400">Paid via Stripe</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-3xl font-bold">${selectedOrder.total}</span>
+                  <span className="text-3xl font-bold">{formatPriceByCurrency(selectedOrder.total, (selectedOrder.currency || 'usd') as SupportedCurrency)}</span>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                     <span className="text-xs font-bold uppercase tracking-widest">Payment Verified</span>

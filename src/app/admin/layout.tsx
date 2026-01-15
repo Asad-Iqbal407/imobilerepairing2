@@ -285,7 +285,7 @@ export default function AdminLayout({
                 A
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-bold text-slate-900 leading-none">Tasawar</span>
+                <span className="text-sm font-bold text-slate-900 leading-none">Admin</span>
                 <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mt-1">Administrator</span>
               </div>
             </div>

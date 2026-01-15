@@ -73,10 +73,10 @@ export default async function BlogPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">
-            Latest <span className="text-blue-600">Insights</span>
+            <DynamicText text="Latest" /> <span className="text-blue-600"><DynamicText text="Insights" /></span>
           </h1>
           <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-            Expert advice, repair guides, and industry news to help you get the most out of your technology.
+            <DynamicText text="Expert advice, repair guides, and industry news to help you get the most out of your technology." />
           </p>
         </div>
 
@@ -93,7 +93,7 @@ export default async function BlogPage() {
                 <div className="absolute top-4 left-4 flex gap-2">
                   {post.tags.map(tag => (
                     <span key={tag} className="px-3 py-1 bg-white/90 backdrop-blur-sm text-xs font-bold text-blue-600 rounded-full">
-                      {tag}
+                      <DynamicText text={tag} />
                     </span>
                   ))}
                 </div>
@@ -106,7 +106,7 @@ export default async function BlogPage() {
                   </span>
                   <span className="flex items-center gap-1">
                     <User className="w-4 h-4" />
-                    {post.author}
+                    <DynamicText text={post.author} />
                   </span>
                 </div>
                 <h2 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors">
@@ -121,7 +121,7 @@ export default async function BlogPage() {
                   href={`/blog/${post.slug}`}
                   className="inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all"
                 >
-                  Read Article <ArrowRight className="w-4 h-4" />
+                  <DynamicText text="Read Article" /> <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
             </article>

@@ -117,6 +117,7 @@ export default function Footer() {
                 <div className="flex flex-col">
                   <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Call Us</span>
                   <span className="group-hover:text-white transition-colors">{t.common.phone}</span>
+                  <span className="group-hover:text-white transition-colors">{t.common.phone2}</span>
                 </div>
               </motion.li>
               <motion.li 
@@ -141,20 +142,11 @@ export default function Footer() {
               {t.common.hours}
             </h3>
             <div className="bg-slate-800/30 rounded-[2rem] p-6 border border-slate-700/50">
-              <ul className="space-y-4">
-                <li className="flex justify-between items-center text-slate-400 border-b border-slate-700/50 pb-3">
-                  <span className="font-medium">Mon - Fri</span>
-                  <span className="text-white font-black bg-blue-600/20 px-3 py-1 rounded-lg text-sm">09:00 - 19:00</span>
-                </li>
-                <li className="flex justify-between items-center text-slate-400 border-b border-slate-700/50 pb-3">
-                  <span className="font-medium">Saturday</span>
-                  <span className="text-white font-black bg-blue-600/20 px-3 py-1 rounded-lg text-sm">10:00 - 17:00</span>
-                </li>
-                <li className="flex justify-between items-center text-slate-400">
-                  <span className="font-medium">Sunday</span>
-                  <span className="text-rose-500 font-black bg-rose-500/10 px-3 py-1 rounded-lg text-sm uppercase tracking-widest">Closed</span>
-                </li>
-              </ul>
+              <div className="flex flex-col items-center text-center space-y-2">
+                <span className="text-white font-black bg-blue-600/20 px-4 py-2 rounded-xl text-lg border border-blue-500/20">
+                  {t.common.everyDay}
+                </span>
+              </div>
             </div>
           </motion.div>
         </motion.div>
@@ -169,6 +161,9 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start gap-2">
             <p className="text-slate-500 text-sm font-medium">
               &copy; {new Date().getFullYear()} <span className="text-white font-bold">{t.common.shopName}</span>. {t.common.rights}
+            </p>
+            <p className="text-xs text-slate-500 font-bold tracking-widest uppercase">
+              NIF: {t.common.nif}
             </p>
             <p className="text-xs text-slate-600 flex items-center gap-1">
               Crafted with <span className="text-rose-500 animate-pulse">❤️</span> for better mobile experiences.

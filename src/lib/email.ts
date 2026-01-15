@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const ADMIN_EMAIL = 'meiqbal2002@gmail.com';
+const ADMIN_EMAIL = 'umpulsiva@gmail.com';
 
 interface OrderItem {
   productId: string;

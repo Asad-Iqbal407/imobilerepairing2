@@ -165,22 +165,22 @@ export default async function BlogPost({ params }: Props) {
             href="/blog" 
             className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors font-bold text-sm uppercase tracking-widest"
           >
-            <ArrowLeft className="w-4 h-4" /> Back to Blog
+            <ArrowLeft className="w-4 h-4" /> <DynamicText text="Back to Blog" />
           </Link>
           <div className="flex flex-wrap gap-3 mb-6">
             {post.tags.map((tag: string) => (
               <span key={tag} className="px-3 py-1 bg-blue-600/80 backdrop-blur-md rounded-full text-xs font-bold">
-                {tag}
+                <DynamicText text={tag} />
               </span>
             ))}
           </div>
           <h1 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
-            {post.title}
+            <DynamicText text={post.title} />
           </h1>
           <div className="flex items-center gap-6 text-sm font-medium text-white/80">
             <span className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              {post.author}
+              <DynamicText text={post.author} />
             </span>
             <span className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
@@ -188,7 +188,7 @@ export default async function BlogPost({ params }: Props) {
             </span>
             <span className="flex items-center gap-2">
               <Clock className="w-4 h-4" />
-              5 min read
+              <DynamicText text="5 min read" />
             </span>
           </div>
         </div>

@@ -5,6 +5,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export type SupportedLanguage = 'en' | 'pt';
+export type SupportedCurrency = 'usd' | 'eur';
+
 export const isValidUrl = (url: string) => {
   try {
     if (!url || typeof url !== 'string') return false;
@@ -16,6 +19,36 @@ export const isValidUrl = (url: string) => {
   } catch {
     return false;
   }
+};
+
+export const getCurrencyForLanguage = (language: SupportedLanguage): SupportedCurrency =>
+  language === 'pt' ? 'eur' : 'usd';
+
+export const getUsdToEurRate = (): number => {
+  const raw = process.env.NEXT_PUBLIC_USD_TO_EUR_RATE;
+  const parsed = raw ? Number(raw) : NaN;
+  if (!Number.isFinite(parsed) || parsed <= 0) return 0.92;
+  return parsed;
+};
+
+export const convertPriceByLanguage = (priceUsd: number, language: SupportedLanguage): number => {
+  if (!Number.isFinite(priceUsd)) return 0;
+  if (language !== 'pt') return priceUsd;
+  return priceUsd * getUsdToEurRate();
+};
+
+export const formatPriceByLanguage = (priceUsd: number, language: SupportedLanguage): string => {
+  const currency = getCurrencyForLanguage(language);
+  const value = convertPriceByLanguage(priceUsd, language);
+  const locale = language === 'pt' ? 'pt-PT' : 'en-US';
+  const currencyCode = currency === 'eur' ? 'EUR' : 'USD';
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(value);
+};
+
+export const formatPriceByCurrency = (value: number, currency: SupportedCurrency): string => {
+  const locale = currency === 'eur' ? 'pt-PT' : 'en-US';
+  const currencyCode = currency === 'eur' ? 'EUR' : 'USD';
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(value);
 };
 
 export const getServiceEmoji = (title: string, description: string = '') => {

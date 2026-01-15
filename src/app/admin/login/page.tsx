@@ -16,8 +16,8 @@ export default function LoginPage() {
     setError('');
 
     // Predefined credentials
-    const adminEmail = 'tasawar@gmail.com';
-    const adminPassword = 'Tasawar123';
+    const adminEmail = 'umpulsiva@gmail.com';
+    const adminPassword = 'Portugal2026@';
 
     if (email === adminEmail && password === adminPassword) {
       localStorage.setItem('is_admin_authenticated', 'true');

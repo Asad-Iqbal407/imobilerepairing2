@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useData } from "@/context/DataContext";
 import Link from "next/link";
 import Image from "next/image";
-import { getServiceEmoji, isValidUrl } from "@/lib/utils";
+import { formatPriceByLanguage, getServiceEmoji, isValidUrl } from "@/lib/utils";
 import DynamicText from "@/components/DynamicText";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
@@ -12,7 +12,7 @@ import { ServiceSkeleton } from "@/components/Skeleton";
 
 export default function ServicesClient() {
   const { services, isLoading } = useData();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -84,7 +84,7 @@ export default function ServicesClient() {
                     <div className="flex flex-col">
                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1.5">{t.common.from}</span>
                       <span className="text-2xl font-black text-slate-900 tracking-tight">
-                        ${service.price}
+                        {formatPriceByLanguage(service.price, language)}
                       </span>
                     </div>
                     <Link

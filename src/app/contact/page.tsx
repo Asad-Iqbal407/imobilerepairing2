@@ -99,6 +99,19 @@ export default function Contact() {
                   <div>
                     <p className="text-blue-100 text-sm font-bold uppercase tracking-widest mb-1">{t.contact.phoneLabel}</p>
                     <p className="text-xl font-medium">{t.common.phone}</p>
+                    <p className="text-xl font-medium">{t.common.phone2}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-5">
+                  <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-blue-100 text-sm font-bold uppercase tracking-widest mb-1">{t.contact.nifLabel}</p>
+                    <p className="text-xl font-medium">{t.common.nif}</p>
                   </div>
                 </div>
 
@@ -123,9 +136,7 @@ export default function Contact() {
                   <div>
                     <p className="text-blue-100 text-sm font-bold uppercase tracking-widest mb-1">{t.contact.hoursLabel}</p>
                     <div className="space-y-1 font-medium">
-                      <p className="flex justify-between gap-4"><span>Mon-Fri:</span> <span>9am - 7pm</span></p>
-                      <p className="flex justify-between gap-4"><span>Sat:</span> <span>10am - 5pm</span></p>
-                      <p className="flex justify-between gap-4 text-white/60"><span>Sun:</span> <span>Closed</span></p>
+                      <p className="text-xl">{t.common.everyDay}</p>
                     </div>
                   </div>
                 </div>

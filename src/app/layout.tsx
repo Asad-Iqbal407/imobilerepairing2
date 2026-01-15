@@ -64,7 +64,8 @@ export default function RootLayout({
     "image": "https://imobile.com/og-image.jpg",
     "@id": "https://imobile.com",
     "url": "https://imobile.com",
-    "telephone": "+351913709717",
+    "telephone": ["+351 913 709 717", "+351 938 210 334"],
+    "taxID": "317822453",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Avenida Almirante Reies 102",
@@ -84,10 +85,12 @@ export default function RootLayout({
         "Tuesday",
         "Wednesday",
         "Thursday",
-        "Friday"
+        "Friday",
+        "Saturday",
+        "Sunday"
       ],
       "opens": "09:00",
-      "closes": "19:00"
+      "closes": "21:00"
     },
     "sameAs": [
       "https://facebook.com/imobile",

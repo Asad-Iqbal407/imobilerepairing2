@@ -15,7 +15,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Stripe Secret Key is not configured. Please add it to your .env.local file.' }, { status: 500 });
     }
 
-    const { items, customer, total } = await request.json();
+    const { items, customer, total, currency } = await request.json();
+    const normalizedCurrency = currency === 'eur' ? 'eur' : 'usd';
 
     await dbConnect();
 
@@ -32,6 +33,7 @@ export async function POST(request: NextRequest) {
         quantity: item.quantity,
       })),
       total,
+      currency: normalizedCurrency,
       status: 'pending',
     });
 
@@ -40,7 +42,7 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: items.map((item: any) => ({
         price_data: {
-          currency: 'usd',
+          currency: normalizedCurrency,
           product_data: {
             name: item.title,
           },

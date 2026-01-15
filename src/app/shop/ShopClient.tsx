@@ -9,15 +9,16 @@ import DynamicText from '@/components/DynamicText';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Tag } from 'lucide-react';
 import { ProductSkeleton } from '@/components/Skeleton';
-import { isValidUrl } from '@/lib/utils';
+import { convertPriceByLanguage, formatPriceByLanguage, isValidUrl } from '@/lib/utils';
 
 export default function ShopClient() {
   const { addToCart } = useCart();
   const { products, isLoading } = useData();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({ min: 0, max: 2000 });
+  const currencySymbol = language === 'pt' ? '€' : '$';
 
   const categories = [
     { id: 'All', label: t.shop.filterAll, icon: "🏷️" },
@@ -46,9 +47,8 @@ export default function ShopClient() {
       product.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     // 3. Price Filter
-    const matchesPrice = 
-      product.price >= priceRange.min && 
-      product.price <= priceRange.max;
+    const displayPrice = convertPriceByLanguage(product.price, language);
+    const matchesPrice = displayPrice >= priceRange.min && displayPrice <= priceRange.max;
 
     return matchesCategory && matchesSearch && matchesPrice;
   });
@@ -96,7 +96,7 @@ export default function ShopClient() {
               
               <div className="flex items-center gap-4 w-full md:w-auto">
                 <div className="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
-                  <span className="text-sm font-bold text-slate-500">$</span>
+                  <span className="text-sm font-bold text-slate-500">{currencySymbol}</span>
                   <input
                     type="number"
                     min="0"
@@ -108,7 +108,7 @@ export default function ShopClient() {
                 </div>
                 <span className="text-slate-400 font-bold">-</span>
                 <div className="flex items-center gap-2 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200">
-                  <span className="text-sm font-bold text-slate-500">$</span>
+                  <span className="text-sm font-bold text-slate-500">{currencySymbol}</span>
                   <input
                     type="number"
                     min="0"
@@ -189,7 +189,7 @@ export default function ShopClient() {
                         <div className="flex flex-col">
                           <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1.5">{t.common.price}</span>
                           <span className="text-2xl font-black text-slate-900 tracking-tight">
-                            ${product.price}
+                            {formatPriceByLanguage(product.price, language)}
                           </span>
                         </div>
                         <motion.button

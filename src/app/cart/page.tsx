@@ -5,12 +5,13 @@ import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import { convertPriceByLanguage, formatPriceByLanguage, getCurrencyForLanguage } from '@/lib/utils';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CartPage() {
   const { items, removeFromCart, total, clearCart } = useCart();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -32,13 +33,21 @@ export default function CartPage() {
         throw new Error('Stripe failed to load. Check your internet connection or API key.');
       }
 
+      const currency = getCurrencyForLanguage(language);
+      const checkoutItems = items.map((item) => ({
+        ...item,
+        price: convertPriceByLanguage(item.price, language),
+      }));
+      const checkoutTotal = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          items,
+          currency,
+          items: checkoutItems,
           customer: customerInfo,
-          total,
+          total: checkoutTotal,
         }),
       });
 
@@ -140,7 +149,7 @@ export default function CartPage() {
                       </div>
                     </div>
                     <div className="flex items-center justify-between sm:justify-end gap-8">
-                      <span className="text-2xl font-black text-slate-900 tracking-tight">${item.price * item.quantity}</span>
+                      <span className="text-2xl font-black text-slate-900 tracking-tight">{formatPriceByLanguage(item.price * item.quantity, language)}</span>
                       <button
                         onClick={() => removeFromCart(item.id)}
                         className="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-200"
@@ -156,7 +165,7 @@ export default function CartPage() {
               </ul>
               <div className="p-8 bg-slate-900 text-white flex justify-between items-center">
                 <span className="text-xl font-bold opacity-70">{t.cart.total}</span>
-                <span className="text-4xl font-black tracking-tighter">${total}</span>
+                <span className="text-4xl font-black tracking-tighter">{formatPriceByLanguage(total, language)}</span>
               </div>
             </div>
 
