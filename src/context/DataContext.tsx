@@ -14,36 +14,19 @@ export interface Service {
 export interface Product {
   id: string;
   name: string;
-  category: 
-    | 'New Phones' 
-    | 'Refurbished Phones' 
-    | '2nd Hand Phones' 
-    | 'Tablets' 
-    | 'Cables' 
-    | 'Chargers' 
-    | 'Powerbanks' 
-    | 'Earbuds' 
-    | 'Adapters' 
-    | 'Speakers' 
-    | 'Cases' 
-    | 'Other';
+  category: string;
   price: number;
   image: string;
   description: string;
-}
-
-export interface Review {
-  id: string;
-  user: string;
-  rating: number;
-  comment: string;
-  date: string;
+  condition?: string;
+  batteryHealth?: number;
+  memory?: string;
+  signsOfWear?: string[];
 }
 
 interface DataContextType {
   services: Service[];
   products: Product[];
-  reviews: Review[];
   isLoading: boolean;
   addService: (service: Service) => void;
   updateService: (service: Service) => void;
@@ -51,8 +34,6 @@ interface DataContextType {
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
   deleteProduct: (id: string) => void;
-  addReview: (review: Omit<Review, 'id' | 'date'>) => Promise<boolean>;
-  deleteReview: (id: string) => Promise<boolean>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -60,7 +41,6 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({ children }: { children: React.ReactNode }) {
   const [services, setServices] = useState<Service[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch data from API
@@ -68,10 +48,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const [servicesRes, productsRes, reviewsRes] = await Promise.all([
+        const [servicesRes, productsRes] = await Promise.all([
           fetch('/api/services'),
           fetch('/api/products'),
-          fetch('/api/reviews')
         ]);
 
         if (servicesRes.ok) {
@@ -87,14 +66,6 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           setProducts(productsData.map((p: any, index: number) => ({ 
             ...p, 
             id: p._id || p.id || `product-${index}-${Date.now()}` 
-          })));
-        }
-
-        if (reviewsRes.ok) {
-          const reviewsData = await reviewsRes.json();
-          setReviews(reviewsData.map((r: any, index: number) => ({ 
-            ...r, 
-            id: r._id || r.id || `review-${index}-${Date.now()}` 
           })));
         }
       } catch (error) {
@@ -203,55 +174,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const addReview = async (review: Omit<Review, 'id' | 'date'>) => {
-    try {
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(review),
-      });
-      if (res.ok) {
-        const newReview = await res.json();
-        setReviews(prev => [{ ...newReview, id: newReview._id }, ...prev]);
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Failed to add review:', error);
-      return false;
-    }
-  };
-
-  const deleteReview = async (id: string) => {
-    try {
-      const res = await fetch(`/api/reviews/${id}`, {
-        method: 'DELETE',
-      });
-      if (res.ok) {
-        setReviews(prev => prev.filter(r => r.id !== id));
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Failed to delete review:', error);
-      return false;
-    }
-  };
-
   return (
     <DataContext.Provider value={{ 
       services, 
       products, 
-      reviews, 
       isLoading,
       addService, 
       updateService, 
       deleteService, 
       addProduct, 
       updateProduct, 
-      deleteProduct,
-      addReview,
-      deleteReview
+      deleteProduct
     }}>
       {children}
     </DataContext.Provider>

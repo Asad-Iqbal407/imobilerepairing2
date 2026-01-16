@@ -15,14 +15,14 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://imobile.com'),
   title: {
-    default: "IMOBILE - Expert Mobile Phone Repair",
-    template: "%s | IMOBILE"
+    default: "Tertulia Impulsiva - Expert Mobile Phone Repair",
+    template: "%s | Tertulia Impulsiva"
   },
   description: "Fast, reliable, and affordable mobile phone repair services for all major brands. Screen replacement, battery repair, and more.",
   keywords: ["mobile repair", "phone repair", "screen replacement", "battery replacement", "iPhone repair", "Samsung repair"],
-  authors: [{ name: "IMOBILE Team" }],
-  creator: "IMOBILE",
-  publisher: "IMOBILE",
+  authors: [{ name: "Tertulia Impulsiva Team" }],
+  creator: "Tertulia Impulsiva",
+  publisher: "Tertulia Impulsiva",
   formatDetection: {
     email: false,
     address: false,
@@ -32,21 +32,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://imobile.com",
-    siteName: "IMOBILE",
-    title: "IMOBILE - Expert Mobile Phone Repair",
+    siteName: "Tertulia Impulsiva",
+    title: "Tertulia Impulsiva - Expert Mobile Phone Repair",
     description: "Fast, reliable, and affordable mobile phone repair services.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "IMOBILE Repair Services",
+        alt: "Tertulia Impulsiva Repair Services",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "IMOBILE - Expert Mobile Phone Repair",
+    title: "Tertulia Impulsiva - Expert Mobile Phone Repair",
     description: "Fast, reliable, and affordable mobile phone repair services.",
     images: ["/og-image.jpg"],
   },
@@ -60,7 +60,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "IMOBILE",
+    "name": "Tertulia Impulsiva",
     "image": "https://imobile.com/og-image.jpg",
     "@id": "https://imobile.com",
     "url": "https://imobile.com",
@@ -68,7 +68,7 @@ export default function RootLayout({
     "taxID": "317822453",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Avenida Almirante Reies 102",
+      "streetAddress": "Avenida Almirante Reies 102C",
       "addressLocality": "lisboa",
       "postalCode": "1150 022",
       "addressCountry": "PT"
@@ -99,7 +99,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="pt">
       <head>
         <script
           type="application/ld+json"

@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import type { IContact } from '@/models/Contact';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function MessagesPage() {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<IContact[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<IContact | null>(null);
@@ -148,7 +150,7 @@ export default function MessagesPage() {
           </svg>
           <input
             type="text"
-            placeholder="Search messages..."
+            placeholder={t.admin.searchMessagesPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-900"

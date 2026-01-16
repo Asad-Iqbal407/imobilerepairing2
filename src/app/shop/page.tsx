@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Shop",
   description: "Browse our wide range of new and refurbished mobile phones, accessories, and more.",
   openGraph: {
-    title: "Shop | IMOBILE",
+    title: "Shop | Tertulia Impulsiva",
     description: "Browse our wide range of new and refurbished mobile phones, accessories, and more.",
   },
 };

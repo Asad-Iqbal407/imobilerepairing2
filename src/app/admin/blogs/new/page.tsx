@@ -4,16 +4,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function NewPostPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
     content: '',
     excerpt: '',
-    author: 'IMOBILE Team',
+    author: 'Tertulia Impulsiva Team',
     tags: '',
     coverImage: '',
     isPublished: true
@@ -37,10 +39,10 @@ export default function NewPostPage() {
 
       if (!res.ok) throw new Error('Failed to create post');
       
-      toast.success('Post created successfully');
+      toast.success(t.admin.postCreated);
       router.push('/admin/blogs');
     } catch (error) {
-      toast.error('Failed to create post');
+      toast.error(t.admin.postCreateFailed);
     } finally {
       setLoading(false);
     }
@@ -67,25 +69,25 @@ export default function NewPostPage() {
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
           </svg>
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Create New Post</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t.admin.createNewPost}</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Title</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postTitle}</label>
               <input
                 type="text"
                 required
                 value={formData.title}
                 onChange={handleTitleChange}
                 className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
-                placeholder="Enter post title"
+                placeholder={t.admin.postTitlePlaceholder}
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Slug</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postSlug}</label>
               <input
                 type="text"
                 required
@@ -97,32 +99,32 @@ export default function NewPostPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Excerpt</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postExcerpt}</label>
             <textarea
               required
               rows={3}
               value={formData.excerpt}
               onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
               className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
-              placeholder="Short description for the card..."
+              placeholder={t.admin.postExcerptPlaceholder}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Content (HTML Support)</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postContent}</label>
             <textarea
               required
               rows={15}
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all font-mono text-sm"
-              placeholder="<p>Write your article content here...</p>"
+              placeholder={t.admin.postContentPlaceholder}
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Author</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postAuthor}</label>
               <input
                 type="text"
                 required
@@ -132,25 +134,25 @@ export default function NewPostPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Tags (comma separated)</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postTags}</label>
               <input
                 type="text"
                 value={formData.tags}
                 onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                 className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
-                placeholder="Tech, Mobile, Repair"
+                placeholder={t.admin.postTagsPlaceholder}
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Cover Image URL</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postCoverImageUrl}</label>
             <input
               type="url"
               value={formData.coverImage}
               onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
               className="w-full px-4 py-2 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition-all"
-              placeholder="https://example.com/image.jpg"
+              placeholder={t.admin.postCoverImagePlaceholder}
             />
           </div>
 
@@ -162,7 +164,7 @@ export default function NewPostPage() {
               onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
               className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
             />
-            <label htmlFor="isPublished" className="text-sm font-bold text-slate-700">Publish immediately</label>
+            <label htmlFor="isPublished" className="text-sm font-bold text-slate-700">{t.admin.publishImmediately}</label>
           </div>
         </div>
 
@@ -171,14 +173,14 @@ export default function NewPostPage() {
             href="/admin/blogs"
             className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all"
           >
-            Cancel
+            {t.admin.cancel}
           </Link>
           <button
             type="submit"
             disabled={loading}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50"
           >
-            {loading ? 'Creating...' : 'Create Post'}
+            {loading ? t.admin.creating : t.admin.createPost}
           </button>
         </div>
       </form>

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
 import { useLanguage } from '@/context/LanguageContext';
+
+type CategoryItem = { id: string; name: string; icon: string; label: string };
 
 export default function ManageProducts() {
   const { products, addProduct, updateProduct, deleteProduct } = useData();
@@ -14,6 +16,10 @@ export default function ManageProducts() {
   const [isUploading, setIsUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [apiCategories, setApiCategories] = useState<Array<{ id: string; name: string; icon?: string }>>([]);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const [isSavingCategory, setIsSavingCategory] = useState(false);
+  const [categoryForm, setCategoryForm] = useState<{ id?: string; name: string; icon: string }>({ name: '', icon: '' });
   const [currentProduct, setCurrentProduct] = useState<Product>({
     id: '',
     name: '',
@@ -21,6 +27,10 @@ export default function ManageProducts() {
     price: 0,
     image: '',
     description: '',
+    condition: '',
+    batteryHealth: undefined,
+    memory: '',
+    signsOfWear: [],
   });
 
   // Simulate loading state for consistency with other pages
@@ -31,21 +41,137 @@ export default function ManageProducts() {
     return () => clearTimeout(timer);
   }, []);
 
-  const categories = [
-    { id: 'All', label: t.admin.all, icon: '🏷️' },
-    { id: 'New Phones', label: t.shop.filterNewPhones, icon: '📱' },
-    { id: 'Refurbished Phones', label: t.shop.filterRefurbishedPhones, icon: '🔄' },
-    { id: '2nd Hand Phones', label: t.shop.filterSecondHandPhones, icon: '🤝' },
-    { id: 'Tablets', label: t.shop.filterTablets, icon: '📟' },
-    { id: 'Cables', label: t.shop.filterCables, icon: '🔌' },
-    { id: 'Chargers', label: t.shop.filterChargers, icon: '⚡' },
-    { id: 'Powerbanks', label: t.shop.filterPowerbanks, icon: '🔋' },
-    { id: 'Earbuds', label: t.shop.filterEarbuds, icon: '🎧' },
-    { id: 'Adapters', label: t.shop.filterAdapters, icon: '🔌' },
-    { id: 'Speakers', label: t.shop.filterSpeakers, icon: '🔊' },
-    { id: 'Cases', label: t.shop.filterCases, icon: '📱' },
-    { id: 'Other', label: t.shop.filterOther, icon: '📦' }
-  ];
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('/api/categories');
+      if (!res.ok) return;
+      const data = await res.json();
+      const normalized = Array.isArray(data)
+        ? data
+            .map((c: any) => ({
+              id: (c?._id || c?.id || '').toString(),
+              name: typeof c?.name === 'string' ? c.name : '',
+              icon: typeof c?.icon === 'string' ? c.icon : undefined,
+            }))
+            .filter((c: any) => c.id && c.name)
+        : [];
+      setApiCategories(normalized);
+    } catch {
+      return;
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const getCategoryLabel = useCallback((name: string) => {
+    const normalized = name.trim().toLowerCase();
+    if (normalized === 'new phones') return t.shop.filterNewPhones;
+    if (normalized === 'refurbished phones') return t.shop.filterRefurbishedPhones;
+    if (normalized === '2nd hand phones') return t.shop.filterSecondHandPhones;
+    if (normalized === 'tablets') return t.shop.filterTablets;
+    if (normalized === 'cables') return t.shop.filterCables;
+    if (normalized === 'chargers') return t.shop.filterChargers;
+    if (normalized === 'powerbanks') return t.shop.filterPowerbanks;
+    if (normalized === 'earbuds') return t.shop.filterEarbuds;
+    if (normalized === 'adapters') return t.shop.filterAdapters;
+    if (normalized === 'speakers') return t.shop.filterSpeakers;
+    if (normalized === 'cases') return t.shop.filterCases;
+    if (normalized === 'other') return t.shop.filterOther;
+    return name;
+  }, [t]);
+
+  const categories: CategoryItem[] = useMemo(() => {
+    const baseFromApi = apiCategories
+      .slice()
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((c) => ({
+        id: c.name,
+        name: c.name,
+        icon: c.icon || '🏷️',
+        label: getCategoryLabel(c.name),
+      }));
+
+    const fallback: CategoryItem[] = [
+      { id: 'New Phones', name: 'New Phones', label: t.shop.filterNewPhones, icon: '📱' },
+      { id: 'Refurbished Phones', name: 'Refurbished Phones', label: t.shop.filterRefurbishedPhones, icon: '🔄' },
+      { id: '2nd Hand Phones', name: '2nd Hand Phones', label: t.shop.filterSecondHandPhones, icon: '🤝' },
+      { id: 'Tablets', name: 'Tablets', label: t.shop.filterTablets, icon: '📟' },
+      { id: 'Cables', name: 'Cables', label: t.shop.filterCables, icon: '🔌' },
+      { id: 'Chargers', name: 'Chargers', label: t.shop.filterChargers, icon: '⚡' },
+      { id: 'Powerbanks', name: 'Powerbanks', label: t.shop.filterPowerbanks, icon: '🔋' },
+      { id: 'Earbuds', name: 'Earbuds', label: t.shop.filterEarbuds, icon: '🎧' },
+      { id: 'Adapters', name: 'Adapters', label: t.shop.filterAdapters, icon: '🔌' },
+      { id: 'Speakers', name: 'Speakers', label: t.shop.filterSpeakers, icon: '🔊' },
+      { id: 'Cases', name: 'Cases', label: t.shop.filterCases, icon: '📱' },
+      { id: 'Other', name: 'Other', label: t.shop.filterOther, icon: '📦' },
+    ];
+
+    const base = baseFromApi.length > 0 ? baseFromApi : fallback;
+    return [{ id: 'All', name: 'All', label: t.admin.all, icon: '🏷️' }, ...base];
+  }, [apiCategories, getCategoryLabel, t.admin.all, t.shop.filterAdapters, t.shop.filterCables, t.shop.filterCases, t.shop.filterChargers, t.shop.filterEarbuds, t.shop.filterNewPhones, t.shop.filterOther, t.shop.filterPowerbanks, t.shop.filterRefurbishedPhones, t.shop.filterSecondHandPhones, t.shop.filterSpeakers, t.shop.filterTablets]);
+
+  const categoriesForSelect = useMemo(() => {
+    const base = categories.filter((c) => c.id !== 'All');
+    if (currentProduct.category && !base.some((c) => c.id === currentProduct.category)) {
+      return [
+        { id: currentProduct.category, name: currentProduct.category, label: currentProduct.category, icon: '🏷️' },
+        ...base,
+      ];
+    }
+    return base;
+  }, [categories, currentProduct.category]);
+
+  const saveCategory = async () => {
+    const name = categoryForm.name.trim();
+    const icon = categoryForm.icon.trim();
+    if (!name) return;
+    setIsSavingCategory(true);
+    try {
+      if (categoryForm.id) {
+        const res = await fetch(`/api/categories/${categoryForm.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon }),
+        });
+        if (!res.ok) throw new Error('failed');
+      } else {
+        const res = await fetch('/api/categories', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, icon }),
+        });
+        if (!res.ok) throw new Error('failed');
+      }
+      await fetchCategories();
+      setCategoryForm({ name: '', icon: '' });
+    } catch {
+      alert(t.admin.saveError);
+    } finally {
+      setIsSavingCategory(false);
+    }
+  };
+
+  const editCategory = (category: { id: string; name: string; icon?: string }) => {
+    setCategoryForm({ id: category.id, name: category.name, icon: category.icon || '' });
+    setIsCategoriesOpen(true);
+  };
+
+  const deleteCategory = async (id: string, name: string) => {
+    if (!confirm(t.admin.confirmDelete)) return;
+    try {
+      const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        if (currentProduct.category === name) {
+          setCurrentProduct({ ...currentProduct, category: 'Other' });
+        }
+        await fetchCategories();
+      }
+    } catch {
+      return;
+    }
+  };
 
   const isValidUrl = (url: string) => {
     try {
@@ -91,6 +217,10 @@ export default function ManageProducts() {
       price: product.price || 0,
       image: product.image || '',
       description: product.description || '',
+      condition: product.condition || '',
+      batteryHealth: product.batteryHealth,
+      memory: product.memory || '',
+      signsOfWear: Array.isArray(product.signsOfWear) ? product.signsOfWear : [],
     });
     setIsEditing(true);
     setIsFormOpen(true);
@@ -172,6 +302,10 @@ export default function ManageProducts() {
       price: 0,
       image: '',
       description: '',
+      condition: '',
+      batteryHealth: undefined,
+      memory: '',
+      signsOfWear: [],
     });
     setIsEditing(false);
   };
@@ -196,18 +330,32 @@ export default function ManageProducts() {
           <h1 className="text-3xl font-bold text-slate-900">{t.admin.manageProducts}</h1>
           <p className="text-slate-500 mt-1">{t.admin.manageProductsDesc}</p>
         </div>
-        <button
-          onClick={() => {
-            resetForm();
-            setIsFormOpen(true);
-          }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          {t.admin.addProduct}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => {
+              setCategoryForm({ name: '', icon: '' });
+              setIsCategoriesOpen(true);
+            }}
+            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V7a2 2 0 00-2-2H6a2 2 0 00-2 2v6m16 0v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6m16 0H4" />
+            </svg>
+            {t.admin.manageCategories}
+          </button>
+          <button
+            onClick={() => {
+              resetForm();
+              setIsFormOpen(true);
+            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            {t.admin.addProduct}
+          </button>
+        </div>
       </div>
 
       {/* Stats Section */}
@@ -419,7 +567,7 @@ export default function ManageProducts() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. iPhone 15 Pro"
+                  placeholder={t.admin.productNamePlaceholder}
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
                   value={currentProduct.name || ''}
                   onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
@@ -432,9 +580,9 @@ export default function ManageProducts() {
                   <select
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium appearance-none"
                     value={currentProduct.category || 'New Phones'}
-                    onChange={(e) => setCurrentProduct({ ...currentProduct, category: e.target.value as any })}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, category: e.target.value })}
                   >
-                    {categories.filter(c => c.id !== 'All').map(category => (
+                    {categoriesForSelect.map(category => (
                       <option key={category.id} value={category.id}>
                         {category.icon} {category.label}
                       </option>
@@ -549,6 +697,67 @@ export default function ManageProducts() {
                 </div>
               </div>
 
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.shop.deviceCondition}</label>
+                    <input
+                      type="text"
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+                      value={currentProduct.condition || ''}
+                      onChange={(e) => setCurrentProduct({ ...currentProduct, condition: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.shop.batteryHealth} (%)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      max={100}
+                      step={1}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-bold"
+                      value={typeof currentProduct.batteryHealth === 'number' ? currentProduct.batteryHealth : ''}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        if (raw === '') {
+                          setCurrentProduct({ ...currentProduct, batteryHealth: undefined });
+                          return;
+                        }
+                        const val = Number(raw);
+                        const clamped = Number.isFinite(val) ? Math.min(100, Math.max(0, Math.round(val))) : undefined;
+                        setCurrentProduct({ ...currentProduct, batteryHealth: clamped });
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.shop.memory}</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+                    value={currentProduct.memory || ''}
+                    onChange={(e) => setCurrentProduct({ ...currentProduct, memory: e.target.value })}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.shop.signsOfWear}</label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+                    value={(currentProduct.signsOfWear || []).join(', ')}
+                    onChange={(e) => {
+                      const parsed = e.target.value
+                        .split(',')
+                        .map((s) => s.trim())
+                        .filter(Boolean);
+                      setCurrentProduct({ ...currentProduct, signsOfWear: parsed });
+                    }}
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.description}</label>
                 <textarea
@@ -577,6 +786,124 @@ export default function ManageProducts() {
               >
                 {isEditing ? t.admin.saveChanges : t.admin.addProduct}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isCategoriesOpen && (
+        <div className="fixed inset-0 z-[100] overflow-hidden">
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setIsCategoriesOpen(false)} />
+          <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+              <h2 className="text-xl font-bold text-slate-900">{t.admin.manageCategories}</h2>
+              <button onClick={() => setIsCategoriesOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.categoryName}</label>
+                    <input
+                      type="text"
+                      value={categoryForm.name}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, name: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.categoryIcon}</label>
+                    <input
+                      type="text"
+                      value={categoryForm.icon}
+                      onChange={(e) => setCategoryForm({ ...categoryForm, icon: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setCategoryForm({ name: '', icon: '' })}
+                    className="flex-1 py-3 px-4 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-white/80 transition-all"
+                  >
+                    {t.admin.cancel}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={saveCategory}
+                    disabled={isSavingCategory}
+                    className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-60"
+                  >
+                    {categoryForm.id ? t.admin.saveChanges : t.admin.addCategory}
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">{t.admin.categories}</h3>
+                  <button
+                    type="button"
+                    onClick={fetchCategories}
+                    className="text-xs font-bold text-blue-600 hover:underline"
+                  >
+                    {t.admin.refresh}
+                  </button>
+                </div>
+                <div className="divide-y divide-slate-100">
+                  {apiCategories
+                    .slice()
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map((c) => (
+                      <div key={c.id} className="px-6 py-4 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-lg">
+                            {c.icon || '🏷️'}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-slate-900 truncate">{c.name}</p>
+                            <p className="text-xs text-slate-400 font-bold uppercase tracking-widest truncate">{getCategoryLabel(c.name)}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => editCategory(c)}
+                            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                            title={t.admin.edit}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            disabled={c.name.trim().toLowerCase() === 'other'}
+                            onClick={() => deleteCategory(c.id, c.name)}
+                            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400"
+                            title={t.admin.delete}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  {apiCategories.length === 0 && (
+                    <div className="px-6 py-10 text-center text-slate-500 font-medium">
+                      {t.admin.noCategoriesFound}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

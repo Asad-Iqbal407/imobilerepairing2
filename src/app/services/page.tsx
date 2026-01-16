@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Repair Services",
   description: "Expert mobile phone repair services including screen replacement, battery repair, water damage, and more for all major brands.",
   openGraph: {
-    title: "Repair Services | IMOBILE",
+    title: "Repair Services | Tertulia Impulsiva",
     description: "Expert mobile phone repair services for iPhone, Samsung, and more.",
   },
 };

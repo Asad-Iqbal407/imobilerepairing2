@@ -3,7 +3,6 @@ import Contact from '../models/Contact';
 import Order from '../models/Order';
 import Product from '../models/Product';
 import Quote from '../models/Quote';
-import Review from '../models/Review';
 import Service from '../models/Service';
 
 export async function initDatabase() {
@@ -13,7 +12,6 @@ export async function initDatabase() {
     { name: 'Order', model: Order },
     { name: 'Product', model: Product },
     { name: 'Quote', model: Quote },
-    { name: 'Review', model: Review },
     { name: 'Service', model: Service },
   ];
 

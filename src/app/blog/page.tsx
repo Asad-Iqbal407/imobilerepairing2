@@ -11,7 +11,7 @@ import DynamicText from '@/components/DynamicText';
 
 export const metadata: Metadata = {
   title: 'Blog | Insights & Repair Tips',
-  description: 'Latest news, repair guides, and technology insights from the IMOBILE expert team.',
+  description: 'Latest news, repair guides, and technology insights from the Tertulia Impulsiva expert team.',
 };
 
 interface BlogPost {
@@ -29,7 +29,7 @@ const fallbackPosts: BlogPost[] = [
     slug: 'common-iphone-battery-issues',
     title: '5 Signs Your iPhone Needs a Battery Replacement',
     excerpt: 'Is your iPhone draining fast? Learn the top signs that indicate it is time for a new battery.',
-    author: 'IMOBILE Team',
+    author: 'Tertulia Impulsiva Team',
     createdAt: new Date('2025-01-05').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1596558450255-7c0b7be9d56a?q=80&w=1000&auto=format&fit=crop',
     tags: ['iPhone', 'Battery', 'Tips'],
@@ -47,7 +47,7 @@ const fallbackPosts: BlogPost[] = [
     slug: 'screen-protector-types',
     title: 'Tempered Glass vs. Hydrogel: Which Screen Protector is Best?',
     excerpt: 'Comparing the durability and feel of different screen protection options for your device.',
-    author: 'IMOBILE Team',
+    author: 'Tertulia Impulsiva Team',
     createdAt: new Date('2024-12-15').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop',
     tags: ['Accessories', 'Protection', 'Comparison'],

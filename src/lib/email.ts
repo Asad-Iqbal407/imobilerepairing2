@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const ADMIN_EMAIL = 'umpulsiva@gmail.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umpulsiva@gmail.com';
 
 interface OrderItem {
   productId: string;
@@ -115,7 +115,7 @@ export async function sendOrderEmails(order: OrderDetails) {
   try {
     // Send to User
     await transporter.sendMail({
-      from: `"IMOBILE" <${process.env.EMAIL_USER}>`,
+      from: `"Tertulia Impulsiva" <${process.env.EMAIL_USER}>`,
       to: order.customerEmail,
       subject: `Order Confirmation - #${order._id}`,
       html: emailContent,
@@ -123,7 +123,7 @@ export async function sendOrderEmails(order: OrderDetails) {
 
     // Send to Admin
     await transporter.sendMail({
-      from: `"IMOBILE System" <${process.env.EMAIL_USER}>`,
+      from: `"Tertulia Impulsiva System" <${process.env.EMAIL_USER}>`,
       to: ADMIN_EMAIL,
       subject: `NEW ORDER - #${order._id}`,
       html: adminEmailContent,

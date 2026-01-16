@@ -320,7 +320,7 @@ export default function ManageServices() {
                 <input
                     type="text"
                     required
-                    placeholder="e.g. iPhone 13 Screen Repair"
+                    placeholder={t.admin.serviceTitlePlaceholder}
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
                     value={currentService.title || ''}
                     onChange={(e) => setCurrentService({ ...currentService, title: e.target.value })}

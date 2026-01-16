@@ -179,6 +179,10 @@ export default function Footer() {
               {t.common.cookies}
               <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
+            <Link href="/privacy" className="hover:text-blue-500 cursor-pointer transition-colors flex items-center gap-2 group">
+              {t.common.privacy}
+              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </Link>
           </div>
         </motion.div>
       </div>
