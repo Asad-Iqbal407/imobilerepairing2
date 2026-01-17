@@ -40,7 +40,9 @@ export const convertPriceByLanguage = (priceUsd: number, language: SupportedLang
 export const formatPriceByLanguage = (priceUsd: number, language: SupportedLanguage): string => {
   const currency = getCurrencyForLanguage(language);
   const value = convertPriceByLanguage(priceUsd, language);
-  const locale = language === 'pt' ? 'pt-PT' : 'en-US';
+  let locale = 'en-US';
+  if (language === 'pt') locale = 'pt-PT';
+  
   const currencyCode = currency === 'eur' ? 'EUR' : 'USD';
   return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(value);
 };
@@ -69,23 +71,52 @@ export const getServiceEmoji = (title: string, description: string = '') => {
 };
 
 /**
- * Dynamically translates text using Google Translate API (free tier/unoffical)
- * This is used for dynamic content like product/service names from DB.
+ * Dynamically translates text.
+ * 1) Tries internal /api/translate (RapidAPI).
+ * 2) If that fails, falls back to Google Translate endpoint.
  */
 export const translateText = async (text: string, targetLang: string): Promise<string> => {
   if (!text || targetLang === 'en') return text;
-  
+
+  // Ensure Portugal Portuguese instead of Brazilian
+  const apiTarget = targetLang === 'pt' ? 'pt-PT' : targetLang;
+
+  // 1. Try internal API (RapidAPI)
   try {
-    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+    const response = await fetch('/api/translate', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ text, target: apiTarget }),
+    });
+
+    if (response.ok) {
+      const data = (await response.json()) as { translated?: string };
+      if (data.translated && typeof data.translated === 'string') {
+        return data.translated;
+      }
+    } else {
+      console.warn('Client translate error status:', response.status);
+    }
+  } catch (error) {
+    console.warn('Client translate error, will fallback to Google:', error);
+  }
+
+  // 2. Fallback to Google Translate (free/unofficial)
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${apiTarget}&dt=t&q=${encodeURIComponent(
+      text
+    )}`;
     const response = await fetch(url);
     const data = await response.json();
-    
+
     if (data && data[0] && data[0][0] && data[0][0][0]) {
       return data[0].map((item: any) => item[0]).join('');
     }
     return text;
   } catch (error) {
-    console.error('Translation error:', error);
+    console.error('Google Translate fallback error:', error);
     return text;
   }
 };

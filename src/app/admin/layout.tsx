@@ -16,6 +16,7 @@ export default function AdminLayout({
   const router = useRouter();
   const { t } = useLanguage();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navItems = [
     {
@@ -96,6 +97,10 @@ export default function AdminLayout({
     }
   }, [pathname, router]);
 
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [pathname]);
+
   // Polling for new notifications
   useEffect(() => {
     if (!isAuthenticated || pathname === '/admin/login') return;
@@ -116,10 +121,10 @@ export default function AdminLayout({
           const orders = await ordersRes.json();
           const newOrders = orders.filter((o: any) => o.createdAt > lastOrderTime && o.status === 'paid');
           newOrders.forEach((o: any) => {
-            toast.success(`New Order #${o._id.slice(-6)}`, {
-              description: `Customer: ${o.customerName} - $${o.total}`,
+            toast.success(`${t.admin.newOrder} #${o._id.slice(-6)}`, {
+              description: `${t.admin.customer}: ${o.customerName} - ${t.admin.currencySymbol}${o.total}`,
               action: {
-                label: 'View',
+                label: t.admin.view,
                 onClick: () => router.push('/admin/orders')
               }
             });
@@ -131,10 +136,10 @@ export default function AdminLayout({
           const quotes = await quotesRes.json();
           const newQuotes = quotes.filter((q: any) => q.createdAt > lastQuoteTime);
           newQuotes.forEach((q: any) => {
-            toast.info(`New Quote Request`, {
+            toast.info(t.admin.newQuoteRequest, {
               description: `${q.name} - ${q.service}`,
               action: {
-                label: 'View',
+                label: t.admin.view,
                 onClick: () => router.push('/admin/quotes')
               }
             });
@@ -146,10 +151,10 @@ export default function AdminLayout({
           const messages = await messagesRes.json();
           const newMessages = messages.filter((m: any) => m.createdAt > lastMessageTime);
           newMessages.forEach((m: any) => {
-            toast.message(`New Customer Message`, {
-              description: `From: ${m.name}`,
+            toast.message(t.admin.newCustomerMessage, {
+              description: `${t.admin.from}: ${m.name}`,
               action: {
-                label: 'Read',
+                label: t.admin.read,
                 onClick: () => router.push('/admin/messages')
               }
             });
@@ -191,8 +196,18 @@ export default function AdminLayout({
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Toaster position="top-right" richColors />
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
       {/* Sidebar */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col fixed inset-y-0 shadow-xl z-50">
+      <aside
+        className={`w-64 bg-slate-900 text-slate-300 flex flex-col fixed inset-y-0 left-0 shadow-xl z-50 transform transition-transform duration-200 md:translate-x-0 ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } md:static md:flex`}
+      >
         <div className="p-6 flex items-center gap-3 border-b border-slate-800">
           <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
             A
@@ -249,36 +264,48 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 ml-64 flex flex-col min-h-screen">
+      <div className="flex-1 flex flex-col min-h-screen md:ml-64">
         {/* Top Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 sticky top-0 z-40">
-          <div className="flex items-center gap-2 text-sm text-slate-500">
-            <span className="hover:text-blue-600 cursor-pointer transition-colors">Admin</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            <span className="text-slate-900 font-semibold capitalize">
-              {pathname === '/admin' ? t.admin.dashboard : pathname.split('/').pop()}
-            </span>
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 md:px-8 sticky top-0 z-40">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen((prev) => !prev)}
+              className="md:hidden inline-flex items-center justify-center p-2 rounded-lg border border-slate-200 text-slate-600 bg-white shadow-sm active:scale-95 transition-all"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <span className="ml-2 text-xs font-semibold text-slate-700">{t.admin.menu}</span>
+            </button>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
+              <span className="hover:text-blue-600 cursor-pointer transition-colors">{t.admin.administrator}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+              <span className="text-slate-900 font-semibold capitalize">
+                {pathname === '/admin' ? t.admin.dashboard : pathname.split('/').pop()}
+              </span>
+            </div>
           </div>
 
           <div className="flex items-center gap-4">
             <button 
               onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+              className="flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
               {t.admin.logout}
             </button>
-            <div className="h-8 w-[1px] bg-slate-200 mx-2" />
-            <div className="flex items-center gap-3 pl-2">
+            <div className="h-8 w-[1px] bg-slate-200 mx-2 hidden sm:block" />
+            <div className="hidden sm:flex items-center gap-3 pl-2">
               <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
                 A
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-bold text-slate-900 leading-none">Admin</span>
+                <span className="text-sm font-bold text-slate-900 leading-none">{t.admin.administrator}</span>
                 <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mt-1">{t.admin.administrator}</span>
               </div>
             </div>
@@ -286,7 +313,7 @@ export default function AdminLayout({
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 p-8 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

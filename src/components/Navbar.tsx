@@ -42,7 +42,7 @@ export default function Navbar() {
     { href: "/", label: t.common.home, icon: Smartphone },
     { href: "/services", label: t.common.services, icon: Wrench },
     { href: "/shop", label: t.common.shop, icon: Store },
-    { href: "/blog", label: "Blog", icon: ClipboardList },
+    { href: "/blog", label: t.common.blog, icon: ClipboardList },
     { href: "/contact", label: t.common.contact, icon: PhoneCall },
   ];
 
@@ -215,7 +215,7 @@ export default function Navbar() {
                   <div className="col-span-2 p-4 bg-slate-50 rounded-2xl flex items-center justify-between">
                     <div className="flex items-center gap-2 text-sm font-bold text-slate-600">
                       <Globe className="w-4 h-4" />
-                      Language
+                    {t.common.language}
                     </div>
                     <div className="flex p-1 bg-white rounded-xl shadow-sm border border-slate-100">
                       <button

@@ -15,11 +15,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://imobile.com'),
   title: {
-    default: "Tertulia Impulsiva - Expert Mobile Phone Repair",
+    default: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
     template: "%s | Tertulia Impulsiva"
   },
-  description: "Fast, reliable, and affordable mobile phone repair services for all major brands. Screen replacement, battery repair, and more.",
-  keywords: ["mobile repair", "phone repair", "screen replacement", "battery replacement", "iPhone repair", "Samsung repair"],
+  description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis para todas as principais marcas. Substituição de ecrã, reparação de bateria e muito mais.",
+  keywords: [
+    "reparação de telemóveis",
+    "reparação de telemóvel Lisboa",
+    "substituição de ecrã",
+    "troca de bateria",
+    "reparação iPhone",
+    "reparação Samsung"
+  ],
   authors: [{ name: "Tertulia Impulsiva Team" }],
   creator: "Tertulia Impulsiva",
   publisher: "Tertulia Impulsiva",
@@ -30,11 +37,11 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "pt_PT",
     url: "https://imobile.com",
     siteName: "Tertulia Impulsiva",
-    title: "Tertulia Impulsiva - Expert Mobile Phone Repair",
-    description: "Fast, reliable, and affordable mobile phone repair services.",
+    title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
+    description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
     images: [
       {
         url: "/og-image.jpg",
@@ -46,8 +53,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tertulia Impulsiva - Expert Mobile Phone Repair",
-    description: "Fast, reliable, and affordable mobile phone repair services.",
+    title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
+    description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
     images: ["/og-image.jpg"],
   },
 };

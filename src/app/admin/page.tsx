@@ -187,7 +187,7 @@ export default function AdminDashboard() {
         </svg>
       ),
       color: 'bg-indigo-500',
-      trend: 'New',
+      trend: t.admin.new,
     },
   ];
 

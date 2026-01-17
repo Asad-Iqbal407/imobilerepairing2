@@ -33,13 +33,16 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('language', lang);
   };
 
-  const t = language === 'en' ? en : pt;
+  const t: Translations = language === 'en' ? en : pt;
 
-  // Dynamic translate helper
-  const dt = useCallback(async (text: string) => {
-    if (language === 'en' || !text) return text;
-    return await translateText(text, language);
-  }, [language]);
+  // Dynamic translate helper (for DB / dynamic content)
+  const dt = useCallback(
+    async (text: string) => {
+      if (language === 'en' || !text) return text;
+      return await translateText(text, language);
+    },
+    [language]
+  );
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t, dt }}>

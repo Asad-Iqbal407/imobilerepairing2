@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useData, Service } from '@/context/DataContext';
 import { getServiceEmoji } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
+import DynamicText from '@/components/DynamicText';
 
 export default function ManageServices() {
   const { services, addService, updateService, deleteService } = useData();
@@ -61,7 +62,7 @@ export default function ManageServices() {
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
+      if (!response.ok) throw new Error(t.admin.uploadFailed);
 
       const data = await response.json();
       setCurrentService({ ...currentService, image: data.url });
@@ -249,9 +250,9 @@ export default function ManageServices() {
                       <div className="flex flex-col">
                         <span className="font-bold text-slate-900 flex items-center gap-2">
                           <span>{getServiceEmoji(service.title, service.description)}</span>
-                          {service.title}
+                          <DynamicText text={service.title} />
                         </span>
-                        <span className="text-xs text-slate-500 line-clamp-1">{service.description}</span>
+                        <span className="text-xs text-slate-500 line-clamp-1"><DynamicText text={service.description} /></span>
                       </div>
                     </div>
                   </td>

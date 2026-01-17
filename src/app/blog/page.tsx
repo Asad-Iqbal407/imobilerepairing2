@@ -10,8 +10,8 @@ import Post from '@/models/Post';
 import DynamicText from '@/components/DynamicText';
 
 export const metadata: Metadata = {
-  title: 'Blog | Insights & Repair Tips',
-  description: 'Latest news, repair guides, and technology insights from the Tertulia Impulsiva expert team.',
+  title: 'Blog | Insights e Dicas de Reparação',
+  description: 'As últimas notícias, guias de reparação e insights tecnológicos da equipa de especialistas da Tertulia Impulsiva.',
 };
 
 interface BlogPost {
@@ -27,30 +27,30 @@ interface BlogPost {
 const fallbackPosts: BlogPost[] = [
   {
     slug: 'common-iphone-battery-issues',
-    title: '5 Signs Your iPhone Needs a Battery Replacement',
-    excerpt: 'Is your iPhone draining fast? Learn the top signs that indicate it is time for a new battery.',
-    author: 'Tertulia Impulsiva Team',
+    title: '5 Sinais de que o seu iPhone precisa de uma Bateria Nova',
+    excerpt: 'O seu iPhone descarrega rápido? Conheça os principais sinais que indicam que é hora de uma bateria nova.',
+    author: 'Equipa Tertulia Impulsiva',
     createdAt: new Date('2025-01-05').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1596558450255-7c0b7be9d56a?q=80&w=1000&auto=format&fit=crop',
-    tags: ['iPhone', 'Battery', 'Tips'],
+    tags: ['iPhone', 'Bateria', 'Dicas'],
   },
   {
     slug: 'water-damage-recovery-guide',
-    title: 'What to Do If You Drop Your Phone in Water',
-    excerpt: 'Immediate steps to take to save your wet smartphone. Do NOT put it in rice!',
-    author: 'Tech Expert',
+    title: 'O que fazer se o seu telemóvel cair na água',
+    excerpt: 'Passos imediatos a tomar para salvar o seu smartphone molhado. NÃO o coloque em arroz!',
+    author: 'Especialista Tech',
     createdAt: new Date('2024-12-28').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop',
-    tags: ['Water Damage', 'Guide', 'Emergency'],
+    tags: ['Danos por Água', 'Guia', 'Emergência'],
   },
   {
     slug: 'screen-protector-types',
-    title: 'Tempered Glass vs. Hydrogel: Which Screen Protector is Best?',
-    excerpt: 'Comparing the durability and feel of different screen protection options for your device.',
-    author: 'Tertulia Impulsiva Team',
+    title: 'Vidro Temperado vs. Hidrogel: Qual o melhor protetor de ecrã?',
+    excerpt: 'Comparação da durabilidade e sensação de diferentes opções de proteção de ecrã para o seu dispositivo.',
+    author: 'Equipa Tertulia Impulsiva',
     createdAt: new Date('2024-12-15').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop',
-    tags: ['Accessories', 'Protection', 'Comparison'],
+    tags: ['Acessórios', 'Proteção', 'Comparação'],
   },
 ];
 
@@ -121,10 +121,11 @@ export default async function BlogPage() {
                   <DynamicText text={post.excerpt} />
                 </p>
                 <Link 
-                  href={`/blog/${post.slug}`}
+                  href={`/blog/${post.slug}`} 
                   className="inline-flex items-center gap-2 text-blue-600 font-bold hover:gap-3 transition-all"
                 >
-                  <DynamicText text="Read Article" /> <ArrowRight className="w-4 h-4" />
+                  <DynamicText text="Read More" />
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </article>

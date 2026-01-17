@@ -11,7 +11,7 @@ export default function QuotesPage() {
   const [selectedQuote, setSelectedQuote] = useState<IQuote | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState('All');
+  const [selectedStatus, setSelectedStatus] = useState('all');
 
   useEffect(() => {
     fetchQuotes();
@@ -38,7 +38,7 @@ export default function QuotesPage() {
       quote.deviceModel.toLowerCase().includes(searchQuery.toLowerCase()) ||
       quote.part.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesStatus = selectedStatus === 'All' || quote.status === selectedStatus;
+    const matchesStatus = selectedStatus === 'all' || quote.status === selectedStatus;
     
     return matchesSearch && matchesStatus;
   });
@@ -177,9 +177,9 @@ export default function QuotesPage() {
           {['all', 'pending', 'responded', 'completed'].map((status) => (
             <button
               key={status}
-              onClick={() => setSelectedStatus(status === 'all' ? 'All' : status)}
+              onClick={() => setSelectedStatus(status)}
               className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border whitespace-nowrap ${
-                (selectedStatus === 'All' && status === 'all') || selectedStatus === status
+                selectedStatus === status
                   ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white border-slate-200 text-slate-500 hover:border-blue-200 hover:text-blue-600'
               }`}
@@ -384,7 +384,7 @@ export default function QuotesPage() {
                       <div key={idx} className="relative aspect-square group cursor-zoom-in rounded-xl overflow-hidden border border-slate-200">
                         <img 
                           src={img} 
-                          alt={`Evidence ${idx + 1}`} 
+                          alt={`${t.admin.image} ${idx + 1}`} 
                           className="w-full h-full object-cover transition-all group-hover:scale-110"
                           onClick={() => window.open(img, '_blank')}
                         />

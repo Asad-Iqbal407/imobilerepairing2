@@ -194,7 +194,7 @@ export default function ShopClient() {
         if (e.key === 'Enter' || e.key === ' ') openProduct(product);
       }}
     >
-      <div className="h-64 bg-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-700 relative overflow-hidden">
+      <div className="h-56 sm:h-64 bg-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
         <Image
           src={isValidUrl(product.image) ? product.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"}
@@ -203,7 +203,7 @@ export default function ShopClient() {
           className="object-cover"
         />
       </div>
-      <div className="p-8 flex-1 flex flex-col">
+      <div className="p-5 sm:p-8 flex-1 flex flex-col">
         <div className="flex-1">
           <div className="flex justify-between items-start mb-4">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black bg-blue-50 text-blue-600 uppercase tracking-widest border border-blue-100">
@@ -211,7 +211,7 @@ export default function ShopClient() {
               <DynamicText text={product.category} />
             </span>
           </div>
-          <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
             <DynamicText text={product.name} />
           </h3>
           <p className="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-2">
@@ -231,7 +231,7 @@ export default function ShopClient() {
         <div className="mt-4 flex items-center justify-between pt-6 border-t border-slate-50">
           <div className="flex flex-col">
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1.5">{t.common.price}</span>
-            <span className="text-2xl font-black text-slate-900 tracking-tight">
+            <span className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
               {formatPriceByLanguage(product.price, language)}
             </span>
           </div>
@@ -257,7 +257,7 @@ export default function ShopClient() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Header Section */}
-      <section className="relative py-24 bg-slate-900 overflow-hidden">
+      <section className="relative py-16 sm:py-24 bg-slate-900 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute top-0 right-0 w-1/3 h-full bg-blue-600/10 skew-x-12 translate-x-1/4"></div>
           <div className="absolute bottom-0 left-0 w-1/4 h-1/2 bg-purple-600/10 -skew-x-12 -translate-x-1/4 rounded-full blur-[100px]"></div>
@@ -265,10 +265,10 @@ export default function ShopClient() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-extrabold text-white mb-6 tracking-tight">
               {t.shop.title}
             </h1>
-            <p className="text-xl text-slate-400 leading-relaxed">
+            <p className="text-lg sm:text-xl text-slate-400 leading-relaxed">
               {t.shop.subtitle}
             </p>
           </div>
@@ -276,12 +276,12 @@ export default function ShopClient() {
       </section>
 
       {/* Main Content */}
-      <section className="py-16 bg-slate-50 min-h-screen">
+      <section className="py-12 sm:py-16 bg-slate-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Filters Section */}
           <div className="mb-12 space-y-8">
             {/* Search and Price Filter */}
-            <div className="flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <div className="flex flex-col md:flex-row gap-6 items-center justify-between bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-100">
               <div className="w-full md:w-1/2 relative">
                 <input
                   type="text"
@@ -394,7 +394,7 @@ export default function ShopClient() {
 
           {/* Product Grid */}
           {isLoading ? (
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               {Array.from({ length: 8 }).map((_, i) => (
                 <ProductSkeleton key={`skeleton-${i}`} />
               ))}
@@ -418,7 +418,7 @@ export default function ShopClient() {
                         {items.length}
                       </span>
                     </div>
-                    <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
                       <AnimatePresence mode="popLayout">
                         {items.map((product) => (
                           <ProductCard key={product.id} product={product} />
@@ -430,7 +430,7 @@ export default function ShopClient() {
               })}
             </div>
           ) : (
-            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
               <AnimatePresence mode="popLayout">
                 {sortedFilteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
@@ -491,7 +491,7 @@ export default function ShopClient() {
                   <div className="flex items-end justify-between gap-4">
                     <div>
                       <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{t.common.price}</div>
-                      <div className="text-3xl font-black text-slate-900 tracking-tight">
+                      <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                         {formatPriceByLanguage(selectedProduct.price, language)}
                       </div>
                     </div>

@@ -40,7 +40,7 @@ function QuoteForm() {
       setFormData(prev => ({ 
         ...prev, 
         part: partKey || 'other',
-        problem: `Interested in: ${service}\n` 
+        problem: `${t.getQuote.interestedIn}${service}\n` 
       }));
     }
   }, [searchParams]);
@@ -76,7 +76,7 @@ function QuoteForm() {
     e.preventDefault();
 
     if (!isValidEmail(formData.email)) {
-      setEmailError('Please enter a valid email address.');
+      setEmailError(t.contact.invalidEmail || 'Por favor, introduza um endereço de email válido.');
       // Scroll to email field or just let the user see the error
       return;
     }

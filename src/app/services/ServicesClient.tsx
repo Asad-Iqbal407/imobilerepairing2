@@ -67,7 +67,7 @@ export default function ServicesClient() {
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
                       <span className="bg-white/20 backdrop-blur-md text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                         <Sparkles className="w-4 h-4" />
-                        Premium Repair
+                        {t.common.premiumRepair}
                       </span>
                     </div>
                   </div>

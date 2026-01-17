@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
 import { useLanguage } from '@/context/LanguageContext';
+import DynamicText from '@/components/DynamicText';
 
 type CategoryItem = { id: string; name: string; icon: string; label: string };
 
@@ -276,7 +277,7 @@ export default function ManageProducts() {
         body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
+      if (!response.ok) throw new Error(t.admin.uploadFailed);
 
       const data = await response.json();
       setCurrentProduct({ ...currentProduct, image: data.url });
@@ -487,8 +488,8 @@ export default function ManageProducts() {
                         )}
                       </div>
                       <div>
-                        <span className="font-bold text-slate-900 block">{product.name}</span>
-                        <span className="text-slate-500 text-sm line-clamp-1 max-w-[200px]">{product.description}</span>
+                        <span className="font-bold text-slate-900 block"><DynamicText text={product.name} /></span>
+                        <span className="text-slate-500 text-sm line-clamp-1 max-w-[200px]"><DynamicText text={product.description} /></span>
                       </div>
                     </div>
                   </td>
@@ -574,7 +575,7 @@ export default function ManageProducts() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.category}</label>
                   <select
@@ -643,7 +644,7 @@ export default function ManageProducts() {
                       required={!currentProduct.image}
                       placeholder="https://images.unsplash.com/..."
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium disabled:text-slate-500 disabled:bg-slate-100"
-                      value={currentProduct.image?.startsWith('data:') ? 'Image uploaded successfully (Base64)' : (currentProduct.image || '')}
+                      value={currentProduct.image?.startsWith('data:') ? t.admin.imageUploaded : (currentProduct.image || '')}
                       onChange={(e) => {
                         if (!currentProduct.image?.startsWith('data:')) {
                           setCurrentProduct({ ...currentProduct, image: e.target.value })
@@ -698,7 +699,7 @@ export default function ManageProducts() {
               </div>
 
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.shop.deviceCondition}</label>
                     <input
@@ -806,7 +807,7 @@ export default function ManageProducts() {
 
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.categoryName}</label>
                     <input

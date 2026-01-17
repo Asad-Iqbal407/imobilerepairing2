@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LoginPage() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -23,7 +25,7 @@ export default function LoginPage() {
       localStorage.setItem('is_admin_authenticated', 'true');
       router.push('/admin');
     } else {
-      setError('Invalid email or password');
+      setError(t.admin.invalidCredentials);
       setIsLoading(false);
     }
   };
@@ -37,10 +39,10 @@ export default function LoginPage() {
           </div>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900 tracking-tight">
-          Admin Portal Login
+          {t.admin.loginTitle}
         </h2>
         <p className="mt-2 text-center text-sm text-slate-600">
-          Please enter your credentials to access the dashboard
+          {t.admin.loginSubtitle}
         </p>
       </div>
 
@@ -49,7 +51,7 @@ export default function LoginPage() {
           <form className="space-y-6" onSubmit={handleLogin}>
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-slate-700">
-                Email Address
+                {t.admin.emailAddress}
               </label>
               <div className="mt-1">
                 <input
@@ -68,7 +70,7 @@ export default function LoginPage() {
 
             <div>
               <label htmlFor="password" className="block text-sm font-semibold text-slate-700">
-                Password
+                {t.admin.password}
               </label>
               <div className="mt-1">
                 <input
@@ -114,7 +116,7 @@ export default function LoginPage() {
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
                 ) : (
-                  'Sign In'
+                  t.admin.signIn
                 )}
               </button>
             </div>

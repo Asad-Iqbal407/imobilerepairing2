@@ -20,7 +20,7 @@ export default function Contact() {
     e.preventDefault();
     
     if (!isValidEmail(formData.email)) {
-      setEmailError('Please enter a valid email address.');
+      setEmailError(t.contact.invalidEmail || 'Por favor, introduza um endereço de email válido.');
       return;
     }
 

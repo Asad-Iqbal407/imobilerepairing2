@@ -4,9 +4,11 @@ import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
+  const { t } = useLanguage();
   const { id } = use(params);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -28,7 +30,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
   const fetchPost = async () => {
     try {
       const res = await fetch(`/api/posts/${id}`);
-      if (!res.ok) throw new Error('Failed to fetch post');
+      if (!res.ok) throw new Error(t.admin.postFetchFailed);
       const data = await res.json();
       setFormData({
         title: data.title,
@@ -41,7 +43,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         isPublished: data.isPublished
       });
     } catch (error) {
-      toast.error('Failed to load post');
+      toast.error(t.admin.postLoadFailed);
       router.push('/admin/blogs');
     } finally {
       setFetching(false);
@@ -64,19 +66,19 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
         })
       });
 
-      if (!res.ok) throw new Error('Failed to update post');
+      if (!res.ok) throw new Error(t.admin.postUpdateFailed);
       
-      toast.success('Post updated successfully');
+      toast.success(t.admin.postUpdated);
       router.push('/admin/blogs');
     } catch (error) {
-      toast.error('Failed to update post');
+      toast.error(t.admin.postUpdateFailed);
     } finally {
       setLoading(false);
     }
   };
 
   if (fetching) {
-    return <div>Loading...</div>;
+    return <div>{t.admin.loading}</div>;
   }
 
   return (
@@ -90,14 +92,14 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
           </svg>
         </Link>
-        <h1 className="text-2xl font-bold text-slate-900">Edit Post</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t.admin.editPost}</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Title</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postTitle}</label>
               <input
                 type="text"
                 required
@@ -107,7 +109,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Slug</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postSlug}</label>
               <input
                 type="text"
                 required
@@ -119,7 +121,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Excerpt</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postExcerpt}</label>
             <textarea
               required
               rows={3}
@@ -130,7 +132,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Content (HTML Support)</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postContent}</label>
             <textarea
               required
               rows={15}
@@ -142,7 +144,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Author</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postAuthor}</label>
               <input
                 type="text"
                 required
@@ -152,7 +154,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Tags</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postTags}</label>
               <input
                 type="text"
                 value={formData.tags}
@@ -163,7 +165,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
           </div>
 
           <div>
-            <label className="block text-sm font-bold text-slate-700 mb-2">Cover Image URL</label>
+            <label className="block text-sm font-bold text-slate-700 mb-2">{t.admin.postCoverImageUrl}</label>
             <input
               type="url"
               value={formData.coverImage}
@@ -180,7 +182,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
               onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })}
               className="w-5 h-5 text-blue-600 rounded focus:ring-blue-500 border-gray-300"
             />
-            <label htmlFor="isPublished" className="text-sm font-bold text-slate-700">Publish immediately</label>
+            <label htmlFor="isPublished" className="text-sm font-bold text-slate-700">{t.admin.publishImmediately}</label>
           </div>
         </div>
 
@@ -189,14 +191,14 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             href="/admin/blogs"
             className="px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all"
           >
-            Cancel
+            {t.admin.cancel}
           </Link>
           <button
             type="submit"
             disabled={loading}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50"
           >
-            {loading ? 'Updating...' : 'Update Post'}
+            {loading ? t.admin.updating : t.admin.updatePost}
           </button>
         </div>
       </form>

@@ -33,7 +33,7 @@ export default function HomeClient() {
 
   return (
     <div className="flex flex-col min-h-screen overflow-x-hidden">
-      <section className="relative min-h-[90vh] flex items-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+      <section className="relative min-h-[80vh] sm:min-h-[90vh] flex items-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <motion.div 
             animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.3, 0.2] }}
@@ -56,23 +56,23 @@ export default function HomeClient() {
               transition={{ duration: 0.8 }}
               className="text-left space-y-8"
             >
-              <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white leading-tight">
                 {t.home.heroTitle.split(' ').slice(0, -1).join(' ')} <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">{t.home.heroTitle.split(' ').pop()}</span>
               </h1>
-              <p className="text-xl md:text-2xl text-slate-300 max-w-xl leading-relaxed">
+              <p className="text-lg sm:text-xl md:text-2xl text-slate-300 max-w-xl leading-relaxed">
                 {t.home.heroSubtitle}
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
                 <Link
                   href="/get-quote"
-                  className="px-8 py-4 bg-emerald-500 text-white rounded-2xl font-bold text-lg hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-500/30 hover:-translate-y-1 flex items-center gap-2 group"
+                  className="px-6 py-3 sm:px-8 sm:py-4 bg-emerald-500 text-white rounded-2xl font-bold text-base sm:text-lg hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-500/30 hover:-translate-y-1 flex items-center gap-2 group"
                 >
                   {t.common.getQuote}
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   href="/services"
-                  className="px-8 py-4 bg-white/10 text-white border border-white/20 rounded-2xl font-bold text-lg hover:bg-white/20 transition-all backdrop-blur-sm"
+                  className="px-6 py-3 sm:px-8 sm:py-4 bg-white/10 text-white border border-white/20 rounded-2xl font-bold text-base sm:text-lg hover:bg-white/20 transition-all backdrop-blur-sm"
                 >
                   {t.home.ourServices}
                 </Link>
@@ -100,7 +100,7 @@ export default function HomeClient() {
                     <ShieldCheck className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">Status</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none">{t.common.status}</p>
                     <p className="text-slate-900 font-bold">{t.home.repairSuccess}</p>
                   </div>
                 </motion.div>
@@ -114,12 +114,12 @@ export default function HomeClient() {
 
 
       {/* Features Section */}
-      <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden">
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
+          <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20 space-y-4">
             <h2 className="text-sm font-bold text-emerald-600 uppercase tracking-[0.3em]">{t.home.whyChooseUs}</h2>
-            <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900">{t.home.experienceExcellence}</h3>
-            <p className="text-xl text-slate-500 leading-relaxed">{t.home.experienceExcellenceDesc}</p>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900">{t.home.experienceExcellence}</h3>
+            <p className="text-lg sm:text-xl text-slate-500 leading-relaxed">{t.home.experienceExcellenceDesc}</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -146,12 +146,12 @@ export default function HomeClient() {
       </section>
 
       {/* Services Preview */}
-      <section className="py-24 bg-slate-50">
+      <section className="py-16 sm:py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
             <div className="space-y-4">
               <h2 className="text-sm font-bold text-emerald-600 uppercase tracking-[0.3em]">{t.home.whatWeRepair}</h2>
-              <h3 className="text-4xl md:text-5xl font-extrabold text-slate-900">{t.home.comprehensiveSolutions}</h3>
+              <h3 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900">{t.home.comprehensiveSolutions}</h3>
             </div>
             <Link
               href="/services"
@@ -181,7 +181,7 @@ export default function HomeClient() {
                   {service.icon}
                 </div>
                 <h4 className="text-xl font-bold text-slate-900 mb-2">{service.name}</h4>
-                <p className="text-slate-500 text-sm">Professional repair with warranty included.</p>
+                <p className="text-slate-500 text-sm">{t.home.professionalRepair}</p>
                 <div className="absolute bottom-0 left-0 h-1 bg-emerald-500 w-0 group-hover:w-full transition-all duration-500"></div>
               </motion.div>
             ))}
@@ -190,29 +190,29 @@ export default function HomeClient() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-white px-4">
+      <section className="py-16 sm:py-24 bg-white px-4">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-7xl mx-auto relative rounded-[3rem] bg-gradient-to-r from-blue-700 via-slate-900 to-emerald-600 overflow-hidden p-12 md:p-24"
+          className="max-w-7xl mx-auto relative rounded-[3rem] bg-gradient-to-r from-blue-700 via-slate-900 to-emerald-600 overflow-hidden p-8 sm:p-12 md:p-24"
         >
           <div className="absolute top-0 right-0 w-1/2 h-full bg-emerald-500/15 skew-x-12 translate-x-1/4"></div>
           <div className="relative z-10 text-center max-w-3xl mx-auto space-y-8">
-            <h3 className="text-4xl md:text-6xl font-extrabold text-white leading-tight">{t.home.readyToGetFixed}</h3>
-            <p className="text-xl text-slate-400 leading-relaxed">
+            <h3 className="text-3xl sm:text-4xl md:text-6xl font-extrabold text-white leading-tight">{t.home.readyToGetFixed}</h3>
+            <p className="text-lg sm:text-xl text-slate-400 leading-relaxed">
               {t.home.readyToGetFixedDesc}
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
               <Link
                 href="/get-quote"
-                className="px-10 py-5 bg-emerald-500 text-white rounded-2xl font-bold text-xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-500/30 hover:-translate-y-1"
+                className="px-8 py-4 sm:px-10 sm:py-5 bg-emerald-500 text-white rounded-2xl font-bold text-lg sm:text-xl hover:bg-emerald-600 transition-all shadow-xl shadow-emerald-500/30 hover:-translate-y-1"
               >
                 {t.home.getFreeQuoteNow}
               </Link>
               <Link
                 href="/contact"
-                className="px-10 py-5 bg-white/10 text-white border border-white/20 rounded-2xl font-bold text-xl hover:bg-white/20 transition-all hover:-translate-y-1"
+                className="px-8 py-4 sm:px-10 sm:py-5 bg-white/10 text-white border border-white/20 rounded-2xl font-bold text-lg sm:text-xl hover:bg-white/20 transition-all hover:-translate-y-1"
               >
                 {t.home.contactUs}
               </Link>

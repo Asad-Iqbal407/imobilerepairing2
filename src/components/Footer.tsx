@@ -103,7 +103,7 @@ export default function Footer() {
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Visit Us</span>
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.visitUs}</span>
                   <span className="group-hover:text-white transition-colors">{t.common.address}</span>
                 </div>
               </motion.li>
@@ -115,7 +115,7 @@ export default function Footer() {
                   <Phone className="h-5 w-5" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Call Us</span>
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.callUs}</span>
                   <span className="group-hover:text-white transition-colors">{t.common.phone}</span>
                   <span className="group-hover:text-white transition-colors">{t.common.phone2}</span>
                 </div>
@@ -128,7 +128,7 @@ export default function Footer() {
                   <Mail className="h-5 w-5" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Email Us</span>
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.emailUs}</span>
                   <span className="group-hover:text-white transition-colors">{t.common.email}</span>
                 </div>
               </motion.li>
@@ -166,7 +166,7 @@ export default function Footer() {
               NIF: {t.common.nif}
             </p>
             <p className="text-xs text-slate-600 flex items-center gap-1">
-              Crafted with <span className="text-rose-500 animate-pulse">❤️</span> for better mobile experiences.
+              {t.common.craftedWithLove}
             </p>
           </div>
           

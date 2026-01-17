@@ -37,7 +37,7 @@ export default function NewPostPage() {
         })
       });
 
-      if (!res.ok) throw new Error('Failed to create post');
+      if (!res.ok) throw new Error(t.admin.postCreateFailed);
       
       toast.success(t.admin.postCreated);
       router.push('/admin/blogs');

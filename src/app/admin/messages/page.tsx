@@ -31,7 +31,7 @@ export default function MessagesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this message?')) return;
+    if (!confirm(t.admin.confirmDeleteMessage)) return;
     try {
       const res = await fetch(`/api/contact/${id}`, { method: 'DELETE' });
       if (res.ok) {
@@ -72,8 +72,8 @@ export default function MessagesPage() {
     <div className="space-y-6 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Customer Messages</h1>
-          <p className="text-slate-500 mt-1">Manage inquiries and feedback from your website visitors.</p>
+          <h1 className="text-3xl font-bold text-slate-900">{t.admin.customerMessages}</h1>
+          <p className="text-slate-500 mt-1">{t.admin.manageInquiries}</p>
         </div>
         <button
           onClick={fetchMessages}
@@ -82,7 +82,7 @@ export default function MessagesPage() {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
-          Refresh
+          {t.admin.refresh}
         </button>
       </div>
 
@@ -96,7 +96,7 @@ export default function MessagesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Total Messages</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.totalQuotes}</p>
               <h3 className="text-2xl font-bold text-slate-900">{totalMessages}</h3>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function MessagesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Received Today</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.receivedToday}</p>
               <h3 className="text-2xl font-bold text-slate-900">{todayMessages}</h3>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function MessagesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">Device Inquiries</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.deviceInquiries}</p>
               <h3 className="text-2xl font-bold text-slate-900">{deviceInquiries}</h3>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function MessagesPage() {
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">General Info</p>
+              <p className="text-sm font-medium text-slate-500">{t.admin.generalInfo}</p>
               <h3 className="text-2xl font-bold text-slate-900">{generalInquiries}</h3>
             </div>
           </div>
@@ -164,10 +164,10 @@ export default function MessagesPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Sender</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Device</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.sender}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.deviceModel}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.date}</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -180,7 +180,7 @@ export default function MessagesPage() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-slate-600 font-medium">{message.device || 'General Inquiry'}</span>
+                    <span className="text-slate-600 font-medium">{message.device || t.admin.general}</span>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="text-slate-500 text-sm">
@@ -195,7 +195,7 @@ export default function MessagesPage() {
                           setIsDetailsOpen(true);
                         }}
                         className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                        title="Read Message"
+                        title={t.admin.readMessage}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -204,7 +204,7 @@ export default function MessagesPage() {
                       <button
                         onClick={() => handleDelete(message._id)}
                         className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
-                        title="Delete Message"
+                        title={t.admin.deleteMessage}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -224,11 +224,11 @@ export default function MessagesPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-slate-900">No messages found</h3>
+            <h3 className="text-lg font-bold text-slate-900">{t.admin.noMessagesFound}</h3>
             <p className="text-slate-500 max-w-xs mx-auto mt-2">
               {searchQuery 
-                ? `No messages matching "${searchQuery}" were found. Try a different search term.`
-                : "When customers contact you via the website, their messages will appear here."}
+                ? t.admin.noMessagesMatching.replace('{query}', searchQuery)
+                : t.admin.noMessagesFoundDesc}
             </p>
           </div>
         )}
@@ -237,12 +237,15 @@ export default function MessagesPage() {
       {/* Details Slide-over */}
       {isDetailsOpen && selectedMessage && (
         <div className="fixed inset-0 z-[100] overflow-hidden">
-          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setIsDetailsOpen(false)} />
+          <div
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsDetailsOpen(false)}
+          />
           <div className="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">Message Details</h2>
-                <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">Inquiry ID: {selectedMessage._id.toString()}</p>
+                <h2 className="text-xl font-bold text-slate-900">{t.admin.messageDetails}</h2>
+                <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">{t.admin.inquiryId}: {selectedMessage._id.toString()}</p>
               </div>
               <button onClick={() => setIsDetailsOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -260,25 +263,25 @@ export default function MessagesPage() {
                   </div>
                   <div>
                     <h3 className="text-lg font-bold text-slate-900">{selectedMessage.name}</h3>
-                    <p className="text-sm text-slate-500 font-medium">Sent on {new Date(selectedMessage.createdAt).toLocaleDateString()}</p>
+                    <p className="text-sm text-slate-500 font-medium">{t.admin.sentOn} {new Date(selectedMessage.createdAt).toLocaleDateString()}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4">
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Email Address</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">{t.admin.emailAddress}</span>
                     <a href={`mailto:${selectedMessage.email}`} className="text-blue-600 font-bold hover:underline break-all">{selectedMessage.email}</a>
                   </div>
                   <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Related Device</span>
-                    <p className="text-slate-900 font-bold">{selectedMessage.device || 'General Inquiry'}</p>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">{t.admin.relatedDevice}</span>
+                    <p className="text-slate-900 font-bold">{selectedMessage.device || t.admin.general}</p>
                   </div>
                 </div>
               </div>
 
               {/* Message Content */}
               <div className="space-y-3">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Message Content</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">{t.admin.messageContent}</span>
                 <div className="bg-white p-6 rounded-3xl border border-slate-100 text-slate-700 font-medium leading-relaxed shadow-sm italic">
                   &quot;{selectedMessage.message}&quot;
                 </div>
@@ -286,7 +289,7 @@ export default function MessagesPage() {
 
               {/* Quick Actions */}
               <div className="space-y-3">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Quick Actions</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">{t.admin.actions}</span>
                 <a 
                   href={`mailto:${selectedMessage.email}?subject=Re: Your inquiry on Phone Repair`}
                   className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
@@ -294,7 +297,7 @@ export default function MessagesPage() {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
                   </svg>
-                  Reply via Email
+                  {t.admin.replyViaEmail}
                 </a>
               </div>
             </div>
@@ -307,7 +310,7 @@ export default function MessagesPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Delete Message
+                {t.admin.deleteMessage}
               </button>
             </div>
           </div>

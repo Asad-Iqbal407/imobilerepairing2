@@ -4,11 +4,11 @@ import ShopClient from './ShopClient';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Shop",
-  description: "Browse our wide range of new and refurbished mobile phones, accessories, and more.",
+  title: "Loja",
+  description: "Explore a nossa vasta gama de telemóveis novos e recondicionados, acessórios e muito mais.",
   openGraph: {
-    title: "Shop | Tertulia Impulsiva",
-    description: "Browse our wide range of new and refurbished mobile phones, accessories, and more.",
+    title: "Loja | Tertulia Impulsiva",
+    description: "Explore a nossa vasta gama de telemóveis novos e recondicionados, acessórios e muito mais.",
   },
 };
 

@@ -4,11 +4,11 @@ import ServicesClient from './ServicesClient';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: "Repair Services",
-  description: "Expert mobile phone repair services including screen replacement, battery repair, water damage, and more for all major brands.",
+  title: "Serviços de Reparação",
+  description: "Serviços especializados de reparação de telemóveis, incluindo substituição de ecrã, reparação de bateria, danos por água e muito mais para todas as principais marcas.",
   openGraph: {
-    title: "Repair Services | Tertulia Impulsiva",
-    description: "Expert mobile phone repair services for iPhone, Samsung, and more.",
+    title: "Serviços de Reparação | Tertulia Impulsiva",
+    description: "Serviços especializados de reparação de telemóveis para iPhone, Samsung e muito mais.",
   },
 };
 

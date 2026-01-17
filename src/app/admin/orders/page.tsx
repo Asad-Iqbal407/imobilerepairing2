@@ -28,11 +28,11 @@ export default function OrdersPage() {
         setOrders(data);
       } else {
         const errData = await res.json();
-        setError(errData.details || errData.error || 'Failed to fetch orders');
+        setError(errData.details || errData.error || t.admin.failedToFetchOrders);
       }
     } catch (error: any) {
       console.error('Failed to fetch orders:', error);
-      setError(error.message || 'Failed to fetch orders');
+      setError(error.message || t.admin.failedToFetchOrders);
     } finally {
       setLoading(false);
     }
@@ -375,11 +375,11 @@ export default function OrdersPage() {
                   </div>
                 </div>
                 <div className="space-y-4 text-right">
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">Shipping</h3>
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-2">{t.admin.shipping}</h3>
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.address}</span>
                     <p className="text-slate-900 font-medium leading-relaxed whitespace-pre-wrap">
-                      {selectedOrder.customerAddress || 'No address provided'}
+                      {selectedOrder.customerAddress || t.admin.noAddressProvided}
                     </p>
                   </div>
                 </div>
@@ -388,8 +388,8 @@ export default function OrdersPage() {
               {/* Order Items */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Order Items</h3>
-                  <span className="text-xs font-bold text-slate-400">{selectedOrder.items.length} unique items</span>
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">{t.admin.orderItems}</h3>
+                  <span className="text-xs font-bold text-slate-400">{selectedOrder.items.length} {t.admin.uniqueItems}</span>
                 </div>
                 <div className="space-y-3">
                   {selectedOrder.items.map((item: any, idx: number) => (
@@ -400,12 +400,12 @@ export default function OrdersPage() {
                         </div>
                         <div>
                           <p className="font-bold text-slate-900">{item.title}</p>
-                          <p className="text-xs text-slate-500 font-medium">Quantity: {item.quantity}</p>
+                          <p className="text-xs text-slate-500 font-medium">{t.admin.quantity}: {item.quantity}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="font-bold text-slate-900">{formatPriceByCurrency(item.price * item.quantity, (selectedOrder.currency || 'usd') as SupportedCurrency)}</p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{formatPriceByCurrency(item.price, (selectedOrder.currency || 'usd') as SupportedCurrency)} each</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{formatPriceByCurrency(item.price, (selectedOrder.currency || 'usd') as SupportedCurrency)} {t.admin.each}</p>
                       </div>
                     </div>
                   ))}
@@ -415,14 +415,14 @@ export default function OrdersPage() {
               {/* Summary */}
               <div className="bg-slate-900 text-white p-6 rounded-3xl space-y-4 shadow-xl">
                 <div className="flex items-center justify-between text-slate-400 text-sm font-bold uppercase tracking-widest">
-                  <span>Order Total</span>
-                  <span className="text-blue-400">Paid via Stripe</span>
+                  <span>{t.admin.orderTotal}</span>
+                  <span className="text-blue-400">{t.admin.paidViaStripe}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-3xl font-bold">{formatPriceByCurrency(selectedOrder.total, (selectedOrder.currency || 'usd') as SupportedCurrency)}</span>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                    <span className="text-xs font-bold uppercase tracking-widest">Payment Verified</span>
+                    <span className="text-xs font-bold uppercase tracking-widest">{t.admin.paymentVerified}</span>
                   </div>
                 </div>
               </div>
@@ -436,7 +436,7 @@ export default function OrdersPage() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
-                Cancel & Delete Order
+                {t.admin.cancelDeleteOrder}
               </button>
             </div>
           </div>
