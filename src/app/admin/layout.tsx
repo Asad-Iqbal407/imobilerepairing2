@@ -82,6 +82,16 @@ export default function AdminLayout({
         </svg>
       ),
     },
+    {
+      name: t.admin.settings,
+      href: '/admin/settings',
+      icon: (
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -194,127 +204,164 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 flex overflow-hidden">
       <Toaster position="top-right" richColors />
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/40 z-40 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-      {/* Sidebar */}
-      <aside
-        className={`w-64 bg-slate-900 text-slate-300 flex flex-col fixed inset-y-0 left-0 shadow-xl z-50 transform transition-transform duration-200 md:translate-x-0 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } md:static md:flex`}
-      >
-        <div className="p-6 flex items-center gap-3 border-b border-slate-800">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
-            A
-          </div>
-          <h2 className="text-xl font-bold text-white tracking-tight">{t.admin.portal}</h2>
+      
+      {/* Sidebar - Desktop */}
+      <aside className="hidden lg:flex flex-col w-72 bg-slate-900 text-white shrink-0 border-r border-slate-800">
+        <div className="p-6 border-b border-slate-800">
+          <Link href="/admin" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              A
+            </div>
+            <div>
+              <h2 className="text-lg font-bold tracking-tight">{t.admin.portal}</h2>
+              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Administrator</p>
+            </div>
+          </Link>
         </div>
-        
-        <nav className="flex-1 mt-6 px-4 space-y-1 overflow-y-auto">
+
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1 custom-scrollbar">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 group ${
                   isActive 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
-                    : 'hover:bg-slate-800 hover:text-white'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20 translate-x-1' 
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white hover:translate-x-1'
                 }`}
               >
-                <span className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'}`}>
+                <span className={`transition-colors ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-white'}`}>
                   {item.icon}
                 </span>
-                <span className="font-medium">{item.name}</span>
-                {isActive && (
-                  <div className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                )}
+                {item.name}
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-slate-800 space-y-2">
+        <div className="p-4 border-t border-slate-800 bg-slate-900/50">
           <Link
             href="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800 hover:text-white transition-all duration-200"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-all group"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span className="font-medium">{t.admin.exitToSite}</span>
+            {t.admin.exitToSite}
           </Link>
-          
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 w-full rounded-xl transition-all duration-200 hover:bg-red-500/10 hover:text-red-500 text-slate-400 group"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-rose-500/10 hover:text-rose-400 transition-all mt-1 group"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-500 group-hover:text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            <span className="font-medium">{t.admin.logout}</span>
+            {t.admin.logout}
           </button>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen md:ml-64">
-        {/* Top Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 md:px-8 sticky top-0 z-40">
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setIsSidebarOpen((prev) => !prev)}
-              className="md:hidden inline-flex items-center justify-center p-2 rounded-lg border border-slate-200 text-slate-600 bg-white shadow-sm active:scale-95 transition-all"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-              <span className="ml-2 text-xs font-semibold text-slate-700">{t.admin.menu}</span>
-            </button>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500">
-              <span className="hover:text-blue-600 cursor-pointer transition-colors">{t.admin.administrator}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-              <span className="text-slate-900 font-semibold capitalize">
-                {pathname === '/admin' ? t.admin.dashboard : pathname.split('/').pop()}
-              </span>
-            </div>
-          </div>
+      {/* Mobile Sidebar Overlay */}
+      <div 
+        className={`fixed inset-0 bg-slate-900/60 z-50 transition-opacity duration-300 lg:hidden ${isSidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        onClick={() => setIsSidebarOpen(false)}
+      />
 
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              {t.admin.logout}
-            </button>
-            <div className="h-8 w-[1px] bg-slate-200 mx-2 hidden sm:block" />
-            <div className="hidden sm:flex items-center gap-3 pl-2">
-              <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
-                A
-              </div>
-              <div className="flex flex-col">
-                <span className="text-sm font-bold text-slate-900 leading-none">{t.admin.administrator}</span>
-                <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mt-1">{t.admin.administrator}</span>
-              </div>
+      {/* Sidebar - Mobile */}
+      <aside className={`fixed top-0 left-0 bottom-0 w-80 bg-slate-900 text-white z-50 transition-transform duration-300 transform lg:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+          <Link href="/admin" className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20">
+              A
+            </div>
+            <h2 className="text-lg font-bold tracking-tight">{t.admin.portal}</h2>
+          </Link>
+          <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-slate-400 hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center gap-4 px-5 py-4 rounded-2xl text-base font-medium transition-all ${
+                  isActive 
+                    ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' 
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                {item.icon}
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="p-6 border-t border-slate-800">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-rose-500/10 text-rose-400 font-bold hover:bg-rose-500/20 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            {t.admin.logout}
+          </button>
+        </div>
+      </aside>
+
+      {/* Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Mobile Header */}
+        <header className="lg:hidden h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 shrink-0">
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-all"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-bold text-slate-900">{t.admin.portal}</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs">
+              A
             </div>
           </div>
         </header>
 
-        {/* Content Area */}
-        <main className="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
-          <div className="max-w-7xl mx-auto">
+        {/* Desktop Header / Top Bar */}
+        <header className="hidden lg:flex h-20 bg-white border-b border-slate-200 items-center justify-between px-8 shrink-0">
+          <div>
+            <h1 className="text-xl font-bold text-slate-900 capitalize">
+              {pathname === '/admin' ? t.admin.dashboard : pathname.split('/').pop()}
+            </h1>
+          </div>
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end">
+              <span className="text-sm font-bold text-slate-900 leading-none">{t.admin.administrator}</span>
+              <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider mt-1 flex items-center gap-1">
+                <span className="w-1 h-1 bg-emerald-600 rounded-full animate-pulse"></span>
+                {t.admin.online}
+              </span>
+            </div>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-500/20 border-2 border-white">
+              A
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content Area */}
+        <main className="flex-1 overflow-y-auto bg-slate-50 custom-scrollbar">
+          <div className="max-w-[1600px] mx-auto p-4 sm:p-6 lg:p-8">
             {children}
           </div>
         </main>

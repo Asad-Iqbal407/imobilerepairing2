@@ -7,7 +7,6 @@ export interface Service {
   id: string;
   title: string;
   description: string;
-  price: number;
   image: string;
 }
 
@@ -80,8 +79,6 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
   const addService = async (service: Service) => {
     try {
-      // Remove id if it's a placeholder (e.g. timestamp from frontend)
-      // or just send the rest. API will generate _id.
       const { id, ...serviceData } = service;
       const res = await fetch('/api/services', {
         method: 'POST',
@@ -91,9 +88,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const newService = await res.json();
         setServices(prev => [...prev, { ...newService, id: newService._id }]);
+        return true;
       }
+      throw new Error('Failed to add service');
     } catch (error) {
       console.error('Failed to add service:', error);
+      throw error;
     }
   };
 
@@ -108,9 +108,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const savedService = await res.json();
         setServices(prev => prev.map(s => s.id === id ? { ...savedService, id: savedService._id } : s));
+        return true;
       }
+      throw new Error('Failed to update service');
     } catch (error) {
       console.error('Failed to update service:', error);
+      throw error;
     }
   };
 
@@ -121,9 +124,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       });
       if (res.ok) {
         setServices(prev => prev.filter(s => s.id !== id));
+        return true;
       }
+      throw new Error('Failed to delete service');
     } catch (error) {
       console.error('Failed to delete service:', error);
+      throw error;
     }
   };
 
@@ -138,9 +144,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const newProduct = await res.json();
         setProducts(prev => [...prev, { ...newProduct, id: newProduct._id }]);
+        return true;
       }
+      throw new Error('Failed to add product');
     } catch (error) {
       console.error('Failed to add product:', error);
+      throw error;
     }
   };
 
@@ -155,9 +164,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         const savedProduct = await res.json();
         setProducts(prev => prev.map(p => p.id === id ? { ...savedProduct, id: savedProduct._id } : p));
+        return true;
       }
+      throw new Error('Failed to update product');
     } catch (error) {
       console.error('Failed to update product:', error);
+      throw error;
     }
   };
 
@@ -168,9 +180,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       });
       if (res.ok) {
         setProducts(prev => prev.filter(p => p.id !== id));
+        return true;
       }
+      throw new Error('Failed to delete product');
     } catch (error) {
       console.error('Failed to delete product:', error);
+      throw error;
     }
   };
 

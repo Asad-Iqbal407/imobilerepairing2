@@ -14,10 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://imobile.com'),
-  title: {
-    default: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
-    template: "%s | Tertulia Impulsiva"
-  },
+  title: "Tertulia Impulsiva",
   description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis para todas as principais marcas. Substituição de ecrã, reparação de bateria e muito mais.",
   keywords: [
     "reparação de telemóveis",
@@ -25,7 +22,8 @@ export const metadata: Metadata = {
     "substituição de ecrã",
     "troca de bateria",
     "reparação iPhone",
-    "reparação Samsung"
+    "reparação Samsung",
+    "Tertulia Impulsiva"
   ],
   authors: [{ name: "Tertulia Impulsiva Team" }],
   creator: "Tertulia Impulsiva",
@@ -71,7 +69,7 @@ export default function RootLayout({
     "image": "https://imobile.com/og-image.jpg",
     "@id": "https://imobile.com",
     "url": "https://imobile.com",
-    "telephone": ["+351 913 709 717", "+351 938 210 334"],
+    "telephone": ["+351 913 709 717", "+351 935 911 908"],
     "taxID": "317822453",
     "address": {
       "@type": "PostalAddress",

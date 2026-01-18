@@ -117,88 +117,90 @@ export default function OrdersPage() {
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalOrders}</p>
-              <p className="text-2xl font-bold text-slate-900">{totalOrders}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.totalOrders}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{totalOrders}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalRevenue}</p>
-              <p className="text-2xl font-bold text-slate-900">
-                {formatPriceByCurrency(revenueByCurrency.usd, 'usd')}
-              </p>
-              {revenueByCurrency.eur > 0 && (
-                <p className="text-xs font-bold text-slate-500">
-                  {formatPriceByCurrency(revenueByCurrency.eur, 'eur')}
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.totalRevenue}</p>
+              <div className="flex flex-col">
+                <p className="text-xl font-bold text-slate-900 leading-none truncate">
+                  {formatPriceByCurrency(revenueByCurrency.usd, 'usd')}
                 </p>
-              )}
+                {revenueByCurrency.eur > 0 && (
+                  <p className="text-[10px] font-bold text-slate-500 mt-1">
+                    {formatPriceByCurrency(revenueByCurrency.eur, 'eur')}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.pending}</p>
-              <p className="text-2xl font-bold text-slate-900">{pendingOrders}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.pending}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{pendingOrders}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.completed}</p>
-              <p className="text-2xl font-bold text-slate-900">{completedOrders}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.completed}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{completedOrders}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-        <div className="relative w-full md:w-96">
+      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="relative w-full lg:w-96">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             type="text"
             placeholder={t.admin.searchOrdersPlaceholder}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {['all', 'pending', 'paid', 'confirmed', 'shipped', 'cancelled'].map((status) => (
             <button
               key={status}
               onClick={() => setSelectedStatus(status === 'all' ? 'All' : status)}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border whitespace-nowrap ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                 (selectedStatus === 'All' && status === 'all') || selectedStatus === status
                   ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white border-slate-200 text-slate-500 hover:border-blue-200 hover:text-blue-600'
@@ -221,62 +223,72 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.customer}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.items}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.total}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.date}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.status}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.customer}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.items}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.total}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.date}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.status}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredOrders.map((order: any) => (
-                <tr key={order._id} className="hover:bg-slate-50 transition-colors group">
+                <tr key={order._id} className="hover:bg-slate-50/80 transition-all group">
                   <td className="px-6 py-4">
-                    <div>
-                      <span className="font-bold text-slate-900 block">{order.customerName}</span>
-                      <span className="text-slate-500 text-sm">{order.customerEmail}</span>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-slate-900 text-base">{order.customerName}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{order.customerEmail}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex flex-col gap-1">
+                      {order.items.map((item: any, idx: number) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-black shrink-0">
+                            {item.quantity}x
+                          </span>
+                          <span className="text-xs font-bold text-slate-700 truncate max-w-[200px]" title={item.title}>
+                            {item.title}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="text-slate-600 font-medium">
-                      {order.items.reduce((acc: number, item: any) => acc + item.quantity, 0)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="font-bold text-slate-900">
+                    <span className="font-bold text-slate-900 text-base">
                       {formatPriceByCurrency(order.total, (order.currency || 'usd') as SupportedCurrency)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="text-slate-500 text-sm">
+                    <span className="text-slate-500 text-xs font-medium">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold ${
-                      order.status === 'pending' ? 'bg-amber-50 text-amber-700' :
-                      order.status === 'paid' ? 'bg-blue-50 text-blue-700' :
-                      order.status === 'shipped' ? 'bg-purple-50 text-purple-700' :
-                      order.status === 'confirmed' ? 'bg-emerald-50 text-emerald-700' :
-                      order.status === 'cancelled' ? 'bg-rose-50 text-rose-700' :
-                      'bg-slate-50 text-slate-700'
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                      order.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                      order.status === 'paid' ? 'bg-blue-50 text-blue-600' :
+                      order.status === 'shipped' ? 'bg-purple-50 text-purple-600' :
+                      order.status === 'confirmed' ? 'bg-emerald-50 text-emerald-600' :
+                      order.status === 'cancelled' ? 'bg-rose-50 text-rose-600' :
+                      'bg-slate-50 text-slate-600'
                     }`}>
                       {t.admin[order.status as keyof typeof t.admin] || order.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => {
                           setSelectedOrder(order);
                           setIsDetailsOpen(true);
                         }}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
                         title={t.admin.viewDetails}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -286,7 +298,7 @@ export default function OrdersPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(order._id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                         title={t.admin.deleteOrder}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -299,6 +311,81 @@ export default function OrdersPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {filteredOrders.map((order: any) => (
+            <div key={order._id} className="p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="font-bold text-slate-900">{order.customerName}</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{new Date(order.createdAt).toLocaleDateString()}</span>
+                </div>
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                  order.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                  order.status === 'paid' ? 'bg-blue-50 text-blue-600' :
+                  order.status === 'confirmed' ? 'bg-emerald-50 text-emerald-600' :
+                  'bg-slate-50 text-slate-600'
+                }`}>
+                  {t.admin[order.status as keyof typeof t.admin] || order.status}
+                </span>
+              </div>
+              <div className="bg-slate-50 p-3 rounded-xl space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-200/50 pb-2">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.admin.total}</span>
+                    <span className="font-bold text-slate-900">
+                      {formatPriceByCurrency(order.total, (order.currency || 'usd') as SupportedCurrency)}
+                    </span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.admin.items}</span>
+                    <span className="font-bold text-slate-900">
+                      {order.items.reduce((acc: number, item: any) => acc + item.quantity, 0)}
+                    </span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {order.items.map((item: any, idx: number) => (
+                    <div key={idx} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="font-black text-slate-400">{item.quantity}x</span>
+                        <span className="font-bold text-slate-700 truncate">{item.title}</span>
+                      </div>
+                      <span className="font-medium text-slate-500 shrink-0">
+                        {formatPriceByCurrency(item.price * item.quantity, (order.currency || 'usd') as SupportedCurrency)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-50">
+                <button
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setIsDetailsOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  {t.admin.details}
+                </button>
+                <button
+                  onClick={() => handleDelete(order._id)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  {t.admin.delete}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
         {filteredOrders.length === 0 && (
           <div className="text-center py-20">

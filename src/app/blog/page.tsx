@@ -10,7 +10,6 @@ import Post from '@/models/Post';
 import DynamicText from '@/components/DynamicText';
 
 export const metadata: Metadata = {
-  title: 'Blog | Insights e Dicas de Reparação',
   description: 'As últimas notícias, guias de reparação e insights tecnológicos da equipa de especialistas da Tertulia Impulsiva.',
 };
 

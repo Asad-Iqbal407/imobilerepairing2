@@ -1,50 +1,73 @@
 import { ImageResponse } from 'next/og'
+import dbConnect from '@/lib/db'
+import SiteSetting from '@/models/SiteSetting'
 
-// Route segment config
-export const runtime = 'edge'
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
-// Image metadata
 export const size = {
   width: 32,
   height: 32,
 }
 export const contentType = 'image/png'
 
-// Image generation
-export default function Icon() {
+export default async function Icon() {
+  let logoDataUri = ''
+  try {
+    await dbConnect()
+    const setting = await SiteSetting.findOne({ key: 'site' }).lean()
+    logoDataUri = typeof setting?.logoDataUri === 'string' ? setting.logoDataUri : ''
+  } catch {
+    logoDataUri = ''
+  }
+
   return new ImageResponse(
     (
-      // ImageResponse JSX element
       <div
         style={{
-          background: 'linear-gradient(to top right, #2563eb, #3b82f6)', // blue-600 to blue-500
+          background: logoDataUri && logoDataUri.startsWith('data:image/') ? 'transparent' : '#ffffff',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          borderRadius: '8px', // rounded-xl relative to 32px
+          borderRadius: logoDataUri && logoDataUri.startsWith('data:image/') ? '0' : '8px',
         }}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{ width: '20px', height: '20px' }}
-        >
-          {/* Smartphone icon: rect with rounded corners */}
-          <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
-          <line x1="12" y1="18" x2="12.01" y2="18" />
-        </svg>
+        {logoDataUri && logoDataUri.startsWith('data:image/') ? (
+          <img
+            src={logoDataUri}
+            width={32}
+            height={32}
+            style={{ objectFit: 'contain' }}
+          />
+        ) : (
+          <div
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '8px',
+              background: 'linear-gradient(to top right, #2563eb, #3b82f6)',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontWeight: 800,
+              fontSize: '14px',
+              letterSpacing: '-0.5px',
+            }}
+          >
+            TI
+          </div>
+        )}
       </div>
     ),
-    // ImageResponse options
     {
       ...size,
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      },
     }
   )
 }

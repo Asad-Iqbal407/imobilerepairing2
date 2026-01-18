@@ -100,14 +100,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPost(slug);
   
   if (!post) {
-    return { title: 'Post Not Found' };
+    return { description: 'Post Não Encontrado' };
   }
 
   return {
-    title: post.title,
     description: post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>?/gm, ''), // Strip HTML tags
     openGraph: {
-      title: post.title,
       description: post.excerpt || post.content.substring(0, 160).replace(/<[^>]*>?/gm, ''),
       images: [post.coverImage || ''],
       type: 'article',

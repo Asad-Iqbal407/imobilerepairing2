@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DynamicText from '@/components/DynamicText';
+import { isValidUrl } from '@/lib/utils';
 
 type CategoryItem = { id: string; name: string; icon: string; label: string };
 
@@ -15,6 +16,7 @@ export default function ManageProducts() {
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [apiCategories, setApiCategories] = useState<Array<{ id: string; name: string; icon?: string }>>([]);
@@ -174,19 +176,6 @@ export default function ManageProducts() {
     }
   };
 
-  const isValidUrl = (url: string) => {
-    try {
-      if (!url || typeof url !== 'string') return false;
-      if (url.startsWith('data:image')) return true;
-      if (url.startsWith('/uploads/')) return true;
-      if (!url.startsWith('http') && !url.startsWith('/')) return false;
-      new URL(url.startsWith('http') ? url : `http://localhost${url}`);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -196,6 +185,7 @@ export default function ManageProducts() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       if (isEditing) {
         await updateProduct(currentProduct);
@@ -207,6 +197,8 @@ export default function ManageProducts() {
     } catch (error) {
       console.error('Error submitting form:', error);
       alert(t.admin.saveError);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -289,9 +281,14 @@ export default function ManageProducts() {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm(t.admin.confirmDelete)) {
-      deleteProduct(id);
+      try {
+        await deleteProduct(id);
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert(t.admin.saveError);
+      }
     }
   };
 
@@ -360,58 +357,58 @@ export default function ManageProducts() {
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalProducts}</p>
-              <p className="text-2xl font-bold text-slate-900">{totalProducts}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.totalProducts}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{totalProducts}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.inventoryValue}</p>
-              <p className="text-2xl font-bold text-slate-900">{t.admin.currencySymbol}{totalValue.toLocaleString()}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.inventoryValue}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{t.admin.currencySymbol}{totalValue.toLocaleString()}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.phonesAndTablets}</p>
-              <p className="text-2xl font-bold text-slate-900">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.phonesAndTablets}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">
                 {(categoriesCount['New Phones'] || 0) + (categoriesCount['Refurbished Phones'] || 0) + (categoriesCount['2nd Hand Phones'] || 0) + (categoriesCount['Tablets'] || 0)}
               </p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 011-1h1a2 2 0 100-4H7a1 1 0 01-1-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.allAccessories}</p>
-              <p className="text-2xl font-bold text-slate-900">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.allAccessories}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">
                 {(categoriesCount['Cables'] || 0) + 
                  (categoriesCount['Chargers'] || 0) + 
                  (categoriesCount['Powerbanks'] || 0) + 
@@ -427,31 +424,31 @@ export default function ManageProducts() {
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-        <div className="relative w-full md:w-96">
+      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="relative w-full lg:w-96">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             type="text"
             placeholder={t.admin.searchProducts}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5 ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border flex items-center gap-2 ${
                 selectedCategory === category.id
                   ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white border-slate-200 text-slate-500 hover:border-blue-200 hover:text-blue-600'
               }`}
             >
-              <span>{category.icon}</span>
+              <span className="text-sm">{category.icon}</span>
               {category.label}
             </button>
           ))}
@@ -460,59 +457,77 @@ export default function ManageProducts() {
 
       {/* Products Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.productName}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.category}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.price}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.productName}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.category}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.price}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.condition}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-slate-50 transition-colors group">
+                <tr key={product.id} className="hover:bg-slate-50/80 transition-all group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-slate-50 rounded-xl overflow-hidden shadow-inner border border-slate-100 flex items-center justify-center relative">
+                      <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 relative shrink-0 shadow-sm border border-slate-200">
                         {product.image ? (
-                          <Image 
-                            src={isValidUrl(product.image) ? product.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"} 
-                            alt={product.name} 
-                            fill 
-                            className="object-cover" 
-                          />
+                          <div className="relative w-full h-full">
+                            <Image 
+                              src={product.image} 
+                              alt={product.name}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";
+                              }}
+                            />
+                          </div>
                         ) : (
-                          <span className="text-2xl">📦</span>
+                          <div className="w-full h-full flex items-center justify-center text-xl">📱</div>
                         )}
                       </div>
-                      <div>
-                        <span className="font-bold text-slate-900 block"><DynamicText text={product.name} /></span>
-                        <span className="text-slate-500 text-sm line-clamp-1 max-w-[200px]"><DynamicText text={product.description} /></span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-bold text-slate-900 truncate text-base">
+                          <DynamicText text={product.name} />
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[200px]">
+                          <DynamicText text={product.description || 'No description'} />
+                        </span>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold ${
-                      product.category.includes('Phone') ? 'bg-blue-50 text-blue-700' :
-                      product.category === 'Tablets' ? 'bg-purple-50 text-purple-700' :
-                      'bg-amber-50 text-amber-700'
-                    }`}>
-                      <span>{categories.find(c => c.id === product.category)?.icon || '📦'}</span>
-                      {categories.find(c => c.id === product.category)?.label || product.category}
+                    <span className="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold whitespace-nowrap">
+                      {getCategoryLabel(product.category)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-emerald-50 text-emerald-700">
-                      {t.admin.currencySymbol}{product.price}
+                    <span className="font-bold text-slate-900 text-base">
+                      {t.admin.currencySymbol}{product.price.toLocaleString()}
                     </span>
                   </td>
+                  <td className="px-6 py-4 text-center">
+                    {product.condition ? (
+                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                        product.condition === 'New' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
+                      }`}>
+                        {product.condition}
+                      </span>
+                    ) : (
+                      <span className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">—</span>
+                    )}
+                  </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleEdit(product)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
                         title={t.admin.editProduct}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -521,7 +536,7 @@ export default function ManageProducts() {
                       </button>
                       <button
                         onClick={() => handleDelete(product.id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                         title={t.admin.delete}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -534,6 +549,62 @@ export default function ManageProducts() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="p-4 space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 relative shrink-0 shadow-sm border border-slate-200">
+                  {product.image ? (
+                    <Image 
+                      src={isValidUrl(product.image) ? product.image : "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop"} 
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-2xl">📱</div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[10px] font-bold uppercase tracking-wider">
+                      {getCategoryLabel(product.category)}
+                    </span>
+                    <span className="font-bold text-blue-600">
+                      {t.admin.currencySymbol}{product.price.toLocaleString()}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-slate-900 truncate"><DynamicText text={product.name} /></h3>
+                  {product.condition && (
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{product.condition}</span>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-50">
+                <button
+                  onClick={() => handleEdit(product)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  {t.admin.editProduct}
+                </button>
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  {t.admin.delete}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
         {filteredProducts.length === 0 && (
           <div className="text-center py-20">
@@ -783,9 +854,17 @@ export default function ManageProducts() {
               <button
                 type="submit"
                 form="product-form"
-                className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
+                disabled={isSaving}
+                className={`flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 ${isSaving ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                {isEditing ? t.admin.saveChanges : t.admin.addProduct}
+                {isSaving ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    {t.admin.saving || 'Saving...'}
+                  </>
+                ) : (
+                  isEditing ? t.admin.saveChanges : t.admin.createProduct
+                )}
               </button>
             </div>
           </div>

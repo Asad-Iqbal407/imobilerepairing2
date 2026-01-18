@@ -3,7 +3,6 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 export interface IService extends Document {
   title: string;
   description: string;
-  price: number;
   image: string;
   createdAt: Date;
   updatedAt: Date;
@@ -12,7 +11,6 @@ export interface IService extends Document {
 const ServiceSchema: Schema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  price: { type: Number, required: true },
   image: { type: String, required: true },
 }, { timestamps: true });
 

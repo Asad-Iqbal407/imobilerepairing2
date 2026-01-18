@@ -25,6 +25,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [logoDataUri, setLogoDataUri] = useState('');
   
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -32,6 +33,35 @@ export default function Navbar() {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/api/site-settings', { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = (await res.json()) as { logoDataUri?: string };
+        const next = typeof data.logoDataUri === 'string' ? data.logoDataUri : '';
+        if (!cancelled) setLogoDataUri(next);
+      } catch {
+        return;
+      }
+    };
+
+    const onUpdated = () => load();
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'site-logo-updated-at') load();
+    };
+
+    load();
+    window.addEventListener('site-logo-updated', onUpdated as EventListener);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      cancelled = true;
+      window.removeEventListener('site-logo-updated', onUpdated as EventListener);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   // Close mobile menu when route changes
@@ -60,10 +90,18 @@ export default function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="group flex items-center gap-3">
               <motion.div 
-                whileHover={{ rotate: 12, scale: 1.1 }}
-                className="w-11 h-11 bg-gradient-to-tr from-blue-600 to-blue-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/30"
+                whileHover={{ rotate: 6, scale: 1.05 }}
+                className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-slate-300/40 border border-slate-200 overflow-hidden"
               >
-                <Smartphone className="h-6 w-6" />
+                {logoDataUri && logoDataUri.startsWith('data:image/') ? (
+                  <img
+                    src={logoDataUri}
+                    alt="Tertúlia Impulsiva logo"
+                    className="w-9 h-9 object-contain"
+                  />
+                ) : (
+                  <Smartphone className="h-6 w-6 text-blue-600" />
+                )}
               </motion.div>
               <span className="text-2xl font-black text-slate-900 tracking-tight">
                 {t.common.shopName}

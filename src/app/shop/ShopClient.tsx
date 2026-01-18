@@ -285,7 +285,7 @@ export default function ShopClient() {
               <div className="w-full md:w-1/2 relative">
                 <input
                   type="text"
-                  placeholder="Search products..."
+                  placeholder={t.shop.searchPlaceholder}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
@@ -301,7 +301,7 @@ export default function ShopClient() {
                   <input
                     type="number"
                     min="0"
-                    placeholder="Min"
+                    placeholder={t.shop.minPrice}
                     value={priceRange.min}
                     onChange={(e) => setPriceRange({ ...priceRange, min: Number(e.target.value) })}
                     className="w-20 bg-transparent outline-none font-bold text-slate-900"
@@ -313,7 +313,7 @@ export default function ShopClient() {
                   <input
                     type="number"
                     min="0"
-                    placeholder="Max"
+                    placeholder={t.shop.maxPrice}
                     value={priceRange.max}
                     onChange={(e) => setPriceRange({ ...priceRange, max: Number(e.target.value) })}
                     className="w-20 bg-transparent outline-none font-bold text-slate-900"

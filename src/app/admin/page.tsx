@@ -217,23 +217,23 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{t.admin.dashboardOverview}</h1>
-          <p className="text-slate-500 mt-1">{t.admin.welcomeBack}</p>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">{t.admin.dashboardOverview}</h1>
+          <p className="text-slate-500 mt-2 text-lg">{t.admin.welcomeBack}</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-4">
           <button 
             onClick={handleExport}
-            className="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-all flex items-center gap-2 shadow-sm active:scale-95"
+            className="flex-1 sm:flex-none px-6 py-3 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-2 shadow-sm active:scale-95"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             {t.admin.exportReport}
           </button>
-          <Link href="/admin/services" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2 active:scale-95">
+          <Link href="/admin/services" className="flex-1 sm:flex-none px-6 py-3 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 flex items-center justify-center gap-2 active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -243,150 +243,168 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {statCards.map((card) => (
           <Link 
             key={card.label} 
             href={card.href}
-            className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md hover:border-blue-200 transition-all group cursor-pointer"
+            className="group relative bg-white p-8 rounded-3xl shadow-sm border border-slate-100 hover:shadow-2xl hover:shadow-blue-500/10 hover:border-blue-200 transition-all duration-300 cursor-pointer overflow-hidden"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`p-3 rounded-xl ${card.color} text-white shadow-lg shadow-opacity-20 group-hover:scale-110 transition-transform`}>
-                {card.icon}
+            <div className="relative z-10 flex flex-col h-full justify-between">
+              <div className="flex items-center justify-between mb-6">
+                <div className={`p-4 rounded-2xl ${card.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  {card.icon}
+                </div>
+                <div className={`text-xs font-bold px-3 py-1.5 rounded-full ${
+                  card.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 
+                  card.trend === t.admin.new ? 'bg-blue-50 text-blue-600' :
+                  'bg-rose-50 text-rose-600'
+                }`}>
+                  {card.trend}
+                </div>
               </div>
-              <span className={`text-xs font-bold px-2 py-1 rounded-lg ${
-                card.trend.startsWith('+') ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
-              }`}>
-                {card.trend}
-              </span>
+              <div>
+                <h3 className="text-slate-500 text-sm font-bold uppercase tracking-wider mb-1">{card.label}</h3>
+                <p className="text-3xl font-black text-slate-900 tabular-nums">{card.value}</p>
+              </div>
             </div>
-            <h3 className="text-slate-500 text-sm font-medium">{card.label}</h3>
-            <p className="text-2xl font-bold text-slate-900 mt-1">{card.value}</p>
+            {/* Background Decoration */}
+            <div className={`absolute -right-4 -bottom-4 w-24 h-24 ${card.color} opacity-[0.03] rounded-full group-hover:scale-150 transition-transform duration-500`}></div>
           </Link>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Quick Management Section */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-slate-900">{t.admin.inventoryStatus}</h2>
-              <Link href="/admin/products" className="text-blue-600 text-sm font-bold hover:underline">{t.admin.viewAll}</Link>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl shadow-sm border border-slate-200">
-                  📱
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900">{stats.products} {t.admin.productsCount}</p>
-                  <p className="text-xs text-slate-500">{t.admin.activeInShop}</p>
-                </div>
+        {/* Recent Activity Section */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 overflow-hidden relative">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">{t.admin.recentActivity}</h2>
+                <p className="text-slate-500 text-sm mt-1">Keep track of what's happening</p>
               </div>
-              <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
-                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-2xl shadow-sm border border-slate-200">
-                  🛠️
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-900">{stats.services} {t.admin.servicesCount}</p>
-                  <p className="text-xs text-slate-500">{t.admin.availableForBooking}</p>
-                </div>
+              <div className="flex gap-2">
+                <span className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
+                <span className="w-3 h-3 rounded-full bg-amber-500 animate-pulse" style={{ animationDelay: '200ms' }}></span>
+                <span className="w-3 h-3 rounded-full bg-purple-500 animate-pulse" style={{ animationDelay: '400ms' }}></span>
               </div>
             </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">{t.admin.recentActivity}</h2>
-            <div className="space-y-6">
+            
+            <div className="space-y-4">
               {activities.length > 0 ? (
                 activities.map((activity) => (
-                  <div key={activity.id} className="flex items-start gap-4 group">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                      activity.type === 'order' ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white' :
-                      activity.type === 'quote' ? 'bg-amber-50 text-amber-600 group-hover:bg-amber-600 group-hover:text-white' :
-                      'bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white'
+                  <div key={activity.id} className="group flex items-center gap-5 p-4 hover:bg-slate-50 rounded-2xl transition-all duration-200 border border-transparent hover:border-slate-100">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-all duration-300 group-hover:scale-105 ${
+                      activity.type === 'order' ? 'bg-blue-50 text-blue-600' :
+                      activity.type === 'quote' ? 'bg-amber-50 text-amber-600' :
+                      'bg-purple-50 text-purple-600'
                     }`}>
                       {activity.type === 'order' && (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                         </svg>
                       )}
                       {activity.type === 'quote' && (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                       )}
                       {activity.type === 'message' && (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-bold text-slate-900 truncate">{activity.title}</p>
-                        <span className="text-[10px] font-medium text-slate-400">
+                        <p className="text-base font-bold text-slate-900 truncate tracking-tight">{activity.title}</p>
+                        <span className="text-xs font-bold text-slate-400 tabular-nums">
                           {new Date(activity.time).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 truncate">{activity.subtitle}</p>
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm text-slate-500 truncate font-medium">{activity.subtitle}</p>
+                        {activity.status && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                        )}
+                        {activity.status && (
+                          <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                            {activity.status}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <div className="text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                  <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <p className="text-slate-500 font-medium">{t.admin.noRecentActivity}</p>
+                  <p className="text-slate-400 font-bold text-lg">{t.admin.noRecentActivity}</p>
                 </div>
               )}
             </div>
+            <Link 
+              href="/admin/orders" 
+              className="mt-8 flex items-center justify-center w-full py-4 text-sm font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-2xl transition-all"
+            >
+              {t.admin.viewAll}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
           </div>
         </div>
 
-        {/* System Info & Support */}
-        <div className="space-y-6">
-          <div className="bg-slate-900 p-6 rounded-2xl shadow-xl text-white overflow-hidden relative">
+        {/* Sidebar Info Section */}
+        <div className="space-y-8">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8 rounded-3xl shadow-2xl text-white overflow-hidden relative group">
             <div className="relative z-10">
-              <h2 className="text-xl font-bold mb-2">{t.admin.needHelp}</h2>
-              <p className="text-slate-400 text-sm mb-6">{t.admin.supportDesc}</p>
+              <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm border border-white/10">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-black mb-3 tracking-tight">{t.admin.needHelp}</h2>
+              <p className="text-slate-400 text-sm mb-8 leading-relaxed font-medium">{t.admin.supportDesc}</p>
               <Link 
                 href="/admin/messages"
-                className="block w-full py-3 bg-white text-slate-900 rounded-xl font-bold hover:bg-slate-100 transition-all text-center active:scale-95"
+                className="block w-full py-4 bg-blue-600 text-white rounded-2xl font-black hover:bg-blue-500 transition-all text-center active:scale-95 shadow-xl shadow-blue-600/20"
               >
                 {t.admin.supportCenter}
               </Link>
             </div>
-            <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl"></div>
+            <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all duration-700"></div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">{t.admin.systemHealth}</h2>
-            <div className="space-y-4">
+          <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+            <h2 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-8">{t.admin.systemHealth}</h2>
+            <div className="space-y-8">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">{t.admin.databaseStatus}</span>
-                <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
-                  <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                <span className="text-sm text-slate-600 font-bold">{t.admin.databaseStatus}</span>
+                <span className="flex items-center gap-2 text-[10px] font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                  <span className="w-2 h-2 bg-emerald-600 rounded-full animate-pulse"></span>
                   {t.admin.connected}
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">{t.admin.stripeApi}</span>
-                <span className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">
-                  <span className="w-1.5 h-1.5 bg-emerald-600 rounded-full"></span>
+                <span className="text-sm text-slate-600 font-bold">{t.admin.stripeApi}</span>
+                <span className="flex items-center gap-2 text-[10px] font-black text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full uppercase tracking-widest">
+                  <span className="w-2 h-2 bg-emerald-600 rounded-full animate-pulse"></span>
                   {t.admin.online}
                 </span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600 font-medium">{t.admin.storage}</span>
-                <span className="text-xs font-bold text-slate-900">2.4GB / 5.0GB</span>
-              </div>
-              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                <div className="w-[48%] bg-blue-600 h-full rounded-full"></div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-slate-600 font-bold">{t.admin.storage}</span>
+                  <span className="text-xs font-black text-slate-900 tabular-nums">2.4GB / 5.0GB</span>
+                </div>
+                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                  <div className="w-[48%] bg-blue-600 h-full rounded-full shadow-[0_0_15px_rgba(37,99,235,0.5)]"></div>
+                </div>
               </div>
             </div>
           </div>

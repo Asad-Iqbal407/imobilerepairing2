@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useData, Service } from '@/context/DataContext';
-import { getServiceEmoji } from '@/lib/utils';
+import { getServiceEmoji, isValidUrl } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
 import DynamicText from '@/components/DynamicText';
 
@@ -13,13 +13,13 @@ export default function ManageServices() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentService, setCurrentService] = useState<Service>({
     id: '',
     title: '',
     description: '',
-    price: 0,
     image: '',
   });
 
@@ -35,18 +35,6 @@ export default function ManageServices() {
     service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     service.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const isValidUrl = (url: string) => {
-    try {
-      if (!url || typeof url !== 'string') return false;
-      if (url.startsWith('/uploads/')) return true;
-      if (!url.startsWith('http') && !url.startsWith('/')) return false;
-      new URL(url.startsWith('http') ? url : `http://localhost${url}`);
-      return true;
-    } catch {
-      return false;
-    }
-  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -76,6 +64,7 @@ export default function ManageServices() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       if (isEditing) {
         await updateService(currentService);
@@ -87,6 +76,8 @@ export default function ManageServices() {
     } catch (error) {
       console.error('Error submitting form:', error);
       alert(t.admin.saveError);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -95,30 +86,29 @@ export default function ManageServices() {
       id: service.id || '',
       title: service.title || '',
       description: service.description || '',
-      price: service.price || 0,
       image: service.image || '',
     });
     setIsEditing(true);
     setIsFormOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm(t.admin.confirmDelete)) {
-      deleteService(id);
+      try {
+        await deleteService(id);
+      } catch (error) {
+        console.error('Error deleting service:', error);
+        alert(t.admin.saveError);
+      }
     }
   };
 
   const resetForm = () => {
-    setCurrentService({ id: '', title: '', description: '', price: 0, image: '' });
+    setCurrentService({ id: '', title: '', description: '', image: '' });
     setIsEditing(false);
   };
 
   const totalServices = services.length;
-  const avgPrice = services.length > 0 
-    ? services.reduce((sum, s) => sum + s.price, 0) / services.length 
-    : 0;
-  const premiumServices = services.filter(s => s.price >= 100).length;
-  const entryServices = services.filter(s => s.price < 50).length;
 
   if (loading) return (
     <div className="flex items-center justify-center min-h-[400px]">
@@ -162,45 +152,6 @@ export default function ManageServices() {
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-emerald-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.avgPrice}</p>
-              <h3 className="text-2xl font-bold text-slate-900">{t.admin.currencySymbol}{Math.round(avgPrice)}</h3>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-purple-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-7.714 2.143L11 21l-2.286-6.857L1 12l7.714-2.143L11 3z" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.premium} (+{t.admin.currencySymbol}100)</p>
-              <h3 className="text-2xl font-bold text-slate-900">{premiumServices}</h3>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-amber-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.entry} (&lt;{t.admin.currencySymbol}50)</p>
-              <h3 className="text-2xl font-bold text-slate-900">{entryServices}</h3>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Search Bar */}
@@ -219,53 +170,60 @@ export default function ManageServices() {
         </div>
       </div>
 
-      {/* Services Table */}
+      {/* Services Table/Grid */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.serviceDetails}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.startingPrice}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.serviceDetails}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.description}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredServices.map((service) => (
-                <tr key={service.id} className="hover:bg-slate-50 transition-colors group">
+                <tr key={service.id} className="hover:bg-slate-50/80 transition-all group">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 relative shrink-0">
+                      <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 relative shrink-0 shadow-sm border border-slate-200">
                         {service.image ? (
-                          <Image 
-                            src={isValidUrl(service.image) ? service.image : "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop"} 
-                            alt={service.title}
-                            fill
-                            className="object-cover"
-                          />
+                          <div className="relative w-full h-full">
+                            <Image 
+                              src={service.image} 
+                              alt={service.title}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-500"
+                              onError={(e) => {
+                                // Fallback for broken images
+                                const target = e.target as HTMLImageElement;
+                                target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";
+                              }}
+                            />
+                          </div>
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-xl">{getServiceEmoji(service.title, service.description)}</div>
+                          <div className="w-full h-full flex items-center justify-center text-2xl">{getServiceEmoji(service.title, service.description)}</div>
                         )}
                       </div>
-                      <div className="flex flex-col">
-                        <span className="font-bold text-slate-900 flex items-center gap-2">
-                          <span>{getServiceEmoji(service.title, service.description)}</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="font-bold text-slate-900 flex items-center gap-2 truncate text-base">
                           <DynamicText text={service.title} />
                         </span>
-                        <span className="text-xs text-slate-500 line-clamp-1"><DynamicText text={service.description} /></span>
+                        <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{t.admin.active}</span>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-center">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-bold bg-emerald-50 text-emerald-700">
-                      {t.admin.currencySymbol}{service.price}
-                    </span>
+                  <td className="px-6 py-4">
+                    <p className="text-sm text-slate-500 line-clamp-2 max-w-md font-medium leading-relaxed">
+                      <DynamicText text={service.description} />
+                    </p>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => handleEdit(service)}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
                         title={t.admin.editService}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -274,7 +232,7 @@ export default function ManageServices() {
                       </button>
                       <button
                         onClick={() => handleDelete(service.id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                         title={t.admin.delete}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -287,6 +245,58 @@ export default function ManageServices() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {filteredServices.map((service) => (
+            <div key={service.id} className="p-4 space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 relative shrink-0 shadow-sm border border-slate-200">
+                  {service.image ? (
+                    <div className="relative w-full h-full">
+                      <Image 
+                        src={service.image} 
+                        alt={service.title}
+                        fill
+                        className="object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-2xl">{getServiceEmoji(service.title, service.description)}</div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-slate-900 truncate"><DynamicText text={service.title} /></h3>
+                  <p className="text-xs text-slate-500 line-clamp-1 mt-1 font-medium"><DynamicText text={service.description} /></p>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-50">
+                <button
+                  onClick={() => handleEdit(service)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  {t.admin.edit}
+                </button>
+                <button
+                  onClick={() => handleDelete(service.id)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  {t.admin.delete}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
         {filteredServices.length === 0 && (
           <div className="text-center py-20">
@@ -387,10 +397,14 @@ export default function ManageServices() {
                   {currentService.image && (
                     <div className="mt-4 w-full h-48 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center relative group/preview">
                       <Image 
-                        src={isValidUrl(currentService.image) ? currentService.image : "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop"} 
+                        src={currentService.image} 
                         alt="Preview" 
                         fill
                         className="object-cover transition-transform duration-500 group-hover/preview:scale-105"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";
+                        }}
                       />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/preview:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="text-white text-xs font-bold uppercase tracking-widest bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">{t.admin.preview}</span>
@@ -410,27 +424,7 @@ export default function ManageServices() {
                     onChange={(e) => setCurrentService({ ...currentService, description: e.target.value })}
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.price} ({t.admin.currencySymbol})</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{t.admin.currencySymbol}</span>
-                    <input
-                      type="number"
-                      required
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-bold"
-                      value={currentService.price || 0}
-                      onChange={(e) => {
-                        const val = e.target.value === '' ? 0 : parseFloat(e.target.value);
-                        setCurrentService({ ...currentService, price: isNaN(val) ? 0 : val });
-                      }}
-                    />
-                  </div>
-                <p className="text-[11px] text-slate-400 font-medium italic mt-1 uppercase tracking-tighter">{t.admin.startingPriceDesc}</p>
-              </div>
-            </form>
+              </form>
 
             <div className="p-6 border-t border-slate-100 bg-slate-50 flex items-center gap-3">
               <button
@@ -443,9 +437,17 @@ export default function ManageServices() {
               <button
                 type="submit"
                 form="service-form"
-                className="flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
+                disabled={isSaving}
+                className={`flex-[2] py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 ${isSaving ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                {isEditing ? t.admin.saveChanges : t.admin.createService}
+                {isSaving ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    {t.admin.saving || 'Saving...'}
+                  </>
+                ) : (
+                  isEditing ? t.admin.saveChanges : t.admin.createService
+                )}
               </button>
             </div>
           </div>

@@ -9,14 +9,31 @@ export type SupportedLanguage = 'en' | 'pt';
 export type SupportedCurrency = 'usd' | 'eur';
 
 export const isValidUrl = (url: string) => {
+  if (!url || typeof url !== 'string') return false;
+  
+  // Base64 images are valid
+  if (url.startsWith('data:image')) return true;
+  
+  // Local uploads are valid
+  if (url.startsWith('/uploads/') || url.startsWith('http://localhost') || url.startsWith('https://localhost')) return true;
+  
   try {
-    if (!url || typeof url !== 'string') return false;
-    if (url.startsWith('data:image')) return true; // Base64 images are valid
-    if (url.startsWith('/uploads/')) return true; // Local uploads are valid
-    if (!url.startsWith('http') && !url.startsWith('/')) return false;
-    new URL(url.startsWith('http') ? url : `http://localhost${url}`);
-    return true;
+    // If it's a relative path starting with /, assume it's valid
+    if (url.startsWith('/')) return true;
+    
+    // Check if it's a valid absolute URL
+    const parsedUrl = new URL(url);
+    return ['http:', 'https:'].includes(parsedUrl.protocol);
   } catch {
+    // If it doesn't start with http/https but looks like a domain, try adding https
+    if (url.includes('.') && !url.startsWith('http')) {
+      try {
+        new URL(`https://${url}`);
+        return true;
+      } catch {
+        return false;
+      }
+    }
     return false;
   }
 };

@@ -55,12 +55,18 @@ export default function ServicesClient() {
                 >
                   <div className="h-64 relative overflow-hidden bg-slate-100">
                     {service.image ? (
-                      <Image
-                        src={isValidUrl(service.image) ? service.image : "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop"}
-                        alt={service.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
+                      <div className="relative w-full h-full">
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";
+                          }}
+                        />
+                      </div>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-4xl">{getServiceEmoji(service.title, service.description)}</div>
                     )}
@@ -80,16 +86,10 @@ export default function ServicesClient() {
                       <DynamicText text={service.description} />
                     </p>
                   </div>
-                  <div className="px-10 py-8 bg-slate-50 border-t border-slate-100 flex items-center justify-between mt-auto group-hover:bg-blue-50/50 transition-colors">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-none mb-1.5">{t.common.from}</span>
-                      <span className="text-2xl font-black text-slate-900 tracking-tight">
-                        {formatPriceByLanguage(service.price, language)}
-                      </span>
-                    </div>
+                  <div className="px-10 py-8 bg-slate-50 border-t border-slate-100 flex items-center justify-center mt-auto group-hover:bg-blue-50/50 transition-colors">
                     <Link
                       href={`/get-quote?service=${encodeURIComponent(service.title)}`}
-                      className="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center gap-2 group/btn"
+                      className="w-full bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2 group/btn"
                     >
                       {t.common.getQuote}
                       <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-1 transition-transform" />

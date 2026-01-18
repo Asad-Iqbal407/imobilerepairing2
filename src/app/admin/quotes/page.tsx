@@ -10,6 +10,8 @@ export default function QuotesPage() {
   const [loading, setLoading] = useState(true);
   const [selectedQuote, setSelectedQuote] = useState<IQuote | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState<Partial<IQuote>>({});
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('all');
 
@@ -58,11 +60,32 @@ export default function QuotesPage() {
       if (res.ok) {
         fetchQuotes();
         if (selectedQuote?._id?.toString() === id) {
-          setSelectedQuote({ ...selectedQuote, status } as IQuote);
+          const updated = { ...selectedQuote, status } as IQuote;
+          setSelectedQuote(updated);
+          setEditForm(updated);
         }
       }
     } catch (error) {
       console.error('Failed to update status:', error);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (!selectedQuote) return;
+    try {
+      const res = await fetch(`/api/quotes/${selectedQuote._id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setQuotes(quotes.map(q => q._id === updated._id ? updated : q));
+        setSelectedQuote(updated);
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error('Failed to save quote edits:', error);
     }
   };
 
@@ -104,81 +127,81 @@ export default function QuotesPage() {
       </div>
 
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.totalQuotes}</p>
-              <p className="text-2xl font-bold text-slate-900">{totalQuotes}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.totalQuotes}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{totalQuotes}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.pending}</p>
-              <p className="text-2xl font-bold text-slate-900">{pendingQuotes}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.pending}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{pendingQuotes}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+            <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.responded}</p>
-              <p className="text-2xl font-bold text-slate-900">{respondedQuotes}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.responded}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{respondedQuotes}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">{t.admin.completed}</p>
-              <p className="text-2xl font-bold text-slate-900">{completedQuotes}</p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.completed}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{completedQuotes}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-        <div className="relative w-full md:w-96">
+      <div className="flex flex-col lg:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+        <div className="relative w-full lg:w-96">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
             type="text"
             placeholder={t.admin.searchQuotesPlaceholder}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
+            className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none text-slate-900 font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
           {['all', 'pending', 'responded', 'completed'].map((status) => (
             <button
               key={status}
               onClick={() => setSelectedStatus(status)}
-              className={`px-4 py-2 rounded-xl text-sm font-bold transition-all border whitespace-nowrap ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                 selectedStatus === status
                   ? 'bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20'
                   : 'bg-white border-slate-200 text-slate-500 hover:border-blue-200 hover:text-blue-600'
@@ -192,54 +215,57 @@ export default function QuotesPage() {
 
       {/* Quotes Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.customer}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.getQuote.deviceType}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.date}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.status}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.customer}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.getQuote.deviceType}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.date}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.status}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredQuotes.map((quote: any) => (
-                <tr key={quote._id} className="hover:bg-slate-50 transition-colors group">
+                <tr key={quote._id} className="hover:bg-slate-50/80 transition-all group">
                   <td className="px-6 py-4">
-                    <div>
-                      <span className="font-bold text-slate-900 block">{quote.name}</span>
-                      <span className="text-slate-500 text-sm">{quote.email}</span>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-slate-900 text-base">{quote.name}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{quote.email}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div>
-                      <span className="font-medium text-slate-700 block">{quote.deviceModel}</span>
-                      <span className="text-slate-400 text-xs uppercase font-bold">{quote.category} • {quote.part}</span>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-slate-700 text-sm">{quote.deviceModel}</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{quote.category} • {quote.part}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="text-slate-500 text-sm">
+                    <span className="text-slate-500 text-xs font-medium">
                       {quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : t.admin.na}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold ${
-                      quote.status === 'pending' ? 'bg-amber-50 text-amber-700' :
-                      quote.status === 'responded' ? 'bg-blue-50 text-blue-700' :
-                      'bg-emerald-50 text-emerald-700'
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                      quote.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                      quote.status === 'responded' ? 'bg-blue-50 text-blue-600' :
+                      'bg-emerald-50 text-emerald-600'
                     }`}>
                       {t.admin[quote.status as keyof typeof t.admin] || quote.status}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => {
                           setSelectedQuote(quote);
+                          setEditForm(quote);
+                          setIsEditing(false);
                           setIsDetailsOpen(true);
                         }}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
                         title={t.admin.viewDetails}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -249,7 +275,7 @@ export default function QuotesPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(quote._id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all"
                         title={t.admin.delete}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -262,6 +288,63 @@ export default function QuotesPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {filteredQuotes.map((quote: any) => (
+            <div key={quote._id} className="p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex flex-col">
+                  <span className="font-bold text-slate-900">{quote.name}</span>
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{quote.createdAt ? new Date(quote.createdAt).toLocaleDateString() : t.admin.na}</span>
+                </div>
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${
+                  quote.status === 'pending' ? 'bg-amber-50 text-amber-600' :
+                  quote.status === 'responded' ? 'bg-blue-50 text-blue-600' :
+                  'bg-emerald-50 text-emerald-600'
+                }`}>
+                  {t.admin[quote.status as keyof typeof t.admin] || quote.status}
+                </span>
+              </div>
+              <div className="bg-slate-50 p-3 rounded-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.getQuote.deviceType}</span>
+                  <span className="font-bold text-slate-700 text-xs">{quote.deviceModel}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.admin.category}</span>
+                  <span className="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold uppercase tracking-wider">{quote.category}</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-50">
+                <button
+                  onClick={() => {
+                    setSelectedQuote(quote);
+                    setEditForm(quote);
+                    setIsEditing(false);
+                    setIsDetailsOpen(true);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  {t.admin.details}
+                </button>
+                <button
+                  onClick={() => handleDelete(quote._id)}
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-rose-600 bg-rose-50 rounded-xl transition-all active:scale-95"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  {t.admin.delete}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
         {filteredQuotes.length === 0 && (
           <div className="text-center py-20">
@@ -290,11 +373,24 @@ export default function QuotesPage() {
                 <h2 className="text-xl font-bold text-slate-900">{t.admin.quoteDetails}</h2>
                 <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-bold">ID: {selectedQuote._id.toString()}</p>
               </div>
-              <button onClick={() => setIsDetailsOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+              <div className="flex items-center gap-2">
+                {!isEditing && (
+                  <button
+                    onClick={() => setIsEditing(true)}
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                    title={t.admin.edit}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                )}
+                <button onClick={() => setIsDetailsOpen(false)} className="p-2 hover:bg-slate-200 rounded-lg transition-all text-slate-400 hover:text-slate-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
             
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
@@ -330,7 +426,16 @@ export default function QuotesPage() {
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-1">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.customerName}</span>
-                  <p className="text-slate-900 font-bold text-lg">{selectedQuote.name}</p>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-bold"
+                      value={editForm.name || ''}
+                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                    />
+                  ) : (
+                    <p className="text-slate-900 font-bold text-lg">{selectedQuote.name}</p>
+                  )}
                 </div>
                 <div className="space-y-1 text-right">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.requestDate}</span>
@@ -340,11 +445,29 @@ export default function QuotesPage() {
                 </div>
                 <div className="space-y-1">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.emailAddress}</span>
-                  <a href={`mailto:${selectedQuote.email}`} className="text-blue-600 font-bold hover:underline">{selectedQuote.email}</a>
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-bold"
+                      value={editForm.email || ''}
+                      onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    />
+                  ) : (
+                    <a href={`mailto:${selectedQuote.email}`} className="text-blue-600 font-bold hover:underline">{selectedQuote.email}</a>
+                  )}
                 </div>
                 <div className="space-y-1 text-right">
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.phoneNumber}</span>
-                  <a href={`tel:${selectedQuote.phone}`} className="text-slate-900 font-bold hover:underline">{selectedQuote.phone}</a>
+                  {isEditing ? (
+                    <input
+                      type="tel"
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-bold text-right"
+                      value={editForm.phone || ''}
+                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                    />
+                  ) : (
+                    <a href={`tel:${selectedQuote.phone}`} className="text-slate-900 font-bold hover:underline">{selectedQuote.phone}</a>
+                  )}
                 </div>
               </div>
 
@@ -354,15 +477,42 @@ export default function QuotesPage() {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.deviceModel}</span>
-                    <p className="text-slate-900 font-bold">{selectedQuote.deviceModel}</p>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-bold"
+                        value={editForm.deviceModel || ''}
+                        onChange={(e) => setEditForm({ ...editForm, deviceModel: e.target.value })}
+                      />
+                    ) : (
+                      <p className="text-slate-900 font-bold">{selectedQuote.deviceModel}</p>
+                    )}
                   </div>
                   <div className="space-y-1 text-right">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.category}</span>
-                    <p className="text-slate-900 font-bold capitalize">{selectedQuote.category}</p>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-bold text-right"
+                        value={editForm.category || ''}
+                        onChange={(e) => setEditForm({ ...editForm, category: e.target.value })}
+                      />
+                    ) : (
+                      <p className="text-slate-900 font-bold capitalize">{selectedQuote.category}</p>
+                    )}
                   </div>
                   <div className="space-y-1">
                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.partServiceNeeded}</span>
-                    <p className="text-slate-900 font-bold capitalize">{selectedQuote.part}</p>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-bold"
+                        value={editForm.part || ''}
+                        onChange={(e) => setEditForm({ ...editForm, part: e.target.value })}
+                      />
+                    ) : (
+                      <p className="text-slate-900 font-bold capitalize">{selectedQuote.part}</p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -370,9 +520,18 @@ export default function QuotesPage() {
               {/* Problem Description */}
               <div className="space-y-2">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block">{t.admin.problemDescription}</span>
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
-                  &quot;{selectedQuote.problem}&quot;
-                </div>
+                {isEditing ? (
+                  <textarea
+                    rows={4}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-slate-900 font-medium leading-relaxed italic"
+                    value={editForm.problem || ''}
+                    onChange={(e) => setEditForm({ ...editForm, problem: e.target.value })}
+                  />
+                ) : (
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
+                    &quot;{selectedQuote.problem}&quot;
+                  </div>
+                )}
               </div>
 
               {/* Images */}
@@ -400,16 +559,33 @@ export default function QuotesPage() {
               )}
             </div>
 
-            <div className="p-6 border-t border-slate-100 bg-slate-50">
-              <button
-                onClick={() => handleDelete(selectedQuote._id as unknown as string)}
-                className="w-full py-3 px-4 bg-white border border-rose-200 text-rose-600 rounded-xl font-bold hover:bg-rose-50 transition-all flex items-center justify-center gap-2"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                {t.admin.deleteQuoteRequest}
-              </button>
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex gap-3">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="flex-1 py-3 px-4 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all"
+                  >
+                    {t.admin.cancel}
+                  </button>
+                  <button
+                    onClick={handleSaveEdit}
+                    className="flex-1 py-3 px-4 bg-blue-600 text-white rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20"
+                  >
+                    {t.admin.save}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => handleDelete(selectedQuote._id as unknown as string)}
+                  className="w-full py-3 px-4 bg-white border border-rose-200 text-rose-600 rounded-xl font-bold hover:bg-rose-50 transition-all flex items-center justify-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  {t.admin.deleteQuoteRequest}
+                </button>
+              )}
             </div>
           </div>
         </div>

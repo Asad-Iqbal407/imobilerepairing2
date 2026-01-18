@@ -87,65 +87,65 @@ export default function MessagesPage() {
       </div>
 
       {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-blue-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.totalQuotes}</p>
-              <h3 className="text-2xl font-bold text-slate-900">{totalMessages}</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.totalQuotes}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{totalMessages}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-amber-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.receivedToday}</p>
-              <h3 className="text-2xl font-bold text-slate-900">{todayMessages}</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.receivedToday}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{todayMessages}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-purple-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.deviceInquiries}</p>
-              <h3 className="text-2xl font-bold text-slate-900">{deviceInquiries}</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.deviceInquiries}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{deviceInquiries}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+        <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow group">
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-emerald-50 rounded-xl">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm font-medium text-slate-500">{t.admin.generalInfo}</p>
-              <h3 className="text-2xl font-bold text-slate-900">{generalInquiries}</h3>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.generalInfo}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{generalInquiries}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Filters & Search */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full md:w-96">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-100">
+        <div className="relative group">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 group-focus-within:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
@@ -153,48 +153,51 @@ export default function MessagesPage() {
             placeholder={t.admin.searchMessagesPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-slate-900"
+            className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-slate-900 font-medium"
           />
         </div>
       </div>
 
-      {/* Messages Table */}
+      {/* Messages List/Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        {/* Desktop View */}
+        <div className="hidden md:block overflow-x-auto">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-100">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.sender}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest">{t.admin.deviceModel}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{t.admin.date}</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-widest text-right">{t.admin.actions}</th>
+              <tr className="bg-slate-50/50 border-b border-slate-100">
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.sender}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">{t.admin.deviceModel}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-center">{t.admin.date}</th>
+                <th className="px-6 py-4 text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] text-right">{t.admin.actions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredMessages.map((message: any) => (
-                <tr key={message._id} className="hover:bg-slate-50 transition-colors group">
+                <tr key={message._id} className="hover:bg-slate-50/80 transition-colors group">
                   <td className="px-6 py-4">
-                    <div>
-                      <span className="font-bold text-slate-900 block">{message.name}</span>
-                      <span className="text-slate-500 text-sm">{message.email}</span>
+                    <div className="flex flex-col">
+                      <span className="font-bold text-slate-900">{message.name}</span>
+                      <span className="text-slate-500 text-xs">{message.email}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-slate-600 font-medium">{message.device || t.admin.general}</span>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${message.device ? 'bg-purple-50 text-purple-700' : 'bg-slate-100 text-slate-600'}`}>
+                      {message.device || t.admin.general}
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <span className="text-slate-500 text-sm">
+                    <span className="text-slate-500 text-sm font-medium">
                       {new Date(message.createdAt).toLocaleDateString()}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-end gap-2">
                       <button
                         onClick={() => {
                           setSelectedMessage(message);
                           setIsDetailsOpen(true);
                         }}
-                        className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl transition-all active:scale-90"
                         title={t.admin.readMessage}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,7 +206,7 @@ export default function MessagesPage() {
                       </button>
                       <button
                         onClick={() => handleDelete(message._id)}
-                        className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                        className="p-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-all active:scale-90"
                         title={t.admin.deleteMessage}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -216,6 +219,58 @@ export default function MessagesPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile View */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {filteredMessages.map((message: any) => (
+            <div key={message._id} className="p-4 space-y-4">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-blue-600/20">
+                    {message.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-slate-900">{message.name}</h3>
+                    <p className="text-xs text-slate-500">{message.email}</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50 px-2 py-1 rounded">
+                  {new Date(message.createdAt).toLocaleDateString()}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.admin.deviceModel}:</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${message.device ? 'bg-purple-50 text-purple-700' : 'bg-slate-100 text-slate-600'}`}>
+                  {message.device || t.admin.general}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-50">
+                <button
+                  onClick={() => {
+                    setSelectedMessage(message);
+                    setIsDetailsOpen(true);
+                  }}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-bold text-blue-600 bg-blue-50 rounded-xl active:scale-95 transition-all"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {t.admin.readMessage}
+                </button>
+                <button
+                  onClick={() => handleDelete(message._id)}
+                  className="flex items-center justify-center p-2.5 text-rose-600 bg-rose-50 rounded-xl active:scale-95 transition-all"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
         {filteredMessages.length === 0 && (
           <div className="text-center py-20">
