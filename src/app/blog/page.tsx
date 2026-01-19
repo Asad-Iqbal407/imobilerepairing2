@@ -10,7 +10,7 @@ import Post from '@/models/Post';
 import DynamicText from '@/components/DynamicText';
 
 export const metadata: Metadata = {
-  description: 'As últimas notícias, guias de reparação e insights tecnológicos da equipa de especialistas da Tertulia Impulsiva.',
+  description: 'As últimas notícias, guias de reparação e insights tecnológicos da equipa de especialistas da Tertulia Umpulsiva.',
 };
 
 interface BlogPost {
@@ -28,7 +28,7 @@ const fallbackPosts: BlogPost[] = [
     slug: 'common-iphone-battery-issues',
     title: '5 Sinais de que o seu iPhone precisa de uma Bateria Nova',
     excerpt: 'O seu iPhone descarrega rápido? Conheça os principais sinais que indicam que é hora de uma bateria nova.',
-    author: 'Equipa Tertulia Impulsiva',
+    author: 'Equipa Tertulia Umpulsiva',
     createdAt: new Date('2025-01-05').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1596558450255-7c0b7be9d56a?q=80&w=1000&auto=format&fit=crop',
     tags: ['iPhone', 'Bateria', 'Dicas'],
@@ -46,7 +46,7 @@ const fallbackPosts: BlogPost[] = [
     slug: 'screen-protector-types',
     title: 'Vidro Temperado vs. Hidrogel: Qual o melhor protetor de ecrã?',
     excerpt: 'Comparação da durabilidade e sensação de diferentes opções de proteção de ecrã para o seu dispositivo.',
-    author: 'Equipa Tertulia Impulsiva',
+    author: 'Equipa Tertulia Umpulsiva',
     createdAt: new Date('2024-12-15').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop',
     tags: ['Acessórios', 'Proteção', 'Comparação'],

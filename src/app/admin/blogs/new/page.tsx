@@ -15,7 +15,7 @@ export default function NewPostPage() {
     slug: '',
     content: '',
     excerpt: '',
-    author: 'Tertulia Impulsiva Team',
+    author: 'Tertulia Umpulsiva Team',
     tags: '',
     coverImage: '',
     isPublished: true

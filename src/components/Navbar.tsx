@@ -96,7 +96,7 @@ export default function Navbar() {
                 {logoDataUri && logoDataUri.startsWith('data:image/') ? (
                   <Image
                     src={logoDataUri}
-                    alt="Tertúlia Impulsiva logo"
+                    alt="Tertúlia Umpulsiva logo"
                     width={36}
                     height={36}
                     className="w-9 h-9 object-contain"

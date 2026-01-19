@@ -61,7 +61,7 @@ export default async function Icon() {
               letterSpacing: '-2px',
             }}
           >
-            TI
+            TU
           </div>
         )}
       </div>

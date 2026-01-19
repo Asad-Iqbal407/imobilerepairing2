@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://imobilept.com'),
-  title: "Tertulia Impulsiva",
+  title: "Tertulia Umpulsiva",
   description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis para todas as principais marcas. Substituição de ecrã, reparação de bateria e muito mais.",
   keywords: [
     "reparação de telemóveis",
@@ -23,11 +23,19 @@ export const metadata: Metadata = {
     "troca de bateria",
     "reparação iPhone",
     "reparação Samsung",
-    "Tertulia Impulsiva"
+    "Tertulia Umpulsiva"
   ],
-  authors: [{ name: "Tertulia Impulsiva Team" }],
-  creator: "Tertulia Impulsiva",
-  publisher: "Tertulia Impulsiva",
+  authors: [{ name: "Tertulia Umpulsiva Team" }],
+  creator: "Tertulia Umpulsiva",
+  publisher: "Tertulia Umpulsiva",
+  icons: {
+    icon: [
+      { url: '/icon', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon', type: 'image/png' },
+    ],
+  },
   formatDetection: {
     email: false,
     address: false,
@@ -37,21 +45,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_PT",
     url: "https://imobilept.com",
-    siteName: "Tertulia Impulsiva",
-    title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
+    siteName: "Tertulia Umpulsiva",
+    title: "Tertulia Umpulsiva - Reparação Profissional de Telemóveis",
     description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Tertulia Impulsiva Repair Services",
+        alt: "Tertulia Umpulsiva Repair Services",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
+    title: "Tertulia Umpulsiva - Reparação Profissional de Telemóveis",
     description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
     images: ["/og-image.jpg"],
   },
@@ -65,7 +73,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Tertulia Impulsiva",
+    "name": "Tertulia Umpulsiva",
     "image": "https://imobilept.com/og-image.jpg",
     "@id": "https://imobilept.com",
     "url": "https://imobilept.com",

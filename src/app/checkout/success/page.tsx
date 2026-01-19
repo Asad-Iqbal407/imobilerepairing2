@@ -3,7 +3,7 @@ import SuccessClient from './SuccessClient';
 import { Suspense } from 'react';
 
 export const metadata: Metadata = {
-  description: 'O seu pagamento foi processado com sucesso. Obrigado por escolher a Tertulia Impulsiva.',
+  description: 'O seu pagamento foi processado com sucesso. Obrigado por escolher a Tertulia Umpulsiva.',
 };
 
 export default function SuccessPage() {
