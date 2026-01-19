@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
@@ -23,11 +23,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     isPublished: true
   });
 
-  useEffect(() => {
-    fetchPost();
-  }, [id]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const res = await fetch(`/api/posts/${id}`);
       if (!res.ok) throw new Error(t.admin.postFetchFailed);
@@ -48,7 +44,11 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     } finally {
       setFetching(false);
     }
-  };
+  }, [id, router, t]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

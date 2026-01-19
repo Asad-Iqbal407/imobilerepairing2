@@ -95,16 +95,30 @@ export default function AdminLayout({
   ];
 
   useEffect(() => {
-    const authStatus = localStorage.getItem('is_admin_authenticated');
-    if (authStatus === 'true') {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsAuthenticated(true);
-    } else {
-      if (pathname !== '/admin/login') {
-        router.push('/admin/login');
+    let cancelled = false;
+    const check = async () => {
+      try {
+        const res = await fetch('/api/admin/me', { cache: 'no-store' });
+        const data = (await res.json()) as { authenticated?: boolean };
+        if (cancelled) return;
+        const authed = !!data?.authenticated;
+        setIsAuthenticated(authed);
+        if (!authed && pathname !== '/admin/login') {
+          router.push('/admin/login');
+        }
+      } catch {
+        if (cancelled) return;
+        setIsAuthenticated(false);
+        if (pathname !== '/admin/login') {
+          router.push('/admin/login');
+        }
       }
-      setIsAuthenticated(false);
-    }
+    };
+
+    check();
+    return () => {
+      cancelled = true;
+    };
   }, [pathname, router]);
 
   useEffect(() => {
@@ -178,11 +192,16 @@ export default function AdminLayout({
 
     const interval = setInterval(checkNewActivity, 30000); // Check every 30 seconds
     return () => clearInterval(interval);
-  }, [isAuthenticated, pathname, router]);
+  }, [isAuthenticated, pathname, router, t]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('is_admin_authenticated');
-    router.push('/admin/login');
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } catch {
+      return;
+    } finally {
+      router.push('/admin/login');
+    }
   };
 
   // If it's the login page, don't show the sidebar layout

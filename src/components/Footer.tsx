@@ -2,6 +2,7 @@
 
 import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { 
@@ -122,7 +123,14 @@ export default function Footer() {
                 }`}
               >
                 {logoDataUri && logoDataUri.startsWith('data:image/') ? (
-                  <img src={logoDataUri} alt={`${t.common.shopName} logo`} className="w-full h-full object-contain" />
+                  <Image
+                    src={logoDataUri}
+                    alt={`${t.common.shopName} logo`}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-contain"
+                    unoptimized
+                  />
                 ) : (
                   <Smartphone className="h-7 w-7" />
                 )}

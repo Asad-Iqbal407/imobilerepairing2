@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function AdminSettingsPage() {
@@ -167,7 +168,14 @@ export default function AdminSettingsPage() {
             <div className="rounded-[2.5rem] border border-slate-100 bg-slate-50/50 p-10 flex items-center justify-center min-h-[320px] shadow-inner">
               {hasLogo ? (
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 animate-in zoom-in duration-300">
-                  <img src={logoDataUri} alt="Logo preview" className="max-h-48 w-auto object-contain" />
+                  <Image
+                    src={logoDataUri}
+                    alt="Logo preview"
+                    width={192}
+                    height={192}
+                    className="max-h-48 w-auto object-contain"
+                    unoptimized
+                  />
                 </div>
               ) : (
                 <div className="text-center space-y-3">

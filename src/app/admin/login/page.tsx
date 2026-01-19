@@ -12,20 +12,27 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
-    // Predefined credentials
-    const adminEmail = 'umpulsiva@gmail.com';
-    const adminPassword = 'Portugal2026@';
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (email === adminEmail && password === adminPassword) {
-      localStorage.setItem('is_admin_authenticated', 'true');
+      if (!res.ok) {
+        setError(t.admin.invalidCredentials);
+        return;
+      }
+
       router.push('/admin');
-    } else {
+    } catch {
       setError(t.admin.invalidCredentials);
+    } finally {
       setIsLoading(false);
     }
   };

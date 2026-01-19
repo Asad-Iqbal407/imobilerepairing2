@@ -36,11 +36,15 @@ export default async function Icon() {
         }}
       >
         {logoDataUri && logoDataUri.startsWith('data:image/') ? (
-          <img
-            src={logoDataUri}
-            width={32}
-            height={32}
-            style={{ objectFit: 'contain' }}
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              backgroundImage: `url(${logoDataUri})`,
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+            }}
           />
         ) : (
           <div

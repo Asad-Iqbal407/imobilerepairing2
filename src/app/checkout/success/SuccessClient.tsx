@@ -12,21 +12,18 @@ function SuccessContent() {
   const { items, clearCart } = useCart();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 
-  const updateOrderStatus = async (id: string) => {
+  const confirmCheckout = async (session: string, order: string) => {
     try {
-      const res = await fetch(`/api/orders/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'paid' }),
-      });
+      const url = `/api/checkout?session_id=${encodeURIComponent(session)}&order_id=${encodeURIComponent(order)}`;
+      const res = await fetch(url, { method: 'GET' });
       if (res.ok) {
         setStatus('success');
       } else {
-        console.error('Failed to update order status');
+        console.error('Failed to confirm checkout');
         setStatus('success'); // Still show success to user
       }
     } catch (error) {
-      console.error('Error updating order status:', error);
+      console.error('Error confirming checkout:', error);
       setStatus('success'); // Still show success to user
     }
   };
@@ -38,7 +35,7 @@ function SuccessContent() {
     }
 
     if (sessionId && orderId) {
-      updateOrderStatus(orderId);
+      confirmCheckout(sessionId, orderId);
     } else {
       setStatus('success');
     }

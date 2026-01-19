@@ -139,7 +139,7 @@ export default async function BlogPost({ params }: Props) {
       name: 'Tertulia Impulsiva',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://imobile.com/logo.png', // Replace with actual logo URL
+        url: 'https://imobilept.com/logo.png', // Production logo URL
       },
     },
   };

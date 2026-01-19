@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -65,7 +66,6 @@ export default function Navbar() {
   }, []);
 
   // Close mobile menu when route changes
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setIsOpen(false), [pathname]);
 
   const navLinks = [
@@ -94,10 +94,13 @@ export default function Navbar() {
                 className="w-11 h-11 bg-white rounded-xl flex items-center justify-center shadow-lg shadow-slate-300/40 border border-slate-200 overflow-hidden"
               >
                 {logoDataUri && logoDataUri.startsWith('data:image/') ? (
-                  <img
+                  <Image
                     src={logoDataUri}
                     alt="Tertúlia Impulsiva logo"
+                    width={36}
+                    height={36}
                     className="w-9 h-9 object-contain"
+                    unoptimized
                   />
                 ) : (
                   <Smartphone className="h-6 w-6 text-blue-600" />

@@ -13,7 +13,7 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://imobile.com'),
+  metadataBase: new URL('https://imobilept.com'),
   title: "Tertulia Impulsiva",
   description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis para todas as principais marcas. Substituição de ecrã, reparação de bateria e muito mais.",
   keywords: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_PT",
-    url: "https://imobile.com",
+    url: "https://imobilept.com",
     siteName: "Tertulia Impulsiva",
     title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
     description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
@@ -66,9 +66,9 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Tertulia Impulsiva",
-    "image": "https://imobile.com/og-image.jpg",
-    "@id": "https://imobile.com",
-    "url": "https://imobile.com",
+    "image": "https://imobilept.com/og-image.jpg",
+    "@id": "https://imobilept.com",
+    "url": "https://imobilept.com",
     "telephone": ["+351 913 709 717", "+351 935 911 908"],
     "taxID": "317822453",
     "address": {
@@ -98,8 +98,10 @@ export default function RootLayout({
       "closes": "21:00"
     },
     "sameAs": [
-      "https://facebook.com/imobile",
-      "https://instagram.com/imobile"
+      "https://www.facebook.com/share/1AQkaD6UNM/",
+      "https://www.tiktok.com/@imobiletertulia",
+      "https://www.youtube.com/@tertuliaumpulsiva",
+      "https://wa.me/qr/5EEVLL7H46YGE1"
     ]
   };
 

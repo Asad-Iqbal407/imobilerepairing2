@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import type { IQuote } from '@/models/Quote';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -541,11 +542,14 @@ export default function QuotesPage() {
                   <div className="grid grid-cols-3 gap-3">
                     {selectedQuote.images.map((img: string, idx: number) => (
                       <div key={idx} className="relative aspect-square group cursor-zoom-in rounded-xl overflow-hidden border border-slate-200">
-                        <img 
-                          src={img} 
-                          alt={`${t.admin.image} ${idx + 1}`} 
-                          className="w-full h-full object-cover transition-all group-hover:scale-110"
+                        <Image
+                          src={img}
+                          alt={`${t.admin.image} ${idx + 1}`}
+                          fill
+                          sizes="(max-width: 768px) 33vw, 200px"
+                          className="object-cover transition-all group-hover:scale-110"
                           onClick={() => window.open(img, '_blank')}
+                          unoptimized
                         />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Quote from '@/models/Quote';
+import { requireAdmin } from '@/lib/adminGuard';
 
 export const dynamic = 'force-dynamic';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
     await dbConnect();
     const { id } = await params;
     const body = await request.json();
@@ -21,6 +24,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
     await dbConnect();
     const { id } = await params;
     const deleted = await Quote.findByIdAndDelete(id);

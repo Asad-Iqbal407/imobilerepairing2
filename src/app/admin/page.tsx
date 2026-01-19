@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -37,96 +37,94 @@ export default function AdminDashboard() {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const [ordersRes, quotesRes, messagesRes, productsRes, servicesRes, postsRes] = await Promise.all([
-          fetch('/api/orders'),
-          fetch('/api/quotes'),
-          fetch('/api/contact'),
-          fetch('/api/products'),
-          fetch('/api/services'),
-          fetch('/api/posts'),
-        ]);
+  const fetchStats = useCallback(async () => {
+    try {
+      const [ordersRes, quotesRes, messagesRes, productsRes, servicesRes, postsRes] = await Promise.all([
+        fetch('/api/orders'),
+        fetch('/api/quotes'),
+        fetch('/api/contact'),
+        fetch('/api/products'),
+        fetch('/api/services'),
+        fetch('/api/posts'),
+      ]);
 
-        const orders = await ordersRes.json();
-        const quotes = await quotesRes.json();
-        const messages = await messagesRes.json();
-        const products = await productsRes.json();
-        const services = await servicesRes.json();
-        const posts = await postsRes.json();
+      const orders = await ordersRes.json();
+      const quotes = await quotesRes.json();
+      const messages = await messagesRes.json();
+      const products = await productsRes.json();
+      const services = await servicesRes.json();
+      const posts = await postsRes.json();
 
-        const totalRevenue = Array.isArray(orders) 
-          ? orders.reduce((acc: number, order: any) => acc + (order.total || 0), 0)
-          : 0;
+      const totalRevenue = Array.isArray(orders)
+        ? orders.reduce((acc: number, order: any) => acc + (order.total || 0), 0)
+        : 0;
 
-        setStats({
-          orders: Array.isArray(orders) ? orders.length : 0,
-          revenue: totalRevenue,
-          quotes: Array.isArray(quotes) ? quotes.length : 0,
-          messages: Array.isArray(messages) ? messages.length : 0,
-          products: Array.isArray(products) ? products.length : 0,
-          services: Array.isArray(services) ? services.length : 0,
-          posts: Array.isArray(posts) ? posts.length : 0,
+      setStats({
+        orders: Array.isArray(orders) ? orders.length : 0,
+        revenue: totalRevenue,
+        quotes: Array.isArray(quotes) ? quotes.length : 0,
+        messages: Array.isArray(messages) ? messages.length : 0,
+        products: Array.isArray(products) ? products.length : 0,
+        services: Array.isArray(services) ? services.length : 0,
+        posts: Array.isArray(posts) ? posts.length : 0,
+      });
+
+      const recentActivities: Activity[] = [];
+
+      if (Array.isArray(orders)) {
+        orders.slice(0, 3).forEach((order: any) => {
+          recentActivities.push({
+            id: order._id || Math.random().toString(),
+            type: 'order',
+            title: `${t.admin.newOrder} #${(order._id || '').slice(-6)}`,
+            subtitle: `${order.customerName || t.admin.unknown} - ${t.admin.currencySymbol}${order.total || 0}`,
+            time: order.createdAt || new Date().toISOString(),
+            status: order.status,
+          });
         });
-
-        // Process Recent Activities
-        const recentActivities: Activity[] = [];
-
-        if (Array.isArray(orders)) {
-          orders.slice(0, 3).forEach((order: any) => {
-            recentActivities.push({
-              id: order._id || Math.random().toString(),
-              type: 'order',
-              title: `${t.admin.newOrder} #${(order._id || '').slice(-6)}`,
-              subtitle: `${order.customerName || t.admin.unknown} - ${t.admin.currencySymbol}${order.total || 0}`,
-              time: order.createdAt || new Date().toISOString(),
-              status: order.status
-            });
-          });
-        }
-
-        if (Array.isArray(quotes)) {
-          quotes.slice(0, 3).forEach((quote: any) => {
-            recentActivities.push({
-              id: quote._id || Math.random().toString(),
-              type: 'quote',
-              title: t.admin.quoteRequest,
-              subtitle: `${quote.name || t.admin.unknown} - ${quote.service || t.admin.general}`,
-              time: quote.createdAt || new Date().toISOString(),
-            });
-          });
-        }
-
-        if (Array.isArray(messages)) {
-          messages.slice(0, 3).forEach((msg: any) => {
-            recentActivities.push({
-              id: msg._id || Math.random().toString(),
-              type: 'message',
-              title: t.admin.newMessage,
-              subtitle: `${t.admin.from} ${msg.name || t.admin.unknown}`,
-              time: msg.createdAt || new Date().toISOString(),
-            });
-          });
-        }
-
-        setActivities(recentActivities.sort((a, b) => 
-          new Date(b.time).getTime() - new Date(a.time).getTime()
-        ).slice(0, 5));
-
-      } catch (error) {
-        console.error('Failed to fetch stats:', error);
-      } finally {
-        setLoading(false);
       }
-    };
 
+      if (Array.isArray(quotes)) {
+        quotes.slice(0, 3).forEach((quote: any) => {
+          recentActivities.push({
+            id: quote._id || Math.random().toString(),
+            type: 'quote',
+            title: t.admin.quoteRequest,
+            subtitle: `${quote.name || t.admin.unknown} - ${quote.service || t.admin.general}`,
+            time: quote.createdAt || new Date().toISOString(),
+          });
+        });
+      }
+
+      if (Array.isArray(messages)) {
+        messages.slice(0, 3).forEach((msg: any) => {
+          recentActivities.push({
+            id: msg._id || Math.random().toString(),
+            type: 'message',
+            title: t.admin.newMessage,
+            subtitle: `${t.admin.from} ${msg.name || t.admin.unknown}`,
+            time: msg.createdAt || new Date().toISOString(),
+          });
+        });
+      }
+
+      setActivities(
+        recentActivities
+          .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
+          .slice(0, 5)
+      );
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
+
+  useEffect(() => {
     fetchStats();
-    
-    // Poll for updates every 30 seconds
     const interval = setInterval(fetchStats, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchStats]);
 
   const statCards = [
     {
@@ -281,7 +279,7 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">{t.admin.recentActivity}</h2>
-                <p className="text-slate-500 text-sm mt-1">Keep track of what's happening</p>
+                <p className="text-slate-500 text-sm mt-1">Keep track of what&apos;s happening</p>
               </div>
               <div className="flex gap-2">
                 <span className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>

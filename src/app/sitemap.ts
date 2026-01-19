@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://imobile.com'; // Replace with actual domain
+  const baseUrl = 'https://imobilept.com'; // Production domain
   
   // Static pages
   const routes = [

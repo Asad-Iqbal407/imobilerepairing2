@@ -5,6 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { CameraIcon, XMarkIcon, PhotoIcon, DevicePhoneMobileIcon, ComputerDesktopIcon, ClockIcon, DeviceTabletIcon, SquaresPlusIcon } from '@heroicons/react/24/outline';
 import { useSearchParams } from 'next/navigation';
 import { isValidEmail } from '@/lib/utils';
+import Image from 'next/image';
 
 function QuoteForm() {
   const { t } = useLanguage();
@@ -43,7 +44,7 @@ function QuoteForm() {
         problem: `${t.getQuote.interestedIn}${service}\n` 
       }));
     }
-  }, [searchParams]);
+  }, [searchParams, t.getQuote.interestedIn]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -379,7 +380,14 @@ function QuoteForm() {
                   <div className="grid grid-cols-3 gap-4 mb-2">
                     {previews.map((url, index) => (
                       <div key={url} className="relative aspect-square rounded-2xl overflow-hidden border-2 border-gray-100 shadow-sm group">
-                        <img src={url} alt="Preview" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                        <Image
+                          src={url}
+                          alt={`Uploaded image preview ${index + 1}`}
+                          fill
+                          unoptimized
+                          sizes="(max-width: 768px) 33vw, 200px"
+                          className="object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
                         <button
                           type="button"
                           onClick={() => removeImage(index)}

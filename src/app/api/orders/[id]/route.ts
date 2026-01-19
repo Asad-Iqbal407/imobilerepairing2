@@ -2,12 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Order from '@/models/Order';
 import { sendOrderEmails } from '@/lib/email';
+import { requireAdmin } from '@/lib/adminGuard';
 
 export const dynamic = 'force-dynamic';
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await dbConnect();
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
+    await dbConnect();
     const { id } = await params;
     const body = await request.json();
 
@@ -30,8 +33,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await dbConnect();
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
+    await dbConnect();
     const { id } = await params;
     const order = await Order.findById(id);
     if (!order) {
@@ -44,8 +49,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await dbConnect();
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
+    await dbConnect();
     const { id } = await params;
     const body = await request.json();
     const oldOrder = await Order.findById(id);
@@ -63,8 +70,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  await dbConnect();
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
+    await dbConnect();
     const { id } = await params;
     const deleted = await Order.findByIdAndDelete(id);
     if (!deleted) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -22,11 +22,7 @@ export default function AdminBlogsPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  useEffect(() => {
-    fetchPosts();
-  }, []);
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const res = await fetch('/api/posts');
       if (!res.ok) throw new Error(t.admin.postFetchFailed);
@@ -37,7 +33,11 @@ export default function AdminBlogsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const handleDelete = async (id: string) => {
     if (!confirm(t.admin.confirmDeletePost)) return;

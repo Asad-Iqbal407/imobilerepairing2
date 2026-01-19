@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import type { IOrder } from '@/models/Order';
 import { formatPriceByCurrency, type SupportedCurrency } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
@@ -15,11 +15,7 @@ export default function OrdersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('All');
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setError(null);
       const res = await fetch('/api/orders');
@@ -36,7 +32,11 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const filteredOrders = orders.filter(order => {
     const matchesSearch = 

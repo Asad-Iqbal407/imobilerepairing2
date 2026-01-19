@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'umpulsiva@gmail.com';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 interface OrderItem {
   productId: string;
@@ -122,12 +122,14 @@ export async function sendOrderEmails(order: OrderDetails) {
     });
 
     // Send to Admin
-    await transporter.sendMail({
-      from: `"Tertulia Impulsiva System" <${process.env.EMAIL_USER}>`,
-      to: ADMIN_EMAIL,
-      subject: `NEW ORDER - #${order._id}`,
-      html: adminEmailContent,
-    });
+    if (ADMIN_EMAIL) {
+      await transporter.sendMail({
+        from: `"Tertulia Impulsiva System" <${process.env.EMAIL_USER}>`,
+        to: ADMIN_EMAIL,
+        subject: `NEW ORDER - #${order._id}`,
+        html: adminEmailContent,
+      });
+    }
 
     console.log(`Emails sent successfully for order ${order._id}`);
   } catch (error) {

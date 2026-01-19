@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
 import { motion } from "framer-motion";
 import { ArrowRight, Zap, ShieldCheck, Banknote, Facebook, Youtube, Phone } from "lucide-react";
@@ -136,10 +137,13 @@ export default function HomeClient() {
               className="relative hidden lg:block"
             >
               <div className="relative z-10 bg-gradient-to-tr from-slate-800 to-slate-700 p-2 rounded-[3rem] shadow-2xl border border-emerald-400/20 hover:rotate-0 transition-transform duration-500 overflow-hidden max-w-[420px] mx-auto">
-                <img 
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6kZ6P-mf5e-FrkXf0ziW6U4uffKgKJfRyPQ&s" 
-                  alt="Professional Mobile Repair" 
+                <Image
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6kZ6P-mf5e-FrkXf0ziW6U4uffKgKJfRyPQ&s"
+                  alt="Professional Mobile Repair"
+                  width={420}
+                  height={400}
                   className="rounded-[2.5rem] w-full h-[400px] object-cover shadow-inner hover:scale-105 transition-transform duration-700"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent pointer-events-none"></div>
                 <motion.div 

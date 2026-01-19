@@ -2,11 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import mongoose from 'mongoose';
 import dbConnect from '@/lib/db';
 import Quote from '@/models/Quote';
+import { requireAdmin } from '@/lib/adminGuard';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const guard = requireAdmin(request);
+    if (guard) return guard;
     await dbConnect();
     
     // Check if collection exists
