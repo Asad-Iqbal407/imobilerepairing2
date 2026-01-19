@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://imobilept.com'),
-  title: "Tertulia Umpulsiva",
+  title: "Tertulia Impulsiva",
   description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis para todas as principais marcas. Substituição de ecrã, reparação de bateria e muito mais.",
   keywords: [
     "reparação de telemóveis",
@@ -23,11 +23,11 @@ export const metadata: Metadata = {
     "troca de bateria",
     "reparação iPhone",
     "reparação Samsung",
-    "Tertulia Umpulsiva"
+    "Tertulia Impulsiva"
   ],
-  authors: [{ name: "Tertulia Umpulsiva Team" }],
-  creator: "Tertulia Umpulsiva",
-  publisher: "Tertulia Umpulsiva",
+  authors: [{ name: "Tertulia Impulsiva Team" }],
+  creator: "Tertulia Impulsiva",
+  publisher: "Tertulia Impulsiva",
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -46,21 +46,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_PT",
     url: "https://imobilept.com",
-    siteName: "Tertulia Umpulsiva",
-    title: "Tertulia Umpulsiva - Reparação Profissional de Telemóveis",
+    siteName: "Tertulia Impulsiva",
+    title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
     description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Tertulia Umpulsiva Repair Services",
+        alt: "Tertulia Impulsiva Repair Services",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Tertulia Umpulsiva - Reparação Profissional de Telemóveis",
+    title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
     description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
     images: ["/og-image.jpg"],
   },
@@ -74,7 +74,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    "name": "Tertulia Umpulsiva",
+    "name": "Tertulia Impulsiva",
     "image": "https://imobilept.com/og-image.jpg",
     "@id": "https://imobilept.com",
     "url": "https://imobilept.com",

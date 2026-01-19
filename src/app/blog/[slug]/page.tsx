@@ -31,9 +31,9 @@ const fallbackPosts: Record<string, any> = {
       <p>iOS may throttle CPU performance to prevent shutdowns if the battery is weak.</p>
       <h2>5. Battery Health Below 80%</h2>
       <p>Check Settings > Battery > Battery Health. If it's under 80%, Apple recommends service.</p>
-      <p>At Tertulia Umpulsiva, we can replace your iPhone battery with premium quality parts.</p>
+      <p>At Tertulia Impulsiva, we can replace your iPhone battery with premium quality parts.</p>
     `,
-    author: 'Tertulia Umpulsiva Team',
+    author: 'Tertulia Impulsiva Team',
     createdAt: new Date('2025-01-05').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1596558450255-7c0b7be9d56a?q=80&w=1000&auto=format&fit=crop',
     tags: ['iPhone', 'Battery', 'Tips'],
@@ -56,7 +56,7 @@ const fallbackPosts: Record<string, any> = {
         <li><strong>Do NOT use a hairdryer:</strong> Heat can damage internal components and push water deeper.</li>
         <li><strong>Do NOT charge it:</strong> This is the fastest way to fry the motherboard.</li>
       </ul>
-      <p>Bring it to a professional repair shop like Tertulia Umpulsiva immediately for ultrasonic cleaning and drying.</p>
+      <p>Bring it to a professional repair shop like Tertulia Impulsiva immediately for ultrasonic cleaning and drying.</p>
     `,
     author: 'Tech Expert',
     createdAt: new Date('2024-12-28').toISOString(),
@@ -77,7 +77,7 @@ const fallbackPosts: Record<string, any> = {
       <h2>Verdict</h2>
       <p>For maximum drop protection, go with <strong>Tempered Glass</strong>. For curved screens and scratch resistance, <strong>Hydrogel</strong> is great.</p>
     `,
-    author: 'Tertulia Umpulsiva Team',
+    author: 'Tertulia Impulsiva Team',
     createdAt: new Date('2024-12-15').toISOString(),
     coverImage: 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop',
     tags: ['Accessories', 'Protection', 'Comparison'],
@@ -136,7 +136,7 @@ export default async function BlogPost({ params }: Props) {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Tertulia Umpulsiva',
+      name: 'Tertulia Impulsiva',
       logo: {
         '@type': 'ImageObject',
         url: 'https://imobilept.com/logo.png', // Production logo URL

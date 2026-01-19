@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import TermsClient from './TermsClient';
 
 export const metadata: Metadata = {
-  description: 'Leia os nossos termos e condições de serviço na Tertulia Umpulsiva.',
+  description: 'Leia os nossos termos e condições de serviço na Tertulia Impulsiva.',
 };
 
 export default function TermsPage() {
