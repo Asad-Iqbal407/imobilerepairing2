@@ -30,10 +30,11 @@ export const metadata: Metadata = {
   publisher: "Tertulia Umpulsiva",
   icons: {
     icon: [
-      { url: '/icon', type: 'image/png' },
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon', type: 'image/png', sizes: '32x32' },
     ],
     apple: [
-      { url: '/apple-icon', type: 'image/png' },
+      { url: '/apple-icon', type: 'image/png', sizes: '180x180' },
     ],
   },
   formatDetection: {
