@@ -21,11 +21,15 @@ export default async function Icon() {
     logoDataUri = ''
   }
 
+  if (!logoDataUri) {
+    logoDataUri = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6kZ6P-mf5e-FrkXf0ziW6U4uffKgKJfRyPQ&s'
+  }
+
   return new ImageResponse(
     (
       <div
         style={{
-          background: logoDataUri && logoDataUri.startsWith('data:image/') ? 'transparent' : '#ffffff',
+          background: 'transparent',
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -34,36 +38,16 @@ export default async function Icon() {
           borderRadius: '32px',
         }}
       >
-        {logoDataUri && logoDataUri.startsWith('data:image/') ? (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundImage: `url(${logoDataUri})`,
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center',
-              backgroundSize: 'contain',
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: '140px',
-              height: '140px',
-              borderRadius: '32px',
-              background: 'linear-gradient(to top right, #2563eb, #3b82f6)',
-              color: '#ffffff',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 900,
-              fontSize: '52px',
-              letterSpacing: '-2px',
-            }}
-          >
-            TU
-          </div>
-        )}
+        <img
+          src={logoDataUri}
+          alt="Apple Icon"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            borderRadius: '32px',
+          }}
+        />
       </div>
     ),
     {
