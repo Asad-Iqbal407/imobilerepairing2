@@ -181,7 +181,7 @@ export default function Footer() {
                     <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.visitUs}</span>
                     <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.address}</span>
                   </div>
-                  <ExternalLink className="hidden md:block w-4 h-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
+                  <ExternalLink className="hidden md:block w-8 h-8 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
                 </a>
               </motion.li>
               <motion.li 
@@ -200,7 +200,7 @@ export default function Footer() {
                     <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.phone}</span>
                     <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.phone2}</span>
                   </div>
-                  <ExternalLink className="hidden md:block w-4 h-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
+                  <ExternalLink className="hidden md:block w-3 h-3 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 self-center" />
                 </a>
               </motion.li>
               <motion.li 
@@ -218,7 +218,7 @@ export default function Footer() {
                     <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.emailUs}</span>
                     <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.email}</span>
                   </div>
-                  <ExternalLink className="hidden md:block w-4 h-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
+                  <ExternalLink className="hidden md:block w-3 h-3 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 self-center" />
                 </a>
               </motion.li>
             </ul>
