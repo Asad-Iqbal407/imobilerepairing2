@@ -51,7 +51,7 @@ export default function ServicesClient() {
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   key={service.id || `service-${i}`}
-                  className="group bg-white rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 overflow-hidden flex flex-col hover:-translate-y-2"
+                  className="group bg-white rounded-[2.5rem] shadow-sm border border-slate-100 overflow-hidden flex flex-col"
                 >
                   <div className="h-64 relative overflow-hidden bg-slate-100">
                     {service.image ? (
@@ -60,7 +60,7 @@ export default function ServicesClient() {
                           src={service.image}
                           alt={service.title}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="object-cover transition-transform duration-700"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";

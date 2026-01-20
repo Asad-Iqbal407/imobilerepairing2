@@ -79,7 +79,7 @@ export default function RootLayout({
     "@id": "https://www.imobilept.com",
     "url": "https://www.imobilept.com",
     "telephone": ["+351 913 709 717", "+351 935 911 908"],
-    "taxID": "317822453",
+    "taxID": "518293718",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Avenida Almirante Reies 102C",

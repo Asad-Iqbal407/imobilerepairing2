@@ -181,7 +181,7 @@ function QuoteForm() {
             {/* Left Sidebar - Info */}
             <div className="bg-blue-600 p-8 text-white md:col-span-2 flex flex-col justify-between">
               <div>
-                <h2 className="text-2xl font-bold mb-6">Why get a quote?</h2>
+                <h2 className="text-2xl font-bold mb-6">{t.getQuote.whyQuote}</h2>
                 <ul className="space-y-6">
                   <li className="flex items-start">
                     <div className="bg-blue-500 p-2 rounded-lg mr-4">
@@ -190,8 +190,8 @@ function QuoteForm() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold">Free Estimate</p>
-                      <p className="text-blue-100 text-sm">No commitment required.</p>
+                      <p className="font-semibold">{t.getQuote.freeEstimate}</p>
+                      <p className="text-blue-100 text-sm">{t.getQuote.noCommitment}</p>
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -201,8 +201,8 @@ function QuoteForm() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold">Fast Response</p>
-                      <p className="text-blue-100 text-sm">Usually within 1-2 hours.</p>
+                      <p className="font-semibold">{t.getQuote.fastResponse}</p>
+                      <p className="text-blue-100 text-sm">{t.getQuote.responseInHours}</p>
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -212,15 +212,15 @@ function QuoteForm() {
                       </svg>
                     </div>
                     <div>
-                      <p className="font-semibold">Quality Parts</p>
-                      <p className="text-blue-100 text-sm">Only premium components.</p>
+                      <p className="font-semibold">{t.getQuote.qualityParts}</p>
+                      <p className="text-blue-100 text-sm">{t.getQuote.premiumComponents}</p>
                     </div>
                   </li>
                 </ul>
               </div>
               <div className="mt-12 pt-8 border-t border-blue-500">
-                <p className="text-blue-100 text-sm italic">&quot;Fastest repair service I&apos;ve ever used. Got my quote and fixed the same day!&quot;</p>
-                <p className="mt-2 font-bold">- John D.</p>
+                <p className="text-blue-100 text-sm italic">&quot;{t.getQuote.testimonial}&quot;</p>
+                <p className="mt-2 font-bold">{t.getQuote.testimonialAuthor}</p>
               </div>
             </div>
 
@@ -258,7 +258,7 @@ function QuoteForm() {
                         className={`flex flex-col items-center justify-center p-3 rounded-2xl border-2 transition-all duration-200 ${
                           formData.category === cat.id
                             ? 'border-blue-600 bg-blue-50 text-blue-600'
-                            : 'border-gray-100 bg-gray-50 text-gray-400 hover:border-blue-200 hover:bg-white'
+                            : 'border-gray-100 bg-gray-50 text-gray-400'
                         }`}
                       >
                         <cat.icon className="h-6 w-6 mb-1" />

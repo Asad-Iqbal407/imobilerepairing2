@@ -12,7 +12,8 @@ import {
   Mail, 
   Facebook, 
   Youtube,
-  ExternalLink
+  ExternalLink,
+  ArrowRight
 } from 'lucide-react';
 
 export default function Footer() {
@@ -115,24 +116,20 @@ export default function Footer() {
           <motion.div variants={itemVariants} className="space-y-6 md:col-span-2 flex flex-col items-center md:items-start">
             <div className="flex items-center gap-3 justify-center md:justify-start">
               <motion.div 
-                whileHover={{ rotate: 12, scale: 1.1 }}
-                className={`w-12 h-12 flex items-center justify-center overflow-hidden transition-all duration-300 ${
-                  logoDataUri && logoDataUri.startsWith('data:image/') 
-                    ? 'bg-transparent' 
-                    : 'bg-gradient-to-tr from-blue-600 to-blue-500 rounded-2xl shadow-lg shadow-blue-600/20 text-white'
-                }`}
+                whileHover={{ rotate: 6, scale: 1.05 }}
+                className="w-11 h-11 flex items-center justify-center overflow-hidden transition-all duration-300 bg-white rounded-xl shadow-lg shadow-slate-300/40 border border-slate-200 text-blue-600"
               >
                 {logoDataUri && logoDataUri.startsWith('data:image/') ? (
                   <Image
                     src={logoDataUri}
                     alt={`${t.common.shopName} logo`}
-                    width={48}
-                    height={48}
+                    width={36}
+                    height={36}
                     className="w-full h-full object-contain"
                     unoptimized
                   />
                 ) : (
-                  <Smartphone className="h-7 w-7" />
+                  <Smartphone className="h-6 w-6" />
                 )}
               </motion.div>
               <span className="text-3xl font-black text-white tracking-tighter">
@@ -169,40 +166,60 @@ export default function Footer() {
             <ul className="space-y-5 w-full">
               <motion.li 
                 whileHover={{ x: 5 }}
-                className="flex flex-col md:flex-row items-center md:items-start gap-4 text-slate-400 group cursor-pointer text-center md:text-left"
+                className="group"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md shrink-0">
-                  <MapPin className="h-5 w-5" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.visitUs}</span>
-                  <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.address}</span>
-                </div>
+                <a 
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(t.common.address)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col md:flex-row items-center md:items-start gap-4 text-slate-400 cursor-pointer text-center md:text-left w-full"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md shrink-0">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.visitUs}</span>
+                    <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.address}</span>
+                  </div>
+                  <ExternalLink className="hidden md:block w-4 h-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
+                </a>
               </motion.li>
               <motion.li 
                 whileHover={{ x: 5 }}
-                className="flex flex-col md:flex-row items-center md:items-start gap-4 text-slate-400 group cursor-pointer text-center md:text-left"
+                className="group"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md shrink-0">
-                  <Phone className="h-5 w-5" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.callUs}</span>
-                  <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.phone}</span>
-                  <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.phone2}</span>
-                </div>
+                <a 
+                  href={`tel:${t.common.phone.replace(/\s/g, '')}`}
+                  className="flex flex-col md:flex-row items-center md:items-start gap-4 text-slate-400 cursor-pointer text-center md:text-left w-full"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md shrink-0">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.callUs}</span>
+                    <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.phone}</span>
+                    <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.phone2}</span>
+                  </div>
+                  <ExternalLink className="hidden md:block w-4 h-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
+                </a>
               </motion.li>
               <motion.li 
                 whileHover={{ x: 5 }}
-                className="flex flex-col md:flex-row items-center md:items-start gap-4 text-slate-400 group cursor-pointer text-center md:text-left"
+                className="group"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md shrink-0">
-                  <Mail className="h-5 w-5" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.emailUs}</span>
-                  <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.email}</span>
-                </div>
+                <a 
+                  href={`mailto:${t.common.email}`}
+                  className="flex flex-col md:flex-row items-center md:items-start gap-4 text-slate-400 cursor-pointer text-center md:text-left w-full"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-slate-800/50 flex items-center justify-center text-blue-500 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-110 transition-all shadow-md shrink-0">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t.common.emailUs}</span>
+                    <span className="text-white font-bold text-base group-hover:text-blue-400 transition-colors">{t.common.email}</span>
+                  </div>
+                  <ExternalLink className="hidden md:block w-4 h-4 text-blue-500 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 self-center" />
+                </a>
               </motion.li>
             </ul>
           </motion.div>
@@ -214,15 +231,13 @@ export default function Footer() {
               {t.common.hours}
               <span className="w-8 h-px bg-blue-500/30 md:hidden"></span>
             </h3>
-            <div className="bg-slate-800/30 rounded-[2rem] p-6 border border-slate-700/50 w-full max-w-xs md:max-w-none">
-              <div className="flex flex-col space-y-2 text-center md:text-left">
-                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                  {t.common.everyDay.split(':')[0]}
-                </span>
-                <span className="text-white font-bold text-base">
-                  {t.common.everyDay.split(':')[1]}
-                </span>
-              </div>
+            <div className="flex flex-col space-y-2 text-center md:text-left w-full">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                {t.common.everyDay.split(':')[0]}
+              </span>
+              <span className="text-white font-bold text-base">
+                {t.common.everyDay.split(':')[1]}
+              </span>
             </div>
           </motion.div>
         </motion.div>
@@ -249,15 +264,15 @@ export default function Footer() {
           <div className="flex gap-8 text-sm font-black text-slate-500 uppercase tracking-widest">
             <Link href="/terms" className="hover:text-blue-500 cursor-pointer transition-colors flex items-center gap-2 group">
               {t.common.terms}
-              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
             <Link href="/cookies" className="hover:text-blue-500 cursor-pointer transition-colors flex items-center gap-2 group">
               {t.common.cookies}
-              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
             <Link href="/privacy" className="hover:text-blue-500 cursor-pointer transition-colors flex items-center gap-2 group">
               {t.common.privacy}
-              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
             </Link>
           </div>
         </motion.div>

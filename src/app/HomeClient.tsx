@@ -187,9 +187,9 @@ export default function HomeClient() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group p-8 bg-white/80 backdrop-blur-sm rounded-[2.5rem] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border border-slate-100"
+                className="group p-8 bg-white/80 backdrop-blur-sm rounded-[2.5rem] shadow-sm transition-all duration-300 border border-slate-100"
               >
-                <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-8 transition-all duration-300">
                   {feature.icon}
                 </div>
                 <h4 className="text-2xl font-bold text-slate-900 mb-4">{feature.title}</h4>
@@ -232,14 +232,14 @@ export default function HomeClient() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="relative group overflow-hidden rounded-3xl bg-white/80 backdrop-blur-sm border border-slate-100 p-8 hover:bg-white hover:shadow-xl transition-all duration-300"
+                className="relative group overflow-hidden rounded-3xl bg-white/80 backdrop-blur-sm border border-slate-100 p-8 transition-all duration-300"
               >
-                <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300 grayscale group-hover:grayscale-0">
+                <div className="text-5xl mb-6 transition-transform duration-300">
                   {service.icon}
                 </div>
                 <h4 className="text-xl font-bold text-slate-900 mb-2">{service.name}</h4>
                 <p className="text-slate-500 text-sm">{t.home.professionalRepair}</p>
-                <div className="absolute bottom-0 left-0 h-1 bg-emerald-500 w-0 group-hover:w-full transition-all duration-500"></div>
+                <div className="absolute bottom-0 left-0 h-1 bg-emerald-500 w-full transition-all duration-500"></div>
               </motion.div>
             ))}
           </div>
