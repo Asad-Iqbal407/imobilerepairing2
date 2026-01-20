@@ -13,7 +13,7 @@ import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://imobilept.com'),
+  metadataBase: new URL('https://www.imobilept.com'),
   title: "Tertulia Impulsiva",
   description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis para todas as principais marcas. Substituição de ecrã, reparação de bateria e muito mais.",
   keywords: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_PT",
-    url: "https://imobilept.com",
+    url: "https://www.imobilept.com",
     siteName: "Tertulia Impulsiva",
     title: "Tertulia Impulsiva - Reparação Profissional de Telemóveis",
     description: "Serviços rápidos, fiáveis e acessíveis de reparação de telemóveis.",
@@ -75,9 +75,9 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Tertulia Impulsiva",
-    "image": "https://imobilept.com/og-image.jpg",
-    "@id": "https://imobilept.com",
-    "url": "https://imobilept.com",
+    "image": "https://www.imobilept.com/og-image.jpg",
+    "@id": "https://www.imobilept.com",
+    "url": "https://www.imobilept.com",
     "telephone": ["+351 913 709 717", "+351 935 911 908"],
     "taxID": "317822453",
     "address": {

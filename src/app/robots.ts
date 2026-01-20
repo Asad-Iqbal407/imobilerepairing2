@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/api/'],
     },
-    sitemap: 'https://imobilept.com/sitemap.xml', // Production domain
+    sitemap: 'https://www.imobilept.com/sitemap.xml', // Production domain
   };
 }

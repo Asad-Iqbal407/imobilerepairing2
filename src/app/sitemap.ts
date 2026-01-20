@@ -3,7 +3,7 @@ import dbConnect from '@/lib/db';
 import Post from '@/models/Post';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://imobilept.com'; // Production domain
+  const baseUrl = 'https://www.imobilept.com'; // Production domain
   
   // Static pages
   const routes = [
