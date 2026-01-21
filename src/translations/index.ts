@@ -333,7 +333,7 @@ export const en = {
     storage: "Storage",
     connected: "Connected",
     online: "Online",
-    currencySymbol: "$",
+    currencySymbol: "€",
     manageProducts: "Manage Products",
     manageProductsDesc: "Manage your inventory of phones, tablets, and accessories.",
     manageServices: "Manage Services",

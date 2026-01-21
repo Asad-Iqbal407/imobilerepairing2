@@ -70,6 +70,12 @@ export const formatPriceByCurrency = (value: number, currency: SupportedCurrency
   return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(value);
 };
 
+export const formatPriceAdmin = (priceUsd: number): string => {
+  const rate = getUsdToEurRate();
+  const value = priceUsd * rate;
+  return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(value);
+};
+
 export const getServiceEmoji = (title: string, description: string = '') => {
   const combined = (title + ' ' + description).toLowerCase();
   

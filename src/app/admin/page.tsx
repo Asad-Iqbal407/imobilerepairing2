@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
+import { formatPriceAdmin, getUsdToEurRate } from '@/lib/utils';
 
 interface Stats {
   orders: number;
@@ -56,7 +57,11 @@ export default function AdminDashboard() {
       const posts = await postsRes.json();
 
       const totalRevenue = Array.isArray(orders)
-        ? orders.reduce((acc: number, order: any) => acc + (order.total || 0), 0)
+        ? orders.reduce((acc: number, order: any) => {
+            const price = order.total || 0;
+            // If the order was in USD, convert it to EUR for the total revenue stat
+            return acc + (order.currency === 'eur' ? price : price * getUsdToEurRate());
+          }, 0)
         : 0;
 
       setStats({
@@ -77,7 +82,7 @@ export default function AdminDashboard() {
             id: order._id || Math.random().toString(),
             type: 'order',
             title: `${t.admin.newOrder} #${(order._id || '').slice(-6)}`,
-            subtitle: `${order.customerName || t.admin.unknown} - ${t.admin.currencySymbol}${order.total || 0}`,
+            subtitle: `${order.customerName || t.admin.unknown} - ${order.currency === 'eur' ? `€${(order.total || 0).toLocaleString()}` : formatPriceAdmin(order.total || 0)}`,
             time: order.createdAt || new Date().toISOString(),
             status: order.status,
           });
@@ -129,7 +134,7 @@ export default function AdminDashboard() {
   const statCards = [
     {
       label: t.admin.totalRevenue,
-      value: `${t.admin.currencySymbol}${stats.revenue.toLocaleString()}`,
+      value: new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(stats.revenue),
       href: '/admin/orders',
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

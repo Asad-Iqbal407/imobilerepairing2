@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DynamicText from '@/components/DynamicText';
-import { isValidUrl } from '@/lib/utils';
+import { isValidUrl, formatPriceAdmin } from '@/lib/utils';
 
 type CategoryItem = { id: string; name: string; icon: string; label: string };
 
@@ -380,7 +380,7 @@ export default function ManageProducts() {
             </div>
             <div>
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.inventoryValue}</p>
-              <p className="text-2xl font-bold text-slate-900 leading-none">{t.admin.currencySymbol}{totalValue.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-slate-900 leading-none">{formatPriceAdmin(totalValue)}</p>
             </div>
           </div>
         </div>
@@ -509,7 +509,7 @@ export default function ManageProducts() {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="font-bold text-slate-900 text-base">
-                      {t.admin.currencySymbol}{product.price.toLocaleString()}
+                      {formatPriceAdmin(product.price)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
@@ -574,7 +574,7 @@ export default function ManageProducts() {
                       {getCategoryLabel(product.category)}
                     </span>
                     <span className="font-bold text-blue-600">
-                      {t.admin.currencySymbol}{product.price.toLocaleString()}
+                      {formatPriceAdmin(product.price)}
                     </span>
                   </div>
                   <h3 className="font-bold text-slate-900 truncate"><DynamicText text={product.name} /></h3>

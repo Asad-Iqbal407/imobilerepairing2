@@ -200,7 +200,7 @@ export default function ShopClient() {
           src={isValidUrl(product.image) ? product.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"}
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-contain p-4"
         />
       </div>
       <div className="p-5 sm:p-8 flex-1 flex flex-col">
@@ -479,12 +479,12 @@ export default function ShopClient() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-                <div className="relative h-72 md:h-full min-h-[18rem] bg-slate-100">
+                <div className="relative h-72 md:h-full min-h-[24rem] bg-slate-100 flex items-center justify-center">
                   <Image
                     src={isValidUrl(selectedProduct.image) ? selectedProduct.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"}
                     alt={selectedProduct.name}
                     fill
-                    className="object-cover"
+                    className="object-contain p-6"
                   />
                 </div>
                 <div className="p-6 md:p-8 space-y-6">

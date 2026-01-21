@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import { formatPriceAdmin } from '@/lib/utils';
 
 import { Toaster, toast } from 'sonner';
 
@@ -146,7 +147,7 @@ export default function AdminLayout({
           const newOrders = orders.filter((o: any) => o.createdAt > lastOrderTime && o.status === 'paid');
           newOrders.forEach((o: any) => {
             toast.success(`${t.admin.newOrder} #${o._id.slice(-6)}`, {
-              description: `${t.admin.customer}: ${o.customerName} - ${t.admin.currencySymbol}${o.total}`,
+              description: `${t.admin.customer}: ${o.customerName} - ${o.currency === 'eur' ? `€${(o.total || 0).toLocaleString()}` : formatPriceAdmin(o.total || 0)}`,
               action: {
                 label: t.admin.view,
                 onClick: () => router.push('/admin/orders')

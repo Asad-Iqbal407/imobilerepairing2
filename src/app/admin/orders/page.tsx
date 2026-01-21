@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import type { IOrder } from '@/models/Order';
-import { formatPriceByCurrency, type SupportedCurrency } from '@/lib/utils';
+import { formatPriceByCurrency, type SupportedCurrency, getUsdToEurRate, formatPriceAdmin } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function OrdersPage() {
@@ -50,13 +50,12 @@ export default function OrdersPage() {
   });
 
   const totalOrders = orders.length;
-  const revenueByCurrency = orders.reduce(
+  const totalRevenueEur = orders.reduce(
     (acc, order: any) => {
-      const currency: SupportedCurrency = order.currency === 'eur' ? 'eur' : 'usd';
-      acc[currency] += order.total || 0;
-      return acc;
+      const price = order.total || 0;
+      return acc + (order.currency === 'eur' ? price : price * getUsdToEurRate());
     },
-    { usd: 0, eur: 0 } as Record<SupportedCurrency, number>
+    0
   );
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
   const completedOrders = orders.filter(o => o.status === 'confirmed').length;
@@ -142,13 +141,8 @@ export default function OrdersPage() {
               <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-0.5">{t.admin.totalRevenue}</p>
               <div className="flex flex-col">
                 <p className="text-xl font-bold text-slate-900 leading-none truncate">
-                  {formatPriceByCurrency(revenueByCurrency.usd, 'usd')}
+                  {new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(totalRevenueEur)}
                 </p>
-                {revenueByCurrency.eur > 0 && (
-                  <p className="text-[10px] font-bold text-slate-500 mt-1">
-                    {formatPriceByCurrency(revenueByCurrency.eur, 'eur')}
-                  </p>
-                )}
               </div>
             </div>
           </div>
@@ -261,7 +255,7 @@ export default function OrdersPage() {
                   </td>
                   <td className="px-6 py-4 text-center">
                     <span className="font-bold text-slate-900 text-base">
-                      {formatPriceByCurrency(order.total, (order.currency || 'usd') as SupportedCurrency)}
+                      {order.currency === 'eur' ? `€${(order.total || 0).toLocaleString()}` : formatPriceAdmin(order.total || 0)}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
@@ -336,7 +330,7 @@ export default function OrdersPage() {
                   <div className="flex flex-col">
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t.admin.total}</span>
                     <span className="font-bold text-slate-900">
-                      {formatPriceByCurrency(order.total, (order.currency || 'usd') as SupportedCurrency)}
+                      {order.currency === 'eur' ? `€${(order.total || 0).toLocaleString()}` : formatPriceAdmin(order.total || 0)}
                     </span>
                   </div>
                   <div className="flex flex-col items-end">
@@ -491,8 +485,8 @@ export default function OrdersPage() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-bold text-slate-900">{formatPriceByCurrency(item.price * item.quantity, (selectedOrder.currency || 'usd') as SupportedCurrency)}</p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{formatPriceByCurrency(item.price, (selectedOrder.currency || 'usd') as SupportedCurrency)} {t.admin.each}</p>
+                        <p className="font-bold text-slate-900">{selectedOrder.currency === 'eur' ? `€${((item.price * item.quantity) || 0).toLocaleString()}` : formatPriceAdmin(item.price * item.quantity)}</p>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{selectedOrder.currency === 'eur' ? `€${(item.price || 0).toLocaleString()}` : formatPriceAdmin(item.price)} {t.admin.each}</p>
                       </div>
                     </div>
                   ))}
@@ -506,7 +500,7 @@ export default function OrdersPage() {
                   <span className="text-blue-400">{t.admin.paidViaStripe}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-3xl font-bold">{formatPriceByCurrency(selectedOrder.total, (selectedOrder.currency || 'usd') as SupportedCurrency)}</span>
+                  <span className="text-3xl font-bold">{selectedOrder.currency === 'eur' ? `€${(selectedOrder.total || 0).toLocaleString()}` : formatPriceAdmin(selectedOrder.total || 0)}</span>
                   <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-xl border border-white/10">
                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                     <span className="text-xs font-bold uppercase tracking-widest">{t.admin.paymentVerified}</span>
