@@ -38,42 +38,18 @@ export const isValidUrl = (url: string) => {
   }
 };
 
-export const getCurrencyForLanguage = (language: SupportedLanguage): SupportedCurrency =>
-  language === 'pt' ? 'eur' : 'usd';
-
-export const getUsdToEurRate = (): number => {
-  const raw = process.env.NEXT_PUBLIC_USD_TO_EUR_RATE;
-  const parsed = raw ? Number(raw) : NaN;
-  if (!Number.isFinite(parsed) || parsed <= 0) return 0.92;
-  return parsed;
-};
-
-export const convertPriceByLanguage = (priceUsd: number, language: SupportedLanguage): number => {
-  if (!Number.isFinite(priceUsd)) return 0;
-  if (language !== 'pt') return priceUsd;
-  return priceUsd * getUsdToEurRate();
-};
-
-export const formatPriceByLanguage = (priceUsd: number, language: SupportedLanguage): string => {
-  const currency = getCurrencyForLanguage(language);
-  const value = convertPriceByLanguage(priceUsd, language);
-  let locale = 'en-US';
+export const formatPriceByLanguage = (price: number, language: SupportedLanguage): string => {
+  let locale = 'en-IE'; // Use Ireland for English Euro formatting
   if (language === 'pt') locale = 'pt-PT';
-  
-  const currencyCode = currency === 'eur' ? 'EUR' : 'USD';
-  return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(value);
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: 'EUR' }).format(price);
 };
 
-export const formatPriceByCurrency = (value: number, currency: SupportedCurrency): string => {
-  const locale = currency === 'eur' ? 'pt-PT' : 'en-US';
-  const currencyCode = currency === 'eur' ? 'EUR' : 'USD';
-  return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(value);
-};
-
-export const formatPriceAdmin = (priceUsd: number): string => {
-  const rate = getUsdToEurRate();
-  const value = priceUsd * rate;
+export const formatPriceByCurrency = (value: number, _currency?: SupportedCurrency): string => {
   return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(value);
+};
+
+export const formatPriceAdmin = (price: number): string => {
+  return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format(price);
 };
 
 export const getServiceEmoji = (title: string, description: string = '') => {
@@ -89,6 +65,9 @@ export const getServiceEmoji = (title: string, description: string = '') => {
   if (combined.includes('software') || combined.includes('unlock') || combined.includes('update') || combined.includes('desbloqueio')) return '💻';
   if (combined.includes('back') || combined.includes('glass') || combined.includes('traseira') || combined.includes('vidro')) return '📲';
   if (combined.includes('network') || combined.includes('signal') || combined.includes('wifi') || combined.includes('rede') || combined.includes('sinal')) return '📶';
+  if (combined.includes('watch') || combined.includes('relógio')) return '⌚';
+  if (combined.includes('laptop') || combined.includes('portátil') || combined.includes('computer')) return '💻';
+  if (combined.includes('tablet') || combined.includes('ipad')) return '📟';
   
   return '🔧';
 };

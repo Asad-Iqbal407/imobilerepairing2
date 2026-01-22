@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
-import { formatPriceAdmin, getUsdToEurRate } from '@/lib/utils';
+import { formatPriceAdmin } from '@/lib/utils';
 
 interface Stats {
   orders: number;
@@ -58,9 +58,7 @@ export default function AdminDashboard() {
 
       const totalRevenue = Array.isArray(orders)
         ? orders.reduce((acc: number, order: any) => {
-            const price = order.total || 0;
-            // If the order was in USD, convert it to EUR for the total revenue stat
-            return acc + (order.currency === 'eur' ? price : price * getUsdToEurRate());
+            return acc + (order.total || 0);
           }, 0)
         : 0;
 

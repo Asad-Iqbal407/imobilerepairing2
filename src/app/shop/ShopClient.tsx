@@ -9,7 +9,7 @@ import DynamicText from '@/components/DynamicText';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Tag, X } from 'lucide-react';
 import { ProductSkeleton } from '@/components/Skeleton';
-import { convertPriceByLanguage, formatPriceByLanguage, isValidUrl } from '@/lib/utils';
+import { formatPriceByLanguage, isValidUrl } from '@/lib/utils';
 
 type CategoryItem = { id: string; label: string; icon: string };
 
@@ -23,7 +23,7 @@ export default function ShopClient() {
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
   const [apiCategories, setApiCategories] = useState<Array<{ id: string; name: string; icon?: string }>>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const currencySymbol = language === 'pt' ? '€' : '$';
+  const currencySymbol = '€';
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -57,7 +57,7 @@ export default function ShopClient() {
     if (normalized === 'tablets') return t.shop.filterTablets;
     if (normalized === 'cables') return t.shop.filterCables;
     if (normalized === 'chargers') return t.shop.filterChargers;
-    if (normalized === 'powerbanks') return t.shop.filterPowerbanks;
+    if (normalized === 'powerbanks' || normalized === 'power banks') return t.shop.filterPowerbanks;
     if (normalized === 'earbuds') return t.shop.filterEarbuds;
     if (normalized === 'adapters') return t.shop.filterAdapters;
     if (normalized === 'speakers') return t.shop.filterSpeakers;
@@ -108,8 +108,7 @@ export default function ShopClient() {
       product.description.toLowerCase().includes(searchQuery.toLowerCase());
 
     // 3. Price Filter
-    const displayPrice = convertPriceByLanguage(product.price, language);
-    const matchesPrice = displayPrice >= priceRange.min && displayPrice <= priceRange.max;
+    const matchesPrice = product.price >= priceRange.min && product.price <= priceRange.max;
 
     return matchesCategory && matchesSearch && matchesPrice;
   });

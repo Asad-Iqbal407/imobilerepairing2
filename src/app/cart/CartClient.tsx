@@ -5,7 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import Link from 'next/link';
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { convertPriceByLanguage, formatPriceByLanguage, getCurrencyForLanguage } from '@/lib/utils';
+import { formatPriceByLanguage } from '@/lib/utils';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -33,12 +33,9 @@ export default function CartPage() {
         throw new Error('Stripe failed to load. Check your internet connection or API key.');
       }
 
-      const currency = getCurrencyForLanguage(language);
-      const checkoutItems = items.map((item) => ({
-        ...item,
-        price: convertPriceByLanguage(item.price, language),
-      }));
-      const checkoutTotal = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const currency = 'eur';
+      const checkoutItems = items;
+      const checkoutTotal = total;
 
       const response = await fetch('/api/checkout', {
         method: 'POST',

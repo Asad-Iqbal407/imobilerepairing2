@@ -224,7 +224,10 @@ export default function HomeClient() {
               { name: t.home.screenRepair, icon: "📱", color: "blue" },
               { name: t.home.batteryReplacement, icon: "🔋", color: "emerald" },
               { name: t.home.waterDamage, icon: "💧", color: "cyan" },
-              { name: t.home.chargingPort, icon: "🔌", color: "amber" }
+              { name: t.home.chargingPort, icon: "🔌", color: "amber" },
+              { name: t.home.watchRepair, icon: "⌚", color: "indigo" },
+              { name: t.home.laptopRepair, icon: "💻", color: "slate" },
+              { name: t.home.tabletRepair, icon: "📟", color: "purple" }
             ].map((service, i) => (
               <motion.div 
                 key={i}

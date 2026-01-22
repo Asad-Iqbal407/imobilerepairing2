@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import type { IOrder } from '@/models/Order';
-import { formatPriceByCurrency, type SupportedCurrency, getUsdToEurRate, formatPriceAdmin } from '@/lib/utils';
+import { formatPriceByCurrency, type SupportedCurrency, formatPriceAdmin } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function OrdersPage() {
@@ -51,10 +51,7 @@ export default function OrdersPage() {
 
   const totalOrders = orders.length;
   const totalRevenueEur = orders.reduce(
-    (acc, order: any) => {
-      const price = order.total || 0;
-      return acc + (order.currency === 'eur' ? price : price * getUsdToEurRate());
-    },
+    (acc, order: any) => acc + (order.total || 0),
     0
   );
   const pendingOrders = orders.filter(o => o.status === 'pending').length;
