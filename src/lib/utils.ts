@@ -72,6 +72,9 @@ export const getServiceEmoji = (title: string, description: string = '') => {
   return '🔧';
 };
 
+// Translation cache to prevent redundant API calls
+const translationCache: Record<string, string> = {};
+
 /**
  * Dynamically translates text.
  * 1) Tries internal /api/translate (RapidAPI).
@@ -79,6 +82,11 @@ export const getServiceEmoji = (title: string, description: string = '') => {
  */
 export const translateText = async (text: string, targetLang: string): Promise<string> => {
   if (!text || targetLang === 'en') return text;
+
+  const cacheKey = `${targetLang}:${text}`;
+  if (translationCache[cacheKey]) {
+    return translationCache[cacheKey];
+  }
 
   // Ensure Portugal Portuguese instead of Brazilian
   const apiTarget = targetLang === 'pt' ? 'pt-PT' : targetLang;
@@ -96,13 +104,20 @@ export const translateText = async (text: string, targetLang: string): Promise<s
     if (response.ok) {
       const data = (await response.json()) as { translated?: string };
       if (data.translated && typeof data.translated === 'string') {
+        translationCache[cacheKey] = data.translated;
         return data.translated;
       }
     } else {
-      console.warn('Client translate error status:', response.status);
+      // Don't warn for rate limits, we have a fallback
+      if (response.status !== 429) {
+        console.warn('Client translate error status:', response.status);
+      }
     }
   } catch (error) {
-    console.warn('Client translate error, will fallback to Google:', error);
+    // Only warn if not a connection/abort error
+    if (!(error instanceof Error && error.name === 'AbortError')) {
+      console.warn('Client translate error, will fallback to Google:', error);
+    }
   }
 
   // 2. Fallback to Google Translate (free/unofficial)
@@ -114,11 +129,13 @@ export const translateText = async (text: string, targetLang: string): Promise<s
     const data = await response.json();
 
     if (data && data[0] && data[0][0] && data[0][0][0]) {
-      return data[0].map((item: any) => item[0]).join('');
+      const translated = data[0].map((item: any) => item[0]).join('');
+      translationCache[cacheKey] = translated;
+      return translated;
     }
     return text;
   } catch (error) {
-    console.error('Google Translate fallback error:', error);
+    // Silently return original text if even fallback fails
     return text;
   }
 };

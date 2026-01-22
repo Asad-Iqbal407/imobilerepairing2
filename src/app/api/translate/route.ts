@@ -39,11 +39,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('RapidAPI error:', response.status, errorText);
+      if (response.status !== 429) {
+        const errorText = await response.text();
+        console.error('RapidAPI error:', response.status, errorText);
+      }
       return NextResponse.json(
         { error: 'RapidAPI translate failed', status: response.status },
-        { status: 500 }
+        { status: response.status === 429 ? 429 : 500 }
       );
     }
 

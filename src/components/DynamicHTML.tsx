@@ -35,7 +35,7 @@ export default function DynamicHTML({ html, className = '' }: DynamicHTMLProps) 
           setTranslatedHTML(result);
         }
       } catch (error) {
-        console.error('Translation error in HTML component:', error);
+        // Silent error, use original HTML
       } finally {
         if (isMounted) {
           setIsLoading(false);

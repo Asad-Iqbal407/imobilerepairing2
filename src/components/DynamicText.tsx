@@ -34,7 +34,7 @@ export default function DynamicText({ text, className = '', as: Component = 'spa
           setTranslatedText(result);
         }
       } catch (error) {
-        console.error('Translation error in component:', error);
+        // Silent error, use original text
       } finally {
         if (isMounted) {
           setIsLoading(false);
