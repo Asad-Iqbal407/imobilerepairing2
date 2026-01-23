@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
+import { translateText } from '@/lib/utils';
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { id } = use(params);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
@@ -22,6 +23,55 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     coverImage: '',
     isPublished: true
   });
+
+  // Translate form content when switching between languages
+  useEffect(() => {
+    const translateFormFields = async () => {
+      const dataToTranslate = { ...formData };
+      const translatedValues: any = {};
+      let hasChanges = false;
+      const targetLang = language;
+
+      // Translate title
+      if (dataToTranslate.title) {
+        const translatedTitle = await translateText(dataToTranslate.title, targetLang);
+        if (translatedTitle !== dataToTranslate.title) {
+          translatedValues.title = translatedTitle;
+          hasChanges = true;
+        }
+      }
+
+      // Translate content
+      if (dataToTranslate.content) {
+        const translatedContent = await translateText(dataToTranslate.content, targetLang);
+        if (translatedContent !== dataToTranslate.content) {
+          translatedValues.content = translatedContent;
+          hasChanges = true;
+        }
+      }
+
+      // Translate excerpt
+      if (dataToTranslate.excerpt) {
+        const translatedExcerpt = await translateText(dataToTranslate.excerpt, targetLang);
+        if (translatedExcerpt !== dataToTranslate.excerpt) {
+          translatedValues.excerpt = translatedExcerpt;
+          hasChanges = true;
+        }
+      }
+
+      if (hasChanges) {
+        setFormData(prev => ({
+          ...prev,
+          ...translatedValues
+        }));
+      }
+    };
+
+    // Only translate if there's content to translate AND we're not currently fetching initial data
+    if (!fetching && (formData.title || formData.content || formData.excerpt)) {
+      translateFormFields();
+    }
+  }, [language, fetching]);
 
   const fetchPost = useCallback(async () => {
     try {

@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useData, Service } from '@/context/DataContext';
-import { getServiceEmoji, isValidUrl } from '@/lib/utils';
+import { getServiceEmoji, isValidUrl, translateText } from '@/lib/utils';
 import { useLanguage } from '@/context/LanguageContext';
 import DynamicText from '@/components/DynamicText';
 
 export default function ManageServices() {
   const { services, addService, updateService, deleteService } = useData();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -22,6 +22,48 @@ export default function ManageServices() {
     description: '',
     image: '',
   });
+
+  // Translate form content when switching between languages
+  useEffect(() => {
+    if (isFormOpen) {
+      const translateFormFields = async () => {
+        const serviceToTranslate = { ...currentService };
+        const translatedValues: any = {};
+        let hasChanges = false;
+        const targetLang = language;
+
+        // Translate title
+        if (serviceToTranslate.title) {
+          const translatedTitle = await translateText(serviceToTranslate.title, targetLang);
+          if (translatedTitle !== serviceToTranslate.title) {
+            translatedValues.title = translatedTitle;
+            hasChanges = true;
+          }
+        }
+
+        // Translate description
+        if (serviceToTranslate.description) {
+          const translatedDesc = await translateText(serviceToTranslate.description, targetLang);
+          if (translatedDesc !== serviceToTranslate.description) {
+            translatedValues.description = translatedDesc;
+            hasChanges = true;
+          }
+        }
+
+        if (hasChanges) {
+          setCurrentService((prev: any) => {
+            // Only update if we're still looking at the same service
+            if (prev.id === serviceToTranslate.id) {
+              return { ...prev, ...translatedValues };
+            }
+            return prev;
+          });
+        }
+      };
+
+      translateFormFields();
+    }
+  }, [language, isFormOpen, currentService.id]);
 
   // Simulate loading state for consistency with other pages
   useEffect(() => {

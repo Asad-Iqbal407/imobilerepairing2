@@ -44,17 +44,18 @@ export default function ManageProducts() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Translate form content when switching to Portuguese
+  // Translate form content when switching between languages
   useEffect(() => {
-    if (language === 'pt' && isFormOpen) {
+    if (isFormOpen) {
       const translateFormFields = async () => {
         const productToTranslate = { ...currentProduct };
         const translatedValues: any = {};
         let hasChanges = false;
+        const targetLang = language;
 
         // Translate name
         if (productToTranslate.name) {
-          const translatedName = await translateText(productToTranslate.name, 'pt');
+          const translatedName = await translateText(productToTranslate.name, targetLang);
           if (translatedName !== productToTranslate.name) {
             translatedValues.name = translatedName;
             hasChanges = true;
@@ -63,7 +64,7 @@ export default function ManageProducts() {
 
         // Translate description
         if (productToTranslate.description) {
-          const translatedDesc = await translateText(productToTranslate.description, 'pt');
+          const translatedDesc = await translateText(productToTranslate.description, targetLang);
           if (translatedDesc !== productToTranslate.description) {
             translatedValues.description = translatedDesc;
             hasChanges = true;
@@ -72,7 +73,7 @@ export default function ManageProducts() {
 
         // Translate condition
         if (productToTranslate.condition) {
-          const translatedCond = await translateText(productToTranslate.condition, 'pt');
+          const translatedCond = await translateText(productToTranslate.condition, targetLang);
           if (translatedCond !== productToTranslate.condition) {
             translatedValues.condition = translatedCond;
             hasChanges = true;
@@ -81,7 +82,7 @@ export default function ManageProducts() {
 
         // Translate memory
         if (productToTranslate.memory) {
-          const translatedMem = await translateText(productToTranslate.memory, 'pt');
+          const translatedMem = await translateText(productToTranslate.memory, targetLang);
           if (translatedMem !== productToTranslate.memory) {
             translatedValues.memory = translatedMem;
             hasChanges = true;
@@ -91,7 +92,7 @@ export default function ManageProducts() {
         // Translate signs of wear
         if (productToTranslate.signsOfWear && productToTranslate.signsOfWear.length > 0) {
           const translatedSigns = await Promise.all(
-            productToTranslate.signsOfWear.map((sign: string) => translateText(sign, 'pt'))
+            productToTranslate.signsOfWear.map((sign: string) => translateText(sign, targetLang))
           );
           if (JSON.stringify(translatedSigns) !== JSON.stringify(productToTranslate.signsOfWear)) {
             translatedValues.signsOfWear = translatedSigns;
@@ -114,13 +115,14 @@ export default function ManageProducts() {
     }
   }, [language, isFormOpen, currentProduct.id]);
 
-  // Translate category form content when switching to Portuguese
+  // Translate category form content when switching between languages
   useEffect(() => {
-    if (language === 'pt' && isCategoriesOpen) {
+    if (isCategoriesOpen) {
       const translateCategoryFields = async () => {
         const categoryToTranslate = { ...categoryForm };
+        const targetLang = language;
         if (categoryToTranslate.name) {
-          const translatedName = await translateText(categoryToTranslate.name, 'pt');
+          const translatedName = await translateText(categoryToTranslate.name, targetLang);
           if (translatedName !== categoryToTranslate.name) {
             setCategoryForm(prev => {
               if (prev.id === categoryToTranslate.id) {
