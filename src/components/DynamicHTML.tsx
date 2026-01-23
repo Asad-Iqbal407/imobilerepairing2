@@ -21,7 +21,7 @@ export default function DynamicHTML({ html, className = '' }: DynamicHTMLProps) 
     let isMounted = true;
 
     async function translate() {
-      if (language === 'en' || !html) {
+      if (!html) {
         setTranslatedHTML(html);
         return;
       }

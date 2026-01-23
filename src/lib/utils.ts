@@ -81,7 +81,7 @@ const translationCache: Record<string, string> = {};
  * 2) If that fails, falls back to Google Translate endpoint.
  */
 export const translateText = async (text: string, targetLang: string): Promise<string> => {
-  if (!text || targetLang === 'en') return text;
+  if (!text) return text;
 
   const cacheKey = `${targetLang}:${text}`;
   if (translationCache[cacheKey]) {

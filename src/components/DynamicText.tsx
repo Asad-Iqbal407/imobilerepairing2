@@ -22,11 +22,6 @@ export default function DynamicText({ text, className = '', as: Component = 'spa
     let isMounted = true;
 
     async function translate() {
-      if (language === 'en') {
-        setTranslatedText(text);
-        return;
-      }
-
       setIsLoading(true);
       try {
         const result = await dt(text);

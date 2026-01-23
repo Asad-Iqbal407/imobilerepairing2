@@ -37,7 +37,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   // Dynamic translate helper (for DB / dynamic content)
   const dt = useCallback(
     async (text: string) => {
-      if (language === 'en' || !text) return text;
+      if (!text) return text;
       return await translateText(text, language);
     },
     [language]
