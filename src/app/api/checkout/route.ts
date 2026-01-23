@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Stripe Secret Key is not configured. Please add it to your .env.local file.' }, { status: 500 });
     }
 
-    const { items, customer, total, currency } = await request.json();
+    const { items, customer, total, currency, shippingMethod, shippingFee } = await request.json();
     const normalizedCurrency = currency === 'eur' ? 'eur' : 'usd';
 
     await dbConnect();
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       customerName: customer.name,
       customerEmail: customer.email,
       customerPhone: customer.phone,
-      customerAddress: customer.address,
+      customerAddress: shippingMethod === 'pickup' ? 'STORE PICKUP' : customer.address,
       items: items.map((item: any) => ({
         productId: item.id,
         title: item.title,
@@ -89,24 +89,42 @@ export async function POST(request: NextRequest) {
       status: 'pending',
     });
 
-    // Create Stripe checkout session
-    const session = await stripe!.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: items.map((item: any) => ({
+    // Prepare line items for Stripe
+    const line_items = items.map((item: any) => ({
+      price_data: {
+        currency: normalizedCurrency,
+        product_data: {
+          name: item.title,
+        },
+        unit_amount: Math.round(item.price * 100),
+      },
+      quantity: item.quantity,
+    }));
+
+    // Add shipping fee if applicable
+    if (shippingFee && shippingFee > 0) {
+      line_items.push({
         price_data: {
           currency: normalizedCurrency,
           product_data: {
-            name: item.title,
+            name: `Shipping Fee (${shippingMethod})`,
           },
-          unit_amount: Math.round(item.price * 100),
+          unit_amount: Math.round(shippingFee * 100),
         },
-        quantity: item.quantity,
-      })),
+        quantity: 1,
+      });
+    }
+
+    // Create Stripe checkout session
+    const session = await stripe!.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items,
       mode: 'payment',
       success_url: `${request.headers.get('origin')}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order._id}`,
       cancel_url: `${request.headers.get('origin')}/cart`,
       metadata: {
         orderId: (order._id as any).toString(),
+        shippingMethod: shippingMethod || 'none',
       },
     });
 

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DynamicText from '@/components/DynamicText';
-import { isValidUrl, formatPriceAdmin } from '@/lib/utils';
+import { isValidUrl, formatPriceAdmin, translateText } from '@/lib/utils';
 
 type CategoryItem = { id: string; name: string; icon: string; label: string };
 
@@ -43,6 +43,84 @@ export default function ManageProducts() {
     }, 500);
     return () => clearTimeout(timer);
   }, []);
+
+  // Translate form content when switching to Portuguese
+  useEffect(() => {
+    if (language === 'pt' && isFormOpen) {
+      const translateFormFields = async () => {
+        const updatedProduct = { ...currentProduct };
+        let hasChanges = false;
+
+        // Translate name
+        if (updatedProduct.name) {
+          const translatedName = await translateText(updatedProduct.name, 'pt');
+          if (translatedName !== updatedProduct.name) {
+            updatedProduct.name = translatedName;
+            hasChanges = true;
+          }
+        }
+
+        // Translate description
+        if (updatedProduct.description) {
+          const translatedDesc = await translateText(updatedProduct.description, 'pt');
+          if (translatedDesc !== updatedProduct.description) {
+            updatedProduct.description = translatedDesc;
+            hasChanges = true;
+          }
+        }
+
+        // Translate condition
+        if (updatedProduct.condition) {
+          const translatedCond = await translateText(updatedProduct.condition, 'pt');
+          if (translatedCond !== updatedProduct.condition) {
+            updatedProduct.condition = translatedCond;
+            hasChanges = true;
+          }
+        }
+
+        // Translate memory
+        if (updatedProduct.memory) {
+          const translatedMem = await translateText(updatedProduct.memory, 'pt');
+          if (translatedMem !== updatedProduct.memory) {
+            updatedProduct.memory = translatedMem;
+            hasChanges = true;
+          }
+        }
+
+        // Translate signs of wear
+        if (updatedProduct.signsOfWear && updatedProduct.signsOfWear.length > 0) {
+          const translatedSigns = await Promise.all(
+            updatedProduct.signsOfWear.map((sign: string) => translateText(sign, 'pt'))
+          );
+          if (JSON.stringify(translatedSigns) !== JSON.stringify(updatedProduct.signsOfWear)) {
+            updatedProduct.signsOfWear = translatedSigns;
+            hasChanges = true;
+          }
+        }
+
+        if (hasChanges) {
+          setCurrentProduct(updatedProduct);
+        }
+      };
+
+      translateFormFields();
+    }
+  }, [language, isFormOpen]);
+
+  // Translate category form content when switching to Portuguese
+  useEffect(() => {
+    if (language === 'pt' && isCategoriesOpen) {
+      const translateCategoryFields = async () => {
+        if (categoryForm.name) {
+          const translatedName = await translateText(categoryForm.name, 'pt');
+          if (translatedName !== categoryForm.name) {
+            setCategoryForm(prev => ({ ...prev, name: translatedName }));
+          }
+        }
+      };
+      translateCategoryFields();
+    }
+  }, [language, isCategoriesOpen]);
 
   const fetchCategories = async () => {
     try {
@@ -524,7 +602,7 @@ export default function ManageProducts() {
                       <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest ${
                         product.condition === 'New' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
                       }`}>
-                        {product.condition}
+                        <DynamicText text={product.condition} />
                       </span>
                     ) : (
                       <span className="text-slate-300 text-[10px] font-bold uppercase tracking-widest">—</span>
@@ -586,7 +664,7 @@ export default function ManageProducts() {
                   </div>
                   <h3 className="font-bold text-slate-900 truncate"><DynamicText text={product.name} /></h3>
                   {product.condition && (
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{product.condition}</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest"><DynamicText text={product.condition} /></span>
                   )}
                 </div>
               </div>
@@ -958,7 +1036,7 @@ export default function ManageProducts() {
                             {c.icon || '🏷️'}
                           </div>
                           <div className="min-w-0">
-                            <p className="font-bold text-slate-900 truncate">{c.name}</p>
+                            <p className="font-bold text-slate-900 truncate"><DynamicText text={c.name} /></p>
                             <p className="text-xs text-slate-400 font-bold uppercase tracking-widest truncate">{getCategoryLabel(c.name)}</p>
                           </div>
                         </div>

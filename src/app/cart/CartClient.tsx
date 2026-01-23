@@ -13,12 +13,22 @@ export default function CartPage() {
   const { items, removeFromCart, total, clearCart } = useCart();
   const { t, language } = useLanguage();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [shippingMethod, setShippingMethod] = useState<'pickup' | 'lisbon' | 'outside'>('pickup');
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
     address: '',
     phone: ''
   });
+
+  const shippingFees = {
+    pickup: 0,
+    lisbon: 4,
+    outside: 6
+  };
+
+  const shippingFee = shippingFees[shippingMethod];
+  const grandTotal = total + shippingFee;
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,8 +45,8 @@ export default function CartPage() {
 
       const currency = 'eur';
       const checkoutItems = items;
-      const checkoutTotal = total;
-
+      
+      // Include shipping as an item or handle separately in API
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -44,7 +54,9 @@ export default function CartPage() {
           currency,
           items: checkoutItems,
           customer: customerInfo,
-          total: checkoutTotal,
+          total: grandTotal,
+          shippingMethod,
+          shippingFee,
         }),
       });
 
@@ -110,7 +122,7 @@ export default function CartPage() {
               {t.cart.title}
             </h1>
             <p className="text-xl text-slate-400 leading-relaxed">
-              Complete your order and get your device fixed today.
+              {t.cart.completeOrder}
             </p>
           </div>
         </div>
@@ -122,14 +134,11 @@ export default function CartPage() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
               <div className="p-8 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Your Items</h2>
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight">{t.cart.yourItems}</h2>
                 <button
                   onClick={clearCart}
-                  className="text-slate-400 hover:text-red-500 font-bold text-sm transition-colors flex items-center gap-2"
+                  className="text-sm font-bold text-red-500 hover:text-red-600 transition-colors"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
                   {t.cart.clearCart}
                 </button>
               </div>
@@ -160,9 +169,21 @@ export default function CartPage() {
                   </li>
                 ))}
               </ul>
-              <div className="p-8 bg-slate-900 text-white flex justify-between items-center">
-                <span className="text-xl font-bold opacity-70">{t.cart.total}</span>
-                <span className="text-4xl font-black tracking-tighter">{formatPriceByLanguage(total, language)}</span>
+              <div className="p-8 bg-slate-900 text-white space-y-4">
+                <div className="flex justify-between items-center text-sm font-bold opacity-70">
+                  <span>{t.cart.subtotal}</span>
+                  <span>{formatPriceByLanguage(total, language)}</span>
+                </div>
+                {shippingFee > 0 && (
+                  <div className="flex justify-between items-center text-sm font-bold opacity-70">
+                    <span>{t.cart.shippingFee}</span>
+                    <span>{formatPriceByLanguage(shippingFee, language)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center pt-4 border-t border-white/10">
+                  <span className="text-xl font-bold opacity-70">{t.cart.total}</span>
+                  <span className="text-4xl font-black tracking-tighter">{formatPriceByLanguage(grandTotal, language)}</span>
+                </div>
               </div>
             </div>
 
@@ -173,8 +194,20 @@ export default function CartPage() {
                 </svg>
               </div>
               <div>
-                <h4 className="font-bold text-blue-900">Secure Checkout</h4>
-                <p className="text-blue-700/70 text-sm leading-relaxed">Your payment information is processed securely through Stripe. We never store your credit card details.</p>
+                <h4 className="font-bold text-blue-900">{t.cart.secureCheckout}</h4>
+                <p className="text-blue-700/70 text-sm leading-relaxed">{t.cart.secureCheckoutDesc}</p>
+              </div>
+            </div>
+
+            <div className="p-8 bg-green-50 rounded-[2rem] border border-green-100 flex items-start gap-4">
+              <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center text-white shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="font-bold text-green-900">{t.shop.refundPolicy}</h4>
+                <p className="text-green-700/70 text-sm leading-relaxed">{t.shop.refundPolicyDesc}</p>
               </div>
             </div>
           </div>
@@ -182,57 +215,98 @@ export default function CartPage() {
           {/* Checkout Form */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 p-8 sticky top-24">
-              <h2 className="text-2xl font-black text-slate-900 mb-8 tracking-tight">Checkout Details</h2>
+              <h2 className="text-2xl font-black text-slate-900 mb-8 tracking-tight">{t.cart.checkoutDetails}</h2>
               <form onSubmit={handleCheckout} className="space-y-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Full Name</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-3">{t.cart.shippingMethod}</label>
+                    <div className="space-y-2">
+                      <label className={`flex items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${shippingMethod === 'pickup' ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-slate-200'}`}>
+                        <input
+                          type="radio"
+                          name="shippingMethod"
+                          value="pickup"
+                          checked={shippingMethod === 'pickup'}
+                          onChange={() => setShippingMethod('pickup')}
+                          className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="ml-3 font-bold text-slate-900">{t.cart.storePickup}</span>
+                      </label>
+                      <label className={`flex items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${shippingMethod === 'lisbon' ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-slate-200'}`}>
+                        <input
+                          type="radio"
+                          name="shippingMethod"
+                          value="lisbon"
+                          checked={shippingMethod === 'lisbon'}
+                          onChange={() => setShippingMethod('lisbon')}
+                          className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="ml-3 font-bold text-slate-900">{t.cart.deliveryLisbon}</span>
+                      </label>
+                      <label className={`flex items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${shippingMethod === 'outside' ? 'border-blue-600 bg-blue-50' : 'border-slate-100 hover:border-slate-200'}`}>
+                        <input
+                          type="radio"
+                          name="shippingMethod"
+                          value="outside"
+                          checked={shippingMethod === 'outside'}
+                          onChange={() => setShippingMethod('outside')}
+                          className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+                        />
+                        <span className="ml-3 font-bold text-slate-900">{t.cart.deliveryOutsideLisbon}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">{t.cart.fullName}</label>
                     <input
                       type="text"
                       name="name"
                       required
-                      placeholder="John Doe"
+                      placeholder={t.cart.placeholderName}
                       value={customerInfo.name}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none bg-slate-50 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Email Address</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">{t.cart.emailAddress}</label>
                     <input
                       type="email"
                       name="email"
                       required
-                      placeholder="john@example.com"
+                      placeholder={t.cart.placeholderEmail}
                       value={customerInfo.email}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none bg-slate-50 font-medium"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Phone Number</label>
+                    <label className="block text-sm font-bold text-slate-700 mb-2">{t.cart.phoneNumber}</label>
                     <input
                       type="tel"
                       name="phone"
                       required
-                      placeholder="(555) 000-0000"
+                      placeholder={t.cart.placeholderPhone}
                       value={customerInfo.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none bg-slate-50 font-medium"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">Shipping Address</label>
-                    <textarea
-                      name="address"
-                      required
-                      rows={3}
-                      placeholder="Street, City, State, ZIP"
-                      value={customerInfo.address}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none bg-slate-50 font-medium resize-none"
-                    />
-                  </div>
+                  {shippingMethod !== 'pickup' && (
+                    <div>
+                      <label className="block text-sm font-bold text-slate-700 mb-2">{t.cart.shippingAddress}</label>
+                      <textarea
+                        name="address"
+                        required
+                        rows={3}
+                        placeholder={t.cart.placeholderAddress}
+                        value={customerInfo.address}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 outline-none bg-slate-50 font-medium resize-none"
+                      />
+                    </div>
+                  )}
                 </div>
                 
                 <button
@@ -245,7 +319,7 @@ export default function CartPage() {
                   }`}
                 >
                   <span className={`flex items-center justify-center transition-all duration-200 ${isCheckingOut ? 'opacity-0' : 'opacity-100'}`}>
-                    {isCheckingOut ? 'Processing...' : `Pay $${total}`}
+                    {isCheckingOut ? t.cart.processing : `${t.cart.pay} ${formatPriceByLanguage(grandTotal, language)}`}
                     <svg className="ml-2 h-5 w-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>

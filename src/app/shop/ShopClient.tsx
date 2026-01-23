@@ -544,6 +544,22 @@ export default function ShopClient() {
                       )}
                     </div>
                   )}
+
+                  <div className="pt-6 mt-6 border-t border-slate-100">
+                    <div className="flex items-start gap-3 p-4 bg-green-50 rounded-2xl border border-green-100">
+                      <div className="p-2 bg-white rounded-lg shadow-sm">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-sm font-black text-green-900 leading-none mb-1">{t.shop.refundPolicy}</div>
+                        <p className="text-xs text-green-700 font-medium leading-relaxed">
+                          {t.shop.refundPolicyDesc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>
