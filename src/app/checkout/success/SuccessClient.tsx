@@ -8,13 +8,17 @@ import Link from 'next/link';
 function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
+  const paymentIntent = searchParams.get('payment_intent');
   const orderId = searchParams.get('order_id');
   const { items, clearCart } = useCart();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
 
-  const confirmCheckout = async (session: string, order: string) => {
+  const confirmCheckout = async (order: string, session?: string | null, pi?: string | null) => {
     try {
-      const url = `/api/checkout?session_id=${encodeURIComponent(session)}&order_id=${encodeURIComponent(order)}`;
+      let url = `/api/checkout?order_id=${encodeURIComponent(order)}`;
+      if (session) url += `&session_id=${encodeURIComponent(session)}`;
+      if (pi) url += `&payment_intent=${encodeURIComponent(pi)}`;
+
       const res = await fetch(url, { method: 'GET' });
       if (res.ok) {
         setStatus('success');
@@ -34,13 +38,13 @@ function SuccessContent() {
       clearCart();
     }
 
-    if (sessionId && orderId) {
-      confirmCheckout(sessionId, orderId);
+    if (orderId && (sessionId || paymentIntent)) {
+      confirmCheckout(orderId, sessionId, paymentIntent);
     } else {
       setStatus('success');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionId, orderId, items.length]);
+  }, [sessionId, paymentIntent, orderId, items.length]);
 
   if (status === 'loading') return (
     <div className="min-h-screen flex items-center justify-center bg-white">

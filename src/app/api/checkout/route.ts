@@ -21,21 +21,35 @@ export async function GET(request: NextRequest) {
 
     const url = new URL(request.url);
     const sessionId = url.searchParams.get('session_id') || '';
+    const paymentIntentId = url.searchParams.get('payment_intent') || '';
     const orderId = url.searchParams.get('order_id') || '';
-    if (!sessionId || !orderId) {
-      return NextResponse.json({ error: 'Missing session_id or order_id' }, { status: 400 });
+
+    if (!orderId || (!sessionId && !paymentIntentId)) {
+      return NextResponse.json({ error: 'Missing session_id/payment_intent or order_id' }, { status: 400 });
     }
 
     await dbConnect();
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const sessionOrderId = session.metadata?.orderId || '';
-    if (sessionOrderId !== orderId) {
-      return NextResponse.json({ error: 'Session does not match order' }, { status: 400 });
+    let isPaid = false;
+
+    if (sessionId) {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      const sessionOrderId = session.metadata?.orderId || '';
+      if (sessionOrderId !== orderId) {
+        return NextResponse.json({ error: 'Session does not match order' }, { status: 400 });
+      }
+      isPaid = session.payment_status === 'paid';
+    } else if (paymentIntentId) {
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      const piOrderId = paymentIntent.metadata?.orderId || '';
+      if (piOrderId !== orderId) {
+        return NextResponse.json({ error: 'PaymentIntent does not match order' }, { status: 400 });
+      }
+      isPaid = paymentIntent.status === 'succeeded';
     }
 
-    if (session.payment_status !== 'paid') {
-      return NextResponse.json({ ok: true, paid: false, paymentStatus: session.payment_status });
+    if (!isPaid) {
+      return NextResponse.json({ ok: true, paid: false });
     }
 
     const oldOrder = await Order.findById(orderId);

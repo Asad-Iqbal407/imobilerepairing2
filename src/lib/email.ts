@@ -35,7 +35,7 @@ export async function sendOrderEmails(order: OrderDetails) {
     <tr>
       <td style="padding: 10px; border-bottom: 1px solid #eee;">${item.title}</td>
       <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">$${(item.price * item.quantity).toFixed(2)}</td>
+      <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">€${(item.price * item.quantity).toFixed(2)}</td>
     </tr>
   `
     )
@@ -61,7 +61,7 @@ export async function sendOrderEmails(order: OrderDetails) {
         <tfoot>
           <tr>
             <td colspan="2" style="padding: 10px; font-weight: bold; text-align: right;">Total:</td>
-            <td style="padding: 10px; font-weight: bold; text-align: right;">$${order.total.toFixed(2)}</td>
+            <td style="padding: 10px; font-weight: bold; text-align: right;">€${order.total.toFixed(2)}</td>
           </tr>
         </tfoot>
       </table>
@@ -105,7 +105,7 @@ export async function sendOrderEmails(order: OrderDetails) {
         <tfoot>
           <tr>
             <td colspan="2" style="padding: 10px; font-weight: bold; text-align: right;">Total:</td>
-            <td style="padding: 10px; font-weight: bold; text-align: right;">$${order.total.toFixed(2)}</td>
+            <td style="padding: 10px; font-weight: bold; text-align: right;">€${order.total.toFixed(2)}</td>
           </tr>
         </tfoot>
       </table>
