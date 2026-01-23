@@ -10,14 +10,22 @@ export async function POST(request: NextRequest) {
     const email = typeof body?.email === 'string' ? body.email.trim() : '';
     const password = typeof body?.password === 'string' ? body.password : '';
 
+    console.log('Login attempt:', { email });
+
     const adminEmail = (process.env.ADMIN_EMAIL || '').trim();
     const adminPassword = process.env.ADMIN_PASSWORD || '';
 
     if (!adminEmail || !adminPassword || !process.env.ADMIN_SESSION_SECRET) {
+      console.error('Admin config missing:', { 
+        hasEmail: !!adminEmail, 
+        hasPassword: !!adminPassword, 
+        hasSecret: !!process.env.ADMIN_SESSION_SECRET 
+      });
       return NextResponse.json({ error: 'Admin is not configured' }, { status: 500 });
     }
 
     if (email !== adminEmail || password !== adminPassword) {
+      console.log('Invalid credentials for:', email);
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 

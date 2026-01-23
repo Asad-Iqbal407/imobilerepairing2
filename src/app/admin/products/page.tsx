@@ -48,79 +48,92 @@ export default function ManageProducts() {
   useEffect(() => {
     if (language === 'pt' && isFormOpen) {
       const translateFormFields = async () => {
-        const updatedProduct = { ...currentProduct };
+        const productToTranslate = { ...currentProduct };
+        const translatedValues: any = {};
         let hasChanges = false;
 
         // Translate name
-        if (updatedProduct.name) {
-          const translatedName = await translateText(updatedProduct.name, 'pt');
-          if (translatedName !== updatedProduct.name) {
-            updatedProduct.name = translatedName;
+        if (productToTranslate.name) {
+          const translatedName = await translateText(productToTranslate.name, 'pt');
+          if (translatedName !== productToTranslate.name) {
+            translatedValues.name = translatedName;
             hasChanges = true;
           }
         }
 
         // Translate description
-        if (updatedProduct.description) {
-          const translatedDesc = await translateText(updatedProduct.description, 'pt');
-          if (translatedDesc !== updatedProduct.description) {
-            updatedProduct.description = translatedDesc;
+        if (productToTranslate.description) {
+          const translatedDesc = await translateText(productToTranslate.description, 'pt');
+          if (translatedDesc !== productToTranslate.description) {
+            translatedValues.description = translatedDesc;
             hasChanges = true;
           }
         }
 
         // Translate condition
-        if (updatedProduct.condition) {
-          const translatedCond = await translateText(updatedProduct.condition, 'pt');
-          if (translatedCond !== updatedProduct.condition) {
-            updatedProduct.condition = translatedCond;
+        if (productToTranslate.condition) {
+          const translatedCond = await translateText(productToTranslate.condition, 'pt');
+          if (translatedCond !== productToTranslate.condition) {
+            translatedValues.condition = translatedCond;
             hasChanges = true;
           }
         }
 
         // Translate memory
-        if (updatedProduct.memory) {
-          const translatedMem = await translateText(updatedProduct.memory, 'pt');
-          if (translatedMem !== updatedProduct.memory) {
-            updatedProduct.memory = translatedMem;
+        if (productToTranslate.memory) {
+          const translatedMem = await translateText(productToTranslate.memory, 'pt');
+          if (translatedMem !== productToTranslate.memory) {
+            translatedValues.memory = translatedMem;
             hasChanges = true;
           }
         }
 
         // Translate signs of wear
-        if (updatedProduct.signsOfWear && updatedProduct.signsOfWear.length > 0) {
+        if (productToTranslate.signsOfWear && productToTranslate.signsOfWear.length > 0) {
           const translatedSigns = await Promise.all(
-            updatedProduct.signsOfWear.map((sign: string) => translateText(sign, 'pt'))
+            productToTranslate.signsOfWear.map((sign: string) => translateText(sign, 'pt'))
           );
-          if (JSON.stringify(translatedSigns) !== JSON.stringify(updatedProduct.signsOfWear)) {
-            updatedProduct.signsOfWear = translatedSigns;
+          if (JSON.stringify(translatedSigns) !== JSON.stringify(productToTranslate.signsOfWear)) {
+            translatedValues.signsOfWear = translatedSigns;
             hasChanges = true;
           }
         }
 
         if (hasChanges) {
-          setCurrentProduct(updatedProduct);
+          setCurrentProduct((prev: any) => {
+            // Only update if we're still looking at the same product
+            if (prev.id === productToTranslate.id) {
+              return { ...prev, ...translatedValues };
+            }
+            return prev;
+          });
         }
       };
 
       translateFormFields();
     }
-  }, [language, isFormOpen]);
+  }, [language, isFormOpen, currentProduct.id]);
 
   // Translate category form content when switching to Portuguese
   useEffect(() => {
     if (language === 'pt' && isCategoriesOpen) {
       const translateCategoryFields = async () => {
-        if (categoryForm.name) {
-          const translatedName = await translateText(categoryForm.name, 'pt');
-          if (translatedName !== categoryForm.name) {
-            setCategoryForm(prev => ({ ...prev, name: translatedName }));
+        const categoryToTranslate = { ...categoryForm };
+        if (categoryToTranslate.name) {
+          const translatedName = await translateText(categoryToTranslate.name, 'pt');
+          if (translatedName !== categoryToTranslate.name) {
+            setCategoryForm(prev => {
+              if (prev.id === categoryToTranslate.id) {
+                return { ...prev, name: translatedName };
+              }
+              return prev;
+            });
           }
         }
       };
       translateCategoryFields();
     }
-  }, [language, isCategoriesOpen]);
+  }, [language, isCategoriesOpen, categoryForm.id]);
 
   const fetchCategories = async () => {
     try {

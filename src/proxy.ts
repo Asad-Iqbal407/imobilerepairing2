@@ -17,9 +17,15 @@ const uint8ToBase64Url = (input: Uint8Array) => {
 
 const verifyAdminSessionEdge = async (token: string | undefined | null) => {
   const secret = process.env.ADMIN_SESSION_SECRET || '';
-  if (!secret || !token) return null;
+  if (!secret || !token) {
+    console.log('Middleware: Missing secret or token');
+    return null;
+  }
   const parts = token.split('.');
-  if (parts.length !== 2) return null;
+  if (parts.length !== 2) {
+    console.log('Middleware: Invalid token format');
+    return null;
+  }
   const [payloadB64, signatureB64] = parts;
 
   try {
@@ -32,18 +38,31 @@ const verifyAdminSessionEdge = async (token: string | undefined | null) => {
     );
     const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payloadB64));
     const expected = uint8ToBase64Url(new Uint8Array(signature));
-    if (expected !== signatureB64) return null;
+    if (expected !== signatureB64) {
+      console.log('Middleware: Signature mismatch', { expected, provided: signatureB64 });
+      return null;
+    }
 
     const payloadJson = new TextDecoder().decode(base64UrlToUint8(payloadB64));
     const payload = JSON.parse(payloadJson) as { email?: unknown; iat?: unknown };
-    if (typeof payload.email !== 'string') return null;
-    if (typeof payload.iat !== 'number') return null;
+    if (typeof payload.email !== 'string') {
+      console.log('Middleware: Invalid email in payload');
+      return null;
+    }
+    if (typeof payload.iat !== 'number') {
+      console.log('Middleware: Invalid iat in payload');
+      return null;
+    }
 
     const maxAgeMs = 7 * 24 * 60 * 60 * 1000;
-    if (Date.now() - payload.iat > maxAgeMs) return null;
+    if (Date.now() - payload.iat > maxAgeMs) {
+      console.log('Middleware: Token expired');
+      return null;
+    }
 
     return { email: payload.email };
-  } catch {
+  } catch (err) {
+    console.log('Middleware: Error during verification', err);
     return null;
   }
 };
