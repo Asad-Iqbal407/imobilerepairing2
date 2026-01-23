@@ -333,9 +333,31 @@ export default function CartPage() {
                     </div>
                   )}
                 </button>
-                <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest">
+                <p className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">
                   {t.cart.securePayment}
                 </p>
+
+                {/* Payment Methods Icons */}
+                <div className="flex items-center justify-center gap-4 pt-4 border-t border-slate-100 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+                  <div title="Visa" className="h-6">
+                    <svg viewBox="0 0 48 48" className="h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18.83 32.18l2.94-18.36h4.72l-2.94 18.36h-4.72zM38.5 14.16c-1.07-.41-2.74-.85-4.8-.85-5.28 0-9 2.81-9.03 6.83-.03 2.97 2.66 4.62 4.68 5.61 2.08 1.02 2.78 1.67 2.77 2.58-.02 1.39-1.66 2.03-3.2 2.03-2.14 0-3.3-.33-5.05-1.1l-.7-.34-.74 4.6c1.24.57 3.53 1.07 5.92 1.09 5.62 0 9.28-2.78 9.32-7.09.03-2.37-1.41-4.16-4.52-5.64-1.88-.97-3.04-1.61-3.03-2.59.01-.89 1.01-1.84 3.19-1.84 1.8 0 3.11.39 4.12.82l.49.23.75-4.38zM14.67 13.82l-4.43 12.01-.48-2.38c-.82-2.79-3.41-5.83-6.25-7.34l-.01.01 4.07 15.65h5.02L20.12 13.82h-5.45zM3.86 13.82l-.08.4c3.42.87 6.64 3.32 7.7 6.27l1.1-5.59L3.86 13.82z" fill="#1A1F71"/>
+                    </svg>
+                  </div>
+                  <div title="Mastercard" className="h-6">
+                    <svg viewBox="0 0 48 48" className="h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="18" cy="24" r="14" fill="#EB001B" fillOpacity="0.8"/>
+                      <circle cx="30" cy="24" r="14" fill="#F79E1B" fillOpacity="0.8"/>
+                      <path d="M24 13.52a13.97 13.97 0 010 20.96 13.97 13.97 0 010-20.96z" fill="#FF5F00"/>
+                    </svg>
+                  </div>
+                  <div title="Klarna" className="h-5">
+                    <svg viewBox="0 0 100 24" className="h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M10.8 0h3.6v24h-3.6V0zm6.8 0h3.6v13.6L29.6 0h4.2l-10 14.2L34.4 24h-4.2l-9.2-13V24h-3.6V0zM4.4 24c-2.4 0-4.4-2-4.4-4.4s2-4.4 4.4-4.4 4.4 2 4.4 4.4-2 4.4-4.4 4.4z" fill="#FFB3C7"/>
+                      <path d="M50.4 8.8c-1.4 0-2.6.6-3.4 1.6V9h-3.4v15h3.4v-8.4c0-2.2 1.4-3.6 3.4-3.6s3.4 1.4 3.4 3.6V24h3.4V15.6c0-4.4-2.8-6.8-6.8-6.8zM71.2 8.8c-1.4 0-2.6.6-3.4 1.6V9h-3.4v15h3.4v-8.4c0-2.2 1.4-3.6 3.4-3.6s3.4 1.4 3.4 3.6V24h3.4V15.6c0-4.4-2.8-6.8-6.8-6.8zM91.4 8.8c-4.4 0-7.8 3.4-7.8 7.8s3.4 7.8 7.8 7.8 7.8-3.4 7.8-7.8-3.4-7.8-7.8-7.8zm0 12.2c-2.6 0-4.4-1.8-4.4-4.4s1.8-4.4 4.4-4.4 4.4 1.8 4.4 4.4-1.8 4.4-4.4 4.4z" fill="#000"/>
+                    </svg>
+                  </div>
+                </div>
               </form>
             </div>
           </div>

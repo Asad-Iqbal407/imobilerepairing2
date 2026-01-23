@@ -117,9 +117,11 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe checkout session
     const session = await stripe!.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'klarna'],
       line_items,
       mode: 'payment',
+      customer_email: customer.email,
+      billing_address_collection: 'required',
       success_url: `${request.headers.get('origin')}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_id=${order._id}`,
       cancel_url: `${request.headers.get('origin')}/cart`,
       metadata: {
