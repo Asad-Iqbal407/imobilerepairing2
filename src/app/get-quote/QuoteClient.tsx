@@ -323,7 +323,7 @@ function QuoteForm() {
 
                 {/* Contact Information */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-bold text-gray-900 border-b pb-2">Contact Information</h3>
+                  <h3 className="text-lg font-bold text-gray-900 border-b pb-2">{t.getQuote.contactInformation}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -401,7 +401,7 @@ function QuoteForm() {
                     {images.length < 3 && (
                       <label className="flex flex-col items-center justify-center aspect-square rounded-2xl border-2 border-dashed border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all cursor-pointer group">
                         <PhotoIcon className="h-8 w-8 text-gray-400 group-hover:text-blue-500 transition-colors" />
-                        <span className="text-xs font-bold text-gray-500 mt-2 group-hover:text-blue-600">Add Photo</span>
+                        <span className="text-xs font-bold text-gray-500 mt-2 group-hover:text-blue-600">{t.getQuote.addPhoto}</span>
                         <input
                           type="file"
                           accept="image/*"
@@ -414,7 +414,7 @@ function QuoteForm() {
                     )}
                   </div>
                   <p className="text-[11px] text-gray-400 font-medium uppercase tracking-wider">
-                    {images.length}/3 images uploaded
+                    {images.length}/3 {t.getQuote.imagesUploaded}
                   </p>
                 </div>
 
@@ -452,12 +452,13 @@ function QuoteForm() {
 }
 
 export default function GetQuote() {
+  const { t } = useLanguage();
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="flex flex-col items-center">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-4"></div>
-          <p className="text-gray-500 font-medium">Loading your quote form...</p>
+          <p className="text-gray-500 font-medium">{t.getQuote.loadingQuoteForm}</p>
         </div>
       </div>
     }>

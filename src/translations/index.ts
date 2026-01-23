@@ -240,6 +240,10 @@ export const en = {
       premiumComponents: "Only premium components.",
       testimonial: "Fastest repair service I've ever used. Got my quote and fixed the same day!",
       testimonialAuthor: "- John D.",
+      contactInformation: "Contact Information",
+      addPhoto: "Add Photo",
+      imagesUploaded: "images uploaded",
+      loadingQuoteForm: "Loading your quote form...",
     },
   admin: {
     portal: "Admin Portal",
@@ -627,6 +631,10 @@ export const pt = {
       premiumComponents: "Apenas componentes premium.",
       testimonial: "O serviço de reparação mais rápido que já utilizei. Recebi o orçamento e ficou pronto no mesmo dia!",
       testimonialAuthor: "- John D.",
+      contactInformation: "Informações de Contacto",
+      addPhoto: "Adicionar Foto",
+      imagesUploaded: "imagens carregadas",
+      loadingQuoteForm: "A carregar o formulário...",
     },
   shop: {
     title: "Loja de Dispositivos e Acessórios",
