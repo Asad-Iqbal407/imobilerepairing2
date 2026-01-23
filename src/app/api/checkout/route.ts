@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Stripe Secret Key is not configured. Please add it to your .env.local file.' }, { status: 500 });
     }
 
-    const { items, customer, total, currency, shippingMethod, shippingFee } = await request.json();
+    const { items, customer, total, currency, shippingMethod, shippingFee, paymentMethod } = await request.json();
     const normalizedCurrency = currency === 'eur' ? 'eur' : 'usd';
 
     await dbConnect();
@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
       total,
       currency: normalizedCurrency,
       status: 'pending',
+      paymentMethod: paymentMethod || 'card',
     });
 
     // Prepare line items for Stripe
@@ -115,9 +116,12 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Determine payment method types based on user selection
+    const payment_method_types: any[] = paymentMethod === 'klarna' ? ['klarna'] : ['card'];
+
     // Create Stripe checkout session
     const session = await stripe!.checkout.sessions.create({
-      payment_method_types: ['card', 'klarna'],
+      payment_method_types,
       line_items,
       mode: 'payment',
       customer_email: customer.email,
