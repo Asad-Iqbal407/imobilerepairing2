@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const initialProducts = [
   // New Phones
@@ -164,6 +165,7 @@ const initialProducts = [
 
 export async function GET() {
   try {
+    console.log('API: Fetching products...');
     await dbConnect();
     
     // Only insert initial products if the database is completely empty
@@ -174,11 +176,11 @@ export async function GET() {
     }
 
     const products = await Product.find({}).sort({ createdAt: -1 });
+    console.log(`API: Found ${products.length} products`);
     return NextResponse.json(products);
   } catch (error) {
     console.error('API Error: Failed to fetch products:', error);
-    // On Vercel, this fallback might be why changes don't show if DB connection fails
-    return NextResponse.json(initialProducts);
+    return NextResponse.json({ error: 'Failed to fetch products from database' }, { status: 500 });
   }
 }
 

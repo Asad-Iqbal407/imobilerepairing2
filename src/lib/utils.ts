@@ -38,6 +38,43 @@ export const isValidUrl = (url: string) => {
   }
 };
 
+export const resolveImageUrl = (input: string, fallback: string = ''): string => {
+  const rawInput = typeof input === 'string' ? input.trim() : '';
+  const raw = rawInput
+    .replace(/&amp;/gi, '&')
+    .replace(/\\u0026/gi, '&');
+  if (!raw) return fallback;
+
+  if (raw.startsWith('data:image')) return raw;
+
+  if (raw.startsWith('/')) return raw;
+  if (raw.startsWith('uploads/')) return `/${raw}`;
+  if (raw.startsWith('public/uploads/')) return raw.replace(/^public/, '');
+
+  try {
+    const url = new URL(raw);
+    const hostname = url.hostname.toLowerCase();
+
+    if (hostname.endsWith('bing.com')) {
+      const mediaUrl = url.searchParams.get('mediaurl');
+      if (mediaUrl) return decodeURIComponent(mediaUrl);
+    }
+
+    if (hostname.endsWith('google.com') || hostname.endsWith('googleusercontent.com')) {
+      const imgUrl = url.searchParams.get('imgurl');
+      if (imgUrl) return decodeURIComponent(imgUrl);
+    }
+
+    return raw;
+  } catch {
+    if (raw.includes('.') && !raw.startsWith('http')) {
+      return `https://${raw}`;
+    }
+  }
+
+  return isValidUrl(raw) ? raw : fallback;
+};
+
 export const formatPriceByLanguage = (price: number, language: SupportedLanguage): string => {
   let locale = 'en-IE'; // Use Ireland for English Euro formatting
   if (language === 'pt') locale = 'pt-PT';

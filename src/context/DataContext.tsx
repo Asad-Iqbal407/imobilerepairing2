@@ -62,6 +62,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
         if (productsRes.ok) {
           const productsData = await productsRes.json();
+          console.log(`DataContext: Loaded ${productsData.length} products`);
           setProducts(productsData.map((p: any, index: number) => ({ 
             ...p, 
             id: p._id || p.id || `product-${index}-${Date.now()}` 

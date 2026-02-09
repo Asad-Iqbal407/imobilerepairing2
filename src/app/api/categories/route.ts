@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Category from '@/models/Category';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const initialCategories = [
   { name: 'New Phones', icon: '📱' },
@@ -29,7 +30,8 @@ export async function GET() {
     const categories = await Category.find({}).sort({ name: 1 });
     return NextResponse.json(categories);
   } catch (error) {
-    return NextResponse.json(initialCategories);
+    console.error('API Error: Failed to fetch categories:', error);
+    return NextResponse.json({ error: 'Failed to fetch categories from database' }, { status: 500 });
   }
 }
 
@@ -55,4 +57,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create category' }, { status: 500 });
   }
 }
-

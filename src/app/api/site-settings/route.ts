@@ -17,7 +17,8 @@ export async function GET() {
     }
     return NextResponse.json({ logoDataUri: existing.logoDataUri || '' });
   } catch (error) {
-    return NextResponse.json({ logoDataUri: '' }, { status: 200 });
+    console.error('API Error: Failed to fetch site settings:', error);
+    return NextResponse.json({ error: 'Failed to fetch site settings from database' }, { status: 500 });
   }
 }
 

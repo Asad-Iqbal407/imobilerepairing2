@@ -21,10 +21,14 @@ if (!cached) {
 }
 
 async function dbConnect() {
-  const MONGODB_URI = process.env.MONGODB_URI;
+  const MONGODB_URI =
+    process.env.MONGODB_URI ||
+    process.env.MONGODB_URL ||
+    process.env.DATABASE_URL;
+
   if (!MONGODB_URI) {
     throw new Error(
-      'Please define the MONGODB_URI environment variable inside .env.local'
+      'Missing database connection string. Set MONGODB_URI (recommended) or MONGODB_URL/DATABASE_URL.'
     );
   }
 
@@ -35,16 +39,22 @@ async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-      serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
+      serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+      family: 4 // Use IPv4, skip trying IPv6
     };
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+    cached.promise = mongoose
+      .connect(MONGODB_URI, opts)
+      .then((mongoose) => {
       console.log('MongoDB connected successfully');
       return mongoose;
-    }).catch((err) => {
+      })
+      .catch((err) => {
       console.error('MongoDB connection error:', err);
       throw err;
-    });
+      });
   }
 
   try {

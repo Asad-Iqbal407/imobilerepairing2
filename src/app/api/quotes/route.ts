@@ -5,6 +5,7 @@ import Quote from '@/models/Quote';
 import { requireAdmin } from '@/lib/adminGuard';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {

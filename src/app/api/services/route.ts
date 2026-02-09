@@ -3,6 +3,7 @@ import dbConnect from '@/lib/db';
 import Service from '@/models/Service';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 const initialServices = [
   {
@@ -45,6 +46,7 @@ const initialServices = [
 
 export async function GET() {
   try {
+    console.log('API: Fetching services...');
     await dbConnect();
     const count = await Service.countDocuments();
     if (count === 0) {
@@ -52,10 +54,11 @@ export async function GET() {
       await Service.insertMany(initialServices.map(({ id, ...s }) => s));
     }
     const services = await Service.find({}).sort({ createdAt: -1 });
+    console.log(`API: Found ${services.length} services`);
     return NextResponse.json(services);
   } catch (error) {
     console.error('API Error: Failed to fetch services:', error);
-    return NextResponse.json(initialServices);
+    return NextResponse.json({ error: 'Failed to fetch services from database' }, { status: 500 });
   }
 }
 

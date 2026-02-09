@@ -9,7 +9,7 @@ import DynamicText from '@/components/DynamicText';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Tag, X } from 'lucide-react';
 import { ProductSkeleton } from '@/components/Skeleton';
-import { formatPriceByLanguage, isValidUrl } from '@/lib/utils';
+import { formatPriceByLanguage, resolveImageUrl } from '@/lib/utils';
 
 type CategoryItem = { id: string; label: string; icon: string };
 
@@ -23,7 +23,9 @@ export default function ShopClient() {
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(false);
   const [apiCategories, setApiCategories] = useState<Array<{ id: string; name: string; icon?: string }>>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [failedImages, setFailedImages] = useState<Record<string, string>>({});
   const currencySymbol = '€';
+  const fallbackImage = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop";
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -98,17 +100,22 @@ export default function ShopClient() {
   const activeCategoryItem = categories.find((c) => c.id === activeCategory) || categories[0];
 
   const filteredProducts = products.filter(product => {
+    const name = typeof product.name === 'string' ? product.name : '';
+    const description = typeof product.description === 'string' ? product.description : '';
+    const category = typeof product.category === 'string' ? product.category : '';
+    const price = typeof product.price === 'number' ? product.price : 0;
+
     // 1. Category Filter
     const matchesCategory = activeCategory === 'All' || 
-      product.category?.trim().toLowerCase() === activeCategory.trim().toLowerCase();
+      category.trim().toLowerCase() === activeCategory.trim().toLowerCase();
     
     // 2. Search Filter
     const matchesSearch = searchQuery === '' || 
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      description.toLowerCase().includes(searchQuery.toLowerCase());
 
     // 3. Price Filter
-    const matchesPrice = product.price >= priceRange.min && product.price <= priceRange.max;
+    const matchesPrice = price >= priceRange.min && price <= priceRange.max;
 
     return matchesCategory && matchesSearch && matchesPrice;
   });
@@ -196,10 +203,18 @@ export default function ShopClient() {
       <div className="h-56 sm:h-64 bg-slate-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10"></div>
         <Image
-          src={isValidUrl(product.image) ? product.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"}
-          alt={product.name}
+          src={(() => {
+            const resolved = resolveImageUrl(product.image, fallbackImage) || fallbackImage;
+            return failedImages[product.id] === resolved ? fallbackImage : resolved;
+          })()}
+          alt={product.name || ''}
           fill
           className="object-contain p-4"
+          unoptimized
+          onError={() => {
+            const resolved = resolveImageUrl(product.image, fallbackImage) || fallbackImage;
+            setFailedImages((prev) => (prev[product.id] === resolved ? prev : { ...prev, [product.id]: resolved }));
+          }}
         />
       </div>
       <div className="p-5 sm:p-8 flex-1 flex flex-col">
@@ -480,10 +495,18 @@ export default function ShopClient() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
                 <div className="relative h-72 md:h-full min-h-[24rem] bg-slate-100 flex items-center justify-center">
                   <Image
-                    src={isValidUrl(selectedProduct.image) ? selectedProduct.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"}
-                    alt={selectedProduct.name}
+                    src={(() => {
+                      const resolved = resolveImageUrl(selectedProduct.image, fallbackImage) || fallbackImage;
+                      return failedImages[selectedProduct.id] === resolved ? fallbackImage : resolved;
+                    })()}
+                    alt={selectedProduct.name || ''}
                     fill
                     className="object-contain p-6"
+                    unoptimized
+                    onError={() => {
+                      const resolved = resolveImageUrl(selectedProduct.image, fallbackImage) || fallbackImage;
+                      setFailedImages((prev) => (prev[selectedProduct.id] === resolved ? prev : { ...prev, [selectedProduct.id]: resolved }));
+                    }}
                   />
                 </div>
                 <div className="p-6 md:p-8 space-y-6">

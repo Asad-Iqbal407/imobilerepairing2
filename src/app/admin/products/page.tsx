@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useData, Product } from '@/context/DataContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DynamicText from '@/components/DynamicText';
-import { isValidUrl, formatPriceAdmin, translateText } from '@/lib/utils';
+import { formatPriceAdmin, resolveImageUrl, translateText } from '@/lib/utils';
 
 type CategoryItem = { id: string; name: string; icon: string; label: string };
 
@@ -35,6 +35,7 @@ export default function ManageProducts() {
     memory: '',
     signsOfWear: [],
   });
+  const [imagePreviewFailed, setImagePreviewFailed] = useState(false);
 
   // Simulate loading state for consistency with other pages
   useEffect(() => {
@@ -315,6 +316,7 @@ export default function ManageProducts() {
       memory: product.memory || '',
       signsOfWear: Array.isArray(product.signsOfWear) ? product.signsOfWear : [],
     });
+    setImagePreviewFailed(false);
     setIsEditing(true);
     setIsFormOpen(true);
   };
@@ -373,6 +375,7 @@ export default function ManageProducts() {
 
       const data = await response.json();
       setCurrentProduct({ ...currentProduct, image: data.url });
+      setImagePreviewFailed(false);
     } catch (error) {
       console.error('Upload error:', error);
       alert(t.admin.uploadError);
@@ -405,6 +408,7 @@ export default function ManageProducts() {
       memory: '',
       signsOfWear: [],
     });
+    setImagePreviewFailed(false);
     setIsEditing(false);
   };
 
@@ -659,10 +663,11 @@ export default function ManageProducts() {
                 <div className="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 relative shrink-0 shadow-sm border border-slate-200">
                   {product.image ? (
                     <Image 
-                      src={isValidUrl(product.image) ? product.image : "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop"} 
+                      src={resolveImageUrl(product.image, "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=1000&auto=format&fit=crop")} 
                       alt={product.name}
                       fill
                       className="object-cover"
+                      unoptimized
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl">📱</div>
@@ -819,6 +824,7 @@ export default function ManageProducts() {
                       onChange={(e) => {
                         if (!currentProduct.image?.startsWith('data:')) {
                           setCurrentProduct({ ...currentProduct, image: e.target.value })
+                          setImagePreviewFailed(false)
                         }
                       }}
                       disabled={currentProduct.image?.startsWith('data:')}
@@ -826,7 +832,10 @@ export default function ManageProducts() {
                     {currentProduct.image && (
                       <button 
                         type="button"
-                        onClick={() => setCurrentProduct({ ...currentProduct, image: '' })}
+                        onClick={() => {
+                          setCurrentProduct({ ...currentProduct, image: '' })
+                          setImagePreviewFailed(false)
+                        }}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-500 transition-colors"
                         title={t.admin.clearImage}
                       >
@@ -840,10 +849,12 @@ export default function ManageProducts() {
                 {currentProduct.image && (
                   <div className="mt-2 w-full h-48 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center relative">
                     <Image 
-                      src={isValidUrl(currentProduct.image) ? currentProduct.image : "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop"} 
+                      src={imagePreviewFailed ? "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop" : resolveImageUrl(currentProduct.image, "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop")} 
                       alt="Preview" 
                       fill 
                       className="object-cover" 
+                      unoptimized
+                      onError={() => setImagePreviewFailed(true)}
                     />
                   </div>
                 )}
