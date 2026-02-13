@@ -582,10 +582,11 @@ export default function ManageProducts() {
                         {product.image ? (
                           <div className="relative w-full h-full">
                             <Image 
-                              src={product.image} 
+                              src={resolveImageUrl(product.image, "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop")} 
                               alt={product.name}
                               fill
                               className="object-cover group-hover:scale-110 transition-transform duration-500"
+                              unoptimized
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
                                 target.src = "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=400&auto=format&fit=crop";
@@ -600,8 +601,8 @@ export default function ManageProducts() {
                         <span className="font-bold text-slate-900 truncate text-base">
                           <DynamicText text={product.name} />
                         </span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate max-w-[200px]">
-                          <DynamicText text={product.description || 'No description'} />
+                        <span className="text-[11px] font-medium text-slate-500 line-clamp-1 max-w-[250px]">
+                          <DynamicText text={product.description || t.admin.noDescription} />
                         </span>
                       </div>
                     </div>
@@ -737,8 +738,50 @@ export default function ManageProducts() {
                 </svg>
               </button>
             </div>
+
+            <div className="flex-1 overflow-y-auto">
+              {/* Live Preview Section */}
+              <div className="p-6 bg-slate-50 border-b border-slate-100">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">
+                  {t.admin.livePreview || 'Live Preview'}
+                </label>
+                <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col">
+                  <div className="h-48 bg-slate-100 flex items-center justify-center relative overflow-hidden">
+                    {currentProduct.image ? (
+                      <Image 
+                        src={imagePreviewFailed ? "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop" : resolveImageUrl(currentProduct.image, "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop")} 
+                        alt="Preview" 
+                        fill 
+                        className="object-contain p-4" 
+                        unoptimized
+                        onError={() => setImagePreviewFailed(true)}
+                      />
+                    ) : (
+                      <div className="text-4xl">📱</div>
+                    )}
+                  </div>
+                  <div className="p-5">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black bg-blue-50 text-blue-600 uppercase tracking-widest border border-blue-100">
+                        {getCategoryLabel(currentProduct.category)}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 mb-1">
+                      <DynamicText text={currentProduct.name || t.admin.productNamePlaceholder} />
+                    </h3>
+                    <p className="text-slate-500 text-sm line-clamp-2 mb-3">
+                      <DynamicText text={currentProduct.description || t.admin.descriptionPlaceholder} />
+                    </p>
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-50">
+                      <span className="text-xl font-black text-slate-900">
+                        {formatPriceAdmin(currentProduct.price || 0)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             
-            <form onSubmit={handleSubmit} id="product-form" className="flex-1 overflow-y-auto p-6 space-y-6">
+              <form onSubmit={handleSubmit} id="product-form" className="p-6 space-y-6">
               <div className="space-y-2">
                 <label className="text-sm font-bold text-slate-700 uppercase tracking-widest">{t.admin.productName}</label>
                 <input
@@ -846,18 +889,6 @@ export default function ManageProducts() {
                     )}
                   </div>
                 </div>
-                {currentProduct.image && (
-                  <div className="mt-2 w-full h-48 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center relative">
-                    <Image 
-                      src={imagePreviewFailed ? "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop" : resolveImageUrl(currentProduct.image, "https://images.unsplash.com/photo-1560393464-5c69a73c5770?q=80&w=1000&auto=format&fit=crop")} 
-                      alt="Preview" 
-                      fill 
-                      className="object-cover" 
-                      unoptimized
-                      onError={() => setImagePreviewFailed(true)}
-                    />
-                  </div>
-                )}
               </div>
               </div>
 
@@ -956,7 +987,7 @@ export default function ManageProducts() {
                 />
               </div>
             </form>
-
+          </div>
             <div className="p-6 border-t border-slate-100 bg-slate-50 flex items-center gap-3">
               <button
                 type="button"
